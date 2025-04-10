@@ -1,0 +1,149 @@
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using Eris.Extension.Eris.Style;
+using Eris.Extension.Generic;
+using Eris.Serializer;
+using Eris.Utilities.Helpers;
+using Microsoft.Win32;
+using NaegleriaSerializer.Streaming;
+using PatcherYrSharp;
+using PatcherYrSharp.Helpers;
+
+namespace Eris.Extension;
+
+public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoTypeExt, TechnoTypeClass>,
+    IExtensionActivator<TechnoExt, TechnoClass>
+{
+    public TechnoExt(Pointer<TechnoClass> owner) : base(owner)
+    {
+    }
+
+    public TechnoExt()
+    {
+    }
+
+    public override void Serialize(INaegleriaStream stream)
+    {
+        stream.ProcessObject(ref TypeFiled!)
+            .Process(ref TokenFiled)
+            .Process(ref _showVisualTree);
+        
+        if (stream is NaegleriaSerializeStream serializeStream)
+        {
+            Formatters.ListSerialize(_styles, serializeStream);
+        }
+        else if(stream is NaegleriaDeserializeStream deserializeStream)
+        {
+            Formatters.ListDeserialize(ref _styles!, deserializeStream);
+        }
+    }
+
+    public override int SerializeType => SerializeRegister.TechnoExtSerializeType;
+
+    public static TechnoExt Create(Pointer<TechnoClass> owner)
+    {
+        return new TechnoExt(owner);
+    }
+    
+    //[Hook(HookType.AresHook, Address = 0x6F3260, Size = 5)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_CTOR", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 TechnoClass_CTOR(Registers* r)
+    {
+        var pItem = (Pointer<TechnoClass>)r->ESI;
+
+        if (!GlobalSerializer.IsLoading)
+        {
+            ExtMap.FindOrAllocate(pItem);
+        }
+        return 0;
+    }
+
+    //[Hook(HookType.AresHook, Address = 0x6F4500, Size = 5)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_DTOR", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 TechnoClass_DTOR(Registers* r)
+    {
+        var pItem = (Pointer<TechnoClass>)r->ECX;
+        ExtMap.Remove(pItem);
+        return 0;
+    }
+
+    //[Hook(HookType.AresHook, Address = 0x70C250, Size = 8)]
+    //[Hook(HookType.AresHook, Address = 0x70BF50, Size = 5)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_SaveLoad_Prefix", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 TechnoClass_SaveLoad_Prefix(Registers* r)
+    {
+        var pItem = r->Stack<Pointer<TechnoClass>>(0x4);
+
+        TechnoExt.ExtMap.Prepare(pItem);
+        return 0;
+    }
+
+    //[Hook(HookType.AresHook, Address = 0x70C249, Size = 5)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_Load_Suffix", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 TechnoClass_Load_Suffix(Registers* r)
+    {
+        TechnoExt.ExtMap.Load();
+        return 0;
+    }
+
+    //[Hook(HookType.AresHook, Address = 0x70C264, Size = 5)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_Save_Suffix", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 TechnoClass_Save_Suffix(Registers* r)
+    {
+        TechnoExt.ExtMap.Save();
+        return 0;
+    }
+
+    private List<StyleInstance> _styles = [];
+    public List<StyleInstance> Styles => _styles;
+
+    private bool _showVisualTree = false;
+    public bool ShowVisualTree { get => _showVisualTree; set => _showVisualTree = value; }
+
+
+    public override void Awake()
+    {
+        if (Type.SelectedBy is { } styleType)
+        {
+            StyleManager.Instance.TryCreate(this, _styles, styleType);
+        }
+    }
+
+    public void ToTreeDisplay(StringBuilder sb, string linePrefix)
+    {
+        if (Token.Initialized)
+        {
+            sb
+           .AppendTreeLeaf(linePrefix, $"UniqueID:{OwnerRef.BaseAbstract.UniqueID}")
+           .AppendTreeLeaf(linePrefix, $"AbstractType:{OwnerRef.BaseAbstract.WhatAmI()}")
+           .AppendTreeLeaf(linePrefix, "StyleManager");
+
+            if (_styles.Count != 0)
+            {
+                var subPrefix = TreeDisplayHelper.GetNextPrefix(linePrefix);
+                var subLastPrefix = TreeDisplayHelper.GetNextPrefix(subPrefix);
+                int i;
+                for (i = 0; i < _styles.Count - 1; i++)
+                {
+                    sb.AppendTreeLeaf(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
+                    _styles[i].ToTreeDisplay(sb, subLastPrefix);
+                    //_styles[i].ToTreeDisplay(sb, subPrefix);
+                }
+
+                //subPrefix = TreeDisplayHelper.GetNextPrefixLast(linePrefix);
+                sb.AppendTreeLeafLast(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
+
+                subLastPrefix = TreeDisplayHelper.GetNextPrefixLast(subPrefix);
+                _styles[i].ToTreeDisplay(sb, subLastPrefix);
+                //_styles[i].ToTreeDisplay(sb, subPrefix);
+            }
+
+            sb
+                .AppendTreeLeafLast(linePrefix, $"GameObject:null");
+        }
+       
+
+    }
+}
