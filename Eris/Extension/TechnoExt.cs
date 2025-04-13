@@ -26,9 +26,10 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     public override void Serialize(INaegleriaStream stream)
     {
-        stream.ProcessObject(ref TypeFiled!)
-            .Process(ref TokenFiled)
-            .Process(ref _showVisualTree);
+        stream.ProcessObject(ref TypeField!)
+            .Process(ref TokenField)
+            .Process(ref _showVisualTree)
+            .ProcessObject(ref ObjectField);
         
         if (stream is NaegleriaSerializeStream serializeStream)
         {

@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Eris.Ui;
 using Microsoft.Win32;
 using PatcherYrSharp;
+using PatcherYrSharp.Com;
 using PatcherYrSharp.Helpers;
 
 namespace Eris.Behaviors;

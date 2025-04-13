@@ -589,6 +589,7 @@ public static class TechnoGird
             var cloackable = pTechno.Ref.Cloakable;
             var body = pTechno.Ref.Facing;
             var tur =  pTechno.Ref.TurretFacing;
+            var location = pTechno.Ref.Base.Location;
             //var bar =  pTechno.Ref.BarrelFacing;
 
             pTechno.Ref.Facing      .set(dir);
@@ -600,6 +601,7 @@ public static class TechnoGird
             pTechno.Ref.CloakStates = CloakStates.Cloaked;
             pTechno.Ref.Cloakable = true;
 
+            pTechno.Ref.Base.Location = pos;
 
             pTechno.Ref.Base.DrawIt(TacticalClass.Instance.CoordsToClient(pos), Surface.ViewBound);
 
@@ -610,6 +612,8 @@ public static class TechnoGird
 
             pTechno.Ref.Facing = body;
             pTechno.Ref.TurretFacing = tur;
+
+            pTechno.Ref.Base.Location = location;
             //pTechno.Ref.BarrelFacing = bar;
 
         }

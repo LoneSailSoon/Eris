@@ -14,6 +14,7 @@
 685659 = Scenario_ClearClasses_Behaviors, 10
 679CAF = RulesData_LoadAfterTypeData, 5
 533066 = CommandClassCallback_Register, 6
+6BD68D = WinMain_PhobosRegistrations, 6
 
 ;/Behaviors/NetworkBehaviors.cs
 4C6CB0 = Network_RespondToEvent_Behaviors, 6

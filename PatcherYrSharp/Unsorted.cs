@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using PatcherYrSharp.GeneralStructures;
 using PatcherYrSharp.Helpers;
 
 namespace PatcherYrSharp;
@@ -43,6 +44,14 @@ public static class Game
     }
 
     private const nint _specialDialog = 0xA8EDA0;
+    
+    
+    
+    public const nint ArrayPointer = 0xB0BC88;
+    public static ref DynamicVectorClass<uint> COMClasses => ref DynamicVectorClass<uint>.GetDynamicVector(ArrayPointer);
+
+    
+    
 }
 
 public static class Import

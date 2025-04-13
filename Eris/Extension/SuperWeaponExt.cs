@@ -21,8 +21,9 @@ public class SuperWeaponExt : CommonInstanceExtension<SuperWeaponExt, SuperClass
 
     public override void Serialize(INaegleriaStream stream)
     {
-        stream.ProcessObject(ref TypeFiled!)
-            .Process(ref TokenFiled);
+        stream.ProcessObject(ref TypeField!)
+            .Process(ref TokenField)
+            .ProcessObject(ref ObjectField);
     }
 
     public override int SerializeType => SerializeRegister.SuperWeaponExtSerializeType;

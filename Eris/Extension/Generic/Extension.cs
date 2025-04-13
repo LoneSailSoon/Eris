@@ -12,6 +12,7 @@ public abstract class Extension<T>(Pointer<T> owner) : INaegleriaSerializable
 
     private Pointer<T> _ownerObject = owner;
     public Pointer<T> OwnerObject => _ownerObject;
+    public bool Expired => OwnerObject.IsNull;
 
     public abstract void Serialize(INaegleriaStream stream);
 

@@ -17,6 +17,7 @@ public static class SerializeRegister
     public const int WeaponTypeExtSerializeType = 11;
     public const int StyleTypeType = 12;
     public const int StyleInstanceType = 13;
+    public const int GameObjectType = 14;
 
 
     public static void Register()
@@ -34,5 +35,6 @@ public static class SerializeRegister
         DeserializeObjectActivator.Register(WeaponTypeExtSerializeType, static () => new Extension.WeaponTypeExt());
         DeserializeObjectActivator.Register(StyleTypeType, static () => new Eris.Extension.Eris.Style.StyleType());
         DeserializeObjectActivator.Register(StyleInstanceType, static () => new Eris.Extension.Eris.Style.StyleInstance());
+        DeserializeObjectActivator.Register(GameObjectType, static () => new Eris.Extension.Eris.Generic.GameObject());
     }
 }

@@ -3,9 +3,12 @@ using System.Runtime.InteropServices;
 using Eris.Extension.Eris.Commands;
 using Eris.Extension.Eris.Style;
 using Eris.Ui.NaegleriaUi;
+using Eris.Utilities.Helpers;
 using Eris.Utilities.Ini;
 using Microsoft.Win32;
 using PatcherYrSharp;
+using PatcherYrSharp.Com;
+using PatcherYrSharp.Com.NewComs;
 using PatcherYrSharp.Helpers;
 
 namespace Eris.Behaviors;
@@ -59,9 +62,28 @@ public static class GeneralBehaviors
 
     //[Hook(HookType.AresHook, Address = 0x533066, Size = 6)]
     [UnmanagedCallersOnly(EntryPoint = "CommandClassCallback_Register", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CommandClassCallback_Register(Registers* R)
+    public static unsafe UInt32 CommandClassCallback_Register(Registers* r)
     {
         Command.Register();
         return 0;
     }
+    
+    //0x6BD68D, WinMain_PhobosRegistrations, 0x6
+    [UnmanagedCallersOnly(EntryPoint = "WinMain_PhobosRegistrations", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 WinMain_PhobosRegistrations(Registers* r)
+    {
+        try
+        {
+            nint factory = YRMemory.Allocate<TestLocomotionClassFactory>();
+            TestLocomotionClassFactory.Constructor(factory);
+            ComManager.RegisterFactoryForClass(TestLocomotion.UuId, factory);
+        }
+        catch (Exception e)
+        {
+            LogHelper.Log(e);
+        }
+        
+        return 0;
+    }
+
 }
