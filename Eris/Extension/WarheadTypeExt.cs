@@ -22,6 +22,7 @@ public class WarheadTypeExt : CommonTypeExtension<WarheadTypeExt, WarheadTypeCla
 
     public override void Serialize(INaegleriaStream stream)
     {
+        base.Serialize(stream);
     }
 
     public override int SerializeType => SerializeRegister.WarheadTypeExtSerializeType;
@@ -84,6 +85,7 @@ public class WarheadTypeExt : CommonTypeExtension<WarheadTypeExt, WarheadTypeCla
 
     public override void LoadFromIni(Pointer<CCINIClass> pIni)
     {
+        base.LoadFromIni(pIni);
         var ini = IniReader.Default;
         ini.SetCurrentIni(pIni);
     }

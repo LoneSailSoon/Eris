@@ -19,6 +19,7 @@ public struct ScenarioClass
     public static ref ScenarioClass Instance { get => ref ppInstance.Convert<Pointer<ScenarioClass>>().Ref.Ref; }
 
 
+    [FieldOffset(0)] public uint SpecialFlags;
     [FieldOffset(4700)] public byte FileName_first;
     public AnsiStringPointer FileName => Pointer<byte>.AsPointer(ref FileName_first);
 

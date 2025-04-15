@@ -69,9 +69,8 @@ public class StyleManager
         }
     }
 
-    public void OnUpdate(GameToken token, List<StyleInstance> styles)
+    public void OnUpdate(List<StyleInstance> styles)
     {
-        if (!token.Initialized) return;
 
         UpdateAll(styles);
         ClearExpired(styles);

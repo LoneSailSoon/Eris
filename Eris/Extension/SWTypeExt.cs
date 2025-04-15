@@ -23,6 +23,7 @@ public class SWTypeExt : CommonTypeExtension<SWTypeExt, SuperWeaponTypeClass>,
 
     public override void Serialize(INaegleriaStream stream)
     {
+        base.Serialize(stream);
     }
 
     public override int SerializeType => SerializeRegister.SuperWeaponTypeExtSerializeType;
@@ -85,6 +86,7 @@ public class SWTypeExt : CommonTypeExtension<SWTypeExt, SuperWeaponTypeClass>,
 
     public override void LoadFromIni(Pointer<CCINIClass> pIni)
     {
+        base.LoadFromIni(pIni);
         var ini = IniReader.Default;
         ini.SetCurrentIni(pIni);
     }

@@ -18,6 +18,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 {
     public TechnoExt(Pointer<TechnoClass> owner) : base(owner)
     {
+        _styles = [];
     }
 
     public TechnoExt()
@@ -26,6 +27,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     public override void Serialize(INaegleriaStream stream)
     {
+        base.Serialize(stream);
         stream.ProcessObject(ref TypeField!)
             .Process(ref TokenField)
             .Process(ref _showVisualTree)
@@ -97,7 +99,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
         return 0;
     }
 
-    private List<StyleInstance> _styles = [];
+    private List<StyleInstance> _styles = null!;
     public List<StyleInstance> Styles => _styles;
 
     private bool _showVisualTree = false;
@@ -106,6 +108,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     public override void Awake()
     {
+        base.Awake();
         if (Type.SelectedBy is { } styleType)
         {
             StyleManager.Instance.TryCreate(this, _styles, styleType);
@@ -114,7 +117,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     public void ToTreeDisplay(StringBuilder sb, string linePrefix)
     {
-        if (Token.Initialized)
+        //if (Token.Initialized)
         {
             sb
            .AppendTreeLeaf(linePrefix, $"UniqueID:{OwnerRef.BaseAbstract.UniqueID}")

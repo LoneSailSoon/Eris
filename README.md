@@ -5,6 +5,9 @@
 
 **阋神星**是由C#编写的《尤里的复仇》引擎扩展项目，在AOT发布和inj文件的协作下它能以类似[Ares](https://github.com/Ares-Developers/Ares)的方式被[Syringe](https://github.com/Ares-Developers/Syringe)注入到游戏中。
 
+![Eris YR Engine Extension](ErisLogo.png)
+
+
 ## 项目结构
 
 - [PatcherYrSharp](PatcherYrSharp)

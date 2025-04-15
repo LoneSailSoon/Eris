@@ -1,50 +1,32 @@
 using Eris.Extension.Eris.Generic;
+using Eris.Extension.Eris.Scripts;
 using PatcherYrSharp;
 using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension.Generic;
 
-public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> : InstanceExtension<TExt, TBase>
-    where TExt : InstanceExtension<TExt, TBase>, IExtensionActivator<TExt, TBase>
-    where TTypeExt : InstanceExtension<TTypeExt, TTypeBase>, IExtensionActivator<TTypeExt, TTypeBase>
+public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> : InstanceExtension<TExt, TBase>, IGameObjectOwner<TExt>
+    where TExt : InstanceExtension<TExt, TBase>, IExtensionActivator<TExt, TBase>, IGameObjectOwner<TExt>
+    where TTypeExt : CommonTypeExtension<TTypeExt, TTypeBase>, IExtensionActivator<TTypeExt, TTypeBase>
     where TBase : IYrObject<TTypeBase>
 {
     protected TTypeExt TypeField;
     protected GameToken TokenField;
     protected GameObject? ObjectField;
 
-    public TTypeExt Type
-    {
-        get
-        {
-            if (Token.Initialized)
-            {
-                return TypeField ??= InstanceExtension<TTypeExt, TTypeBase>.ExtMap.Find(OwnerRef.Type)!;
-            }
-
-            return null!;
-        }
-    }
-
-    public GameToken Token
-    {
-        get
-        {
-            if (!TokenField.Initialized)
-            {
-                TokenField.Initialized = true;
-                Awake();
-            }
-            
-            return TokenField;
-        }
-    }
+    public TTypeExt Type => TypeField;
     
     public GameObject GameObject
     {
         get
         {
-            return ObjectField ??= new(Token);
+            if (ObjectField is null)
+            {
+                ObjectField = GameObject.Create();
+                Awake();
+            }
+            
+            return ObjectField;
         }
     }
 
@@ -53,6 +35,14 @@ public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> 
 
     public virtual void Awake()
     {
+        TypeField ??= CommonTypeExtension<TTypeExt, TTypeBase>.ExtMap.Find(OwnerRef.Type)!;
+        if (TypeField.Scripts is { } scripts)
+        {
+            foreach (var script in scripts)
+            { 
+                ScriptManager.AttachTo((this as TExt)!, script);
+            }
+        }
         
     }
     
@@ -71,4 +61,9 @@ public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> 
 public struct GameToken
 {
     public bool Initialized;
+}
+
+public interface IGameObjectOwner<TExt>
+{
+    public GameObject GameObject { get; }
 }

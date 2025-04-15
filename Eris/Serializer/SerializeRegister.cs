@@ -1,3 +1,4 @@
+using Eris.Extension.Eris.Scripts;
 using NaegleriaSerializer;
 
 namespace Eris.Serializer;
@@ -35,6 +36,6 @@ public static class SerializeRegister
         DeserializeObjectActivator.Register(WeaponTypeExtSerializeType, static () => new Extension.WeaponTypeExt());
         DeserializeObjectActivator.Register(StyleTypeType, static () => new Eris.Extension.Eris.Style.StyleType());
         DeserializeObjectActivator.Register(StyleInstanceType, static () => new Eris.Extension.Eris.Style.StyleInstance());
-        DeserializeObjectActivator.Register(GameObjectType, static () => new Eris.Extension.Eris.Generic.GameObject());
+        DeserializeObjectActivator.Register(GameObjectType, static () => new GameObject());
     }
 }

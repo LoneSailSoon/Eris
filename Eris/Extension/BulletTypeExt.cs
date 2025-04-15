@@ -22,6 +22,7 @@ public class BulletTypeExt : CommonTypeExtension<BulletTypeExt, BulletTypeClass>
 
     public override void Serialize(INaegleriaStream stream)
     {
+        base.Serialize(stream);
     }
 
     public override int SerializeType => SerializeRegister.BulletTypeExtSerializeType;
@@ -85,6 +86,7 @@ public class BulletTypeExt : CommonTypeExtension<BulletTypeExt, BulletTypeClass>
 
     public override void LoadFromIni(Pointer<CCINIClass> pIni)
     {
+        base.LoadFromIni(pIni);
         var ini = IniReader.Default;
         ini.SetCurrentIni(pIni);
     }

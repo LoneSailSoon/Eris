@@ -55,6 +55,8 @@
 6F9E50 = TechnoClass_Update_Behaviors, 5
 6F6CA0 = TechnoClass_Put_Behaviors, 7
 6D471A = TechnoClass_RenderLater, 6
+701900 = TechnoClass_ReceiveDamage_Behaviors, 6
+6FDD50 = TechnoClass_Fire_Behaviors, 6
 
 
 ;/Extension/CellExt.cs

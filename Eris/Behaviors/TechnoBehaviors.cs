@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Eris.Extension;
+using Eris.Extension.Eris.Scripts;
 using Eris.Extension.Eris.Style;
 using Eris.Utilities.Helpers;
 using PatcherYrSharp;
@@ -29,7 +30,9 @@ public static class TechnoBehaviors
 
             if (ext is not null)
             {
-                StyleManager.Instance.OnUpdate(ext.Token, ext.Styles);
+                StyleManager.Instance.OnUpdate(ext.Styles);
+
+                ext.GameObject.ForEach(o => o.OnUpdate());
             }
         }
         catch (Exception e)
@@ -49,6 +52,12 @@ public static class TechnoBehaviors
             var pCoord = r->Stack<Pointer<CoordStruct>>(0x4);
             var faceDir = r->Stack<Direction>(0x8);
             TechnoExt? ext = TechnoExt.ExtMap.Find(pTechno);
+
+            if (ext is not null)
+            {
+                ext.GameObject.ForEach((pCoord, faceDir), TechnoScriptable.OnPut);
+            }
+
         }
         catch (Exception e)
         {
@@ -65,6 +74,14 @@ public static class TechnoBehaviors
         try
         {
             Pointer<TechnoClass> pTechno = (nint)r->ECX;
+            
+            var ext = TechnoExt.ExtMap.Find(pTechno);
+
+            if (ext is not null)
+            {
+                ext.GameObject.ForEach(o=>(o as TechnoScriptable)?.OnRemove());
+            }
+
         }
         catch (Exception e)
         {
@@ -120,6 +137,65 @@ public static class TechnoBehaviors
         {
             LogHelper.Log(e);
         }
+        return 0;
+    }
+
+    //[Hook(0x701900, 6)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_ReceiveDamage_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe uint TechnoClass_ReceiveDamage_Behaviors(Registers* r)
+    {
+        
+        try
+        {
+            Pointer<TechnoClass> pTechno = (nint)r->ECX;
+            var pDamage = r->Stack<Pointer<int>>(0x4);
+            var distanceFromEpicenter = r->Stack<int>(0x8);
+            var pWH = r->Stack<Pointer<WarheadTypeClass>>(0xC);
+            var pAttacker = r->Stack<Pointer<ObjectClass>>(0x10);
+            var ignoreDefenses = r->Stack<bool>(0x14);
+            var preventPassengerEscape = r->Stack<bool>(0x18);
+            var pAttackingHouse = r->Stack<Pointer<HouseClass>>(0x1C);
+            
+            var ext = TechnoExt.ExtMap.Find(pTechno);
+
+            if (ext is not null)
+            {
+                ext.GameObject.ForEach((pDamage, distanceFromEpicenter, pWH, pAttacker, ignoreDefenses, preventPassengerEscape, pAttackingHouse), TechnoScriptable.OnReceiveDamage);
+            }
+
+        }
+        catch (Exception e)
+        {
+            LogHelper.Log(e);
+        }
+
+        return 0;
+    }
+
+    //[Hook(0x6FDD50, 6)]
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_Fire_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe uint TechnoClass_Fire_Behaviors(Registers* r)
+    {
+        
+        try
+        {
+            Pointer<TechnoClass> pTechno = (nint)r->ECX;
+            var pTarget = r->Stack<Pointer<AbstractClass>>(0x4);
+            var nWeaponIndex = r->Stack<int>(0x8);
+            
+            var ext = TechnoExt.ExtMap.Find(pTechno);
+
+            if (ext is not null)
+            {
+                ext.GameObject.ForEach((nWeaponIndex, pTarget), TechnoScriptable.OnFire);
+            }
+
+        }
+        catch (Exception e)
+        {
+            LogHelper.Log(e);
+        }
+
         return 0;
     }
 

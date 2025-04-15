@@ -1,3 +1,4 @@
+using NaegleriaSerializer.Streaming;
 using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension.Generic;
@@ -12,6 +13,10 @@ public abstract class InstanceExtension<TExt, TBase> : Extension<TBase> where TE
     }
     
     public InstanceExtension()
+    {
+    }
+
+    public override void Serialize(INaegleriaStream stream)
     {
     }
 

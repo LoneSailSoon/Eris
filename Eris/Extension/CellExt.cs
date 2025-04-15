@@ -20,6 +20,7 @@ public class CellExt : InstanceExtension<CellExt, CellClass>,
     }
     public override void Serialize(INaegleriaStream stream)
     {
+        base.Serialize(stream);
     }
 
     public override int SerializeType => SerializeRegister.CellExtSerializeType;

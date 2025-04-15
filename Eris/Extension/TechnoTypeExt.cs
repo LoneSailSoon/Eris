@@ -25,6 +25,7 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
 
     public override void Serialize(INaegleriaStream stream)
     {
+        base.Serialize(stream);
         stream
             .ProcessObject(ref SelectedBy);
     }
@@ -89,6 +90,7 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
 
     public override void LoadFromIni(Pointer<CCINIClass> pIni)
     {
+        base.LoadFromIni(pIni);
         var ini = IniReader.Default;
         ini.SetCurrentIni(pIni);
 
