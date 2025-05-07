@@ -9,13 +9,7 @@ namespace PatcherYrSharp;
 [StructLayout(LayoutKind.Explicit, Size = 1312)]
 public struct TechnoClass : IYrObject<TechnoTypeClass>
 {
-    public unsafe Pointer<TechnoTypeClass> Type
-    {
-        get
-        {
-            return Base.GetTechnoType();
-        }
-    }
+    public unsafe Pointer<TechnoTypeClass> Type => Base.GetTechnoType();
 
     public unsafe bool IsVoxel()
     {
@@ -265,6 +259,12 @@ public struct TechnoClass : IYrObject<TechnoTypeClass>
     {
         var func = (delegate* unmanaged[Thiscall]<ref TechnoClass, IntPtr, void>)0x710470;
         func(ref this, pPayload);
+    }
+
+    public unsafe void KillPassengers(Pointer<TechnoClass> pSource)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, void>)0x707CB0;
+        func(this.GetThisPointer(), pSource);
     }
 
 

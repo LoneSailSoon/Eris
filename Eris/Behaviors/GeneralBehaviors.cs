@@ -5,6 +5,7 @@ using Eris.Extension.Eris.Style;
 using Eris.Ui.NaegleriaUi;
 using Eris.Utilities.Helpers;
 using Eris.Utilities.Ini;
+using Eris.Utilities.Logger;
 using Microsoft.Win32;
 using PatcherYrSharp;
 using PatcherYrSharp.Com;
@@ -36,7 +37,7 @@ public static class GeneralBehaviors
     {
         return 0;
     }
-    
+
     //[Hook(0x685659, 10)]
     [UnmanagedCallersOnly(EntryPoint = "Scenario_ClearClasses_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe UInt32 Scenario_ClearClasses_Behaviors(Registers* r)
@@ -47,43 +48,44 @@ public static class GeneralBehaviors
     }
 
     //DEFINE_HOOK(0x679CAF, RulesData_LoadBeforeTypeData, 5)
-    [UnmanagedCallersOnly(EntryPoint = "RulesData_LoadAfterTypeData", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 RulesData_LoadAfterTypeData(Registers* r)
+    [UnmanagedCallersOnly(EntryPoint = "RulesData_LoadAfterTypeData_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 RulesData_LoadAfterTypeData_Behaviors(Registers* r)
     {
         var pIni = r->Stack<Pointer<CCINIClass>>(0x4);
-
         var ini = IniReader.Default;
         ini.SetCurrentIni(pIni);
 
         StyleType.ExtMap.LoadFromIni(ini);
-        
+
         return 0;
     }
 
     //[Hook(HookType.AresHook, Address = 0x533066, Size = 6)]
-    [UnmanagedCallersOnly(EntryPoint = "CommandClassCallback_Register", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CommandClassCallback_Register(Registers* r)
+    [UnmanagedCallersOnly(EntryPoint = "CommandClassCallback_Register_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 CommandClassCallback_Register_Behaviors(Registers* r)
     {
         Command.Register();
-        return 0;
-    }
-    
-    //0x6BD68D, WinMain_PhobosRegistrations, 0x6
-    [UnmanagedCallersOnly(EntryPoint = "WinMain_PhobosRegistrations", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 WinMain_PhobosRegistrations(Registers* r)
-    {
-        try
-        {
-            nint factory = YRMemory.Allocate<TestLocomotionClassFactory>();
-            TestLocomotionClassFactory.Constructor(factory);
-            ComManager.RegisterFactoryForClass(TestLocomotion.UuId, factory);
-        }
-        catch (Exception e)
-        {
-            LogHelper.Log(e);
-        }
-        
+
+        Logger.Log($"Initialized Eris version:{Program.ErisVersion}");
+
         return 0;
     }
 
+    //DEFINE_HOOK(0x6BD68D, WinMain_PhobosRegistrations, 0x6)
+    [UnmanagedCallersOnly(EntryPoint = "WinMain_Registrations_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 WinMain_Registrations_Behaviors(Registers* r)
+    {
+        try
+        {
+            //nint factory = YRMemory.Allocate<TestLocomotionClassFactory>();
+            //TestLocomotionClassFactory.Constructor(factory);
+            //ComManager.RegisterFactoryForClass(TestLocomotion.UuId, factory);
+        }
+        catch (Exception e)
+        {
+            Logger.LogException(e);
+        }
+
+        return 0;
+    }
 }

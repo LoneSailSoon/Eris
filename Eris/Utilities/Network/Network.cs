@@ -48,7 +48,7 @@ public static class Network
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.Logger.LogException(e);
         }
 
         return 0;

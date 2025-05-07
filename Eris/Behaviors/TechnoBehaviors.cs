@@ -9,6 +9,7 @@ using Eris.Extension;
 using Eris.Extension.Eris.Scripts;
 using Eris.Extension.Eris.Style;
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 using PatcherYrSharp;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.GeneralStructures;
@@ -30,14 +31,17 @@ public static class TechnoBehaviors
 
             if (ext is not null)
             {
+                
                 StyleManager.Instance.OnUpdate(ext.Styles);
-
+                ext.StyleStateManager.OnUpdate();
                 ext.GameObject.ForEach(o => o.OnUpdate());
+
+                
             }
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
         return 0;
     }
@@ -51,7 +55,7 @@ public static class TechnoBehaviors
             Pointer<TechnoClass> pTechno = (nint)r->ECX;
             var pCoord = r->Stack<Pointer<CoordStruct>>(0x4);
             var faceDir = r->Stack<Direction>(0x8);
-            TechnoExt? ext = TechnoExt.ExtMap.Find(pTechno);
+            var ext = TechnoExt.ExtMap.Find(pTechno);
 
             if (ext is not null)
             {
@@ -61,7 +65,7 @@ public static class TechnoBehaviors
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
         return 0;
     }
@@ -85,7 +89,7 @@ public static class TechnoBehaviors
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
 
         return 0;
@@ -135,7 +139,7 @@ public static class TechnoBehaviors
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
         return 0;
     }
@@ -166,7 +170,7 @@ public static class TechnoBehaviors
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
 
         return 0;
@@ -193,7 +197,33 @@ public static class TechnoBehaviors
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
+        }
+
+        return 0;
+    }
+
+    //7077C0 7
+    [UnmanagedCallersOnly(EntryPoint = "TechnoClass_PointerExpired_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe uint TechnoClass_PointerExpired_Behaviors(Registers* r)
+    {
+        
+        try
+        {
+            Pointer<TechnoClass> pTechno = (nint)r->ECX;
+            var pTarget = r->Stack<Pointer<AbstractClass>>(0x4);
+            
+            var ext = TechnoExt.ExtMap.Find(pTechno);
+
+            if (ext is not null)
+            {
+                //ext.GameObject.ForEach((nWeaponIndex, pTarget), TechnoScriptable.OnFire);
+            }
+
+        }
+        catch (Exception e)
+        {
+            Logger.LogException(e);
         }
 
         return 0;

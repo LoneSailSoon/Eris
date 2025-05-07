@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.GeneralStructures;
 using PatcherYrSharp.Helpers;
+using Quaternion = System.Numerics.Quaternion;
 
 namespace PatcherYrSharp.Utilities;
 
@@ -447,14 +448,14 @@ namespace PatcherYrSharp.Utilities;
             return new BulletVelocity((float)vector.X, (float)vector.Y, (float)vector.Z);
         }
 
-        public static RectangleStruct ToRectangleStruct(this LTRBStruct ltrb)
+        public static RectangleStruct ToRectangleStruct(this LtrbStruct ltrb)
         {
             return new RectangleStruct(ltrb.Left, ltrb.Top, ltrb.Right - ltrb.Left, ltrb.Bottom - ltrb.Top);
         }
 
-        public static LTRBStruct ToLTRBStruct(this RectangleStruct rect)
+        public static LtrbStruct ToLTRBStruct(this RectangleStruct rect)
         {
-            return new LTRBStruct(rect.X, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
+            return new LtrbStruct(rect.X, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
         }
 
         #endregion

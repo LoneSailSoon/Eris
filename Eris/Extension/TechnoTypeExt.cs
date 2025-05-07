@@ -27,7 +27,7 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
     {
         base.Serialize(stream);
         stream
-            .ProcessObject(ref SelectedBy);
+            .ProcessObjectArrayInline(ref SelectedBy!);
     }
 
     public override int SerializeType => SerializeRegister.TechnoTypeExtSerializeType;
@@ -111,5 +111,5 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
         return 0;
     }
 
-    public StyleType? SelectedBy;
+    public StyleType[]? SelectedBy;
 }

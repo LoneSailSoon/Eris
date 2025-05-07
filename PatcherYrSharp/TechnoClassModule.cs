@@ -15,16 +15,16 @@ public struct VeterancyStruct
 
     public void Add(int ownerCost, int victimCost)
     {
-        this.Add(victimCost / (ownerCost * RulesClass.Instance.Ref.VeteranRatio));
+        this.Add(victimCost / (ownerCost * RulesClass.Instance.VeteranRatio));
     }
 
     public void Add(double value)
     {
         var val = this.Veterancy + value;
 
-        if (val > RulesClass.Instance.Ref.VeteranCap)
+        if (val > RulesClass.Instance.VeteranCap)
         {
-            val = RulesClass.Instance.Ref.VeteranCap;
+            val = RulesClass.Instance.VeteranCap;
         }
 
         this.Veterancy = (float)val;

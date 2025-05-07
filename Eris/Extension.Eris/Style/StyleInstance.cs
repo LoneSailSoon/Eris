@@ -3,16 +3,19 @@ using Eris.Utilities.Helpers;
 using NaegleriaSerializer;
 using NaegleriaSerializer.Streaming;
 using System.Text;
+using Eris.Extension.Eris.Generic;
+using Eris.Extension.Eris.Style.State.DestroySelf;
+using Eris.Utilities.Logger;
 using PatcherYrSharp;
 using PatcherYrSharp.GeneralStructures;
 using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension.Eris.Style;
 
-public class StyleInstance :  INaegleriaSerializable
+public class StyleInstance : Component
 {
     private StyleType? _type;
-    public StyleType? StyleType => _type;
+    public StyleType StyleType => _type!;
     
     protected StyleStatus StyleStatus;
     public StyleStatus Status => StyleStatus;
@@ -20,47 +23,56 @@ public class StyleInstance :  INaegleriaSerializable
     protected TimerStruct StyleLifeTime;
     public TimerStruct LifeTime => StyleLifeTime;
 
+    private StyleModule[] _styleModules = null!;
+    private StyleModule[] _stateStyleModules = null!;
+
+    public DestroySelfState? DestroySelfState;
     
-    public void Serialize(INaegleriaStream stream)
+    public override void Serialize(INaegleriaStream stream)
     {
         stream
             .ProcessObject(ref _type)
             .Process(ref StyleStatus)
             .Process(ref StyleLifeTime)
             .Process(ref LoopTimes)
-            .Process(ref Expired)
-            .Process(ref Active)
+            .Process(ref StyleExpired)
+            .Process(ref StyleActive)
             .ProcessObject(ref _house)
             .ProcessObject(ref _warhead)
-            .ProcessObject(ref _owner);
+            .ProcessObject(ref _owner)
+            .ProcessObject(ref _source)
+            .ProcessObjectArrayInline(ref _styleModules!)
+            .ProcessObjectArrayInline(ref _stateStyleModules!)
+            .ProcessObject(ref DestroySelfState);
     }
 
-    public int SerializeType => SerializeRegister.StyleInstanceType;
-    public ulong SerializeId { get; } = SerializeIdCreater.NewId();
-    
-    public bool Attach(TechnoExt owner, StyleType type, HouseExt? house, WarheadTypeExt? warhead, Pointer<ObjectClass> pSource = default) 
+    public override int SerializeType => SerializeRegister.StyleInstanceType;
+
+    public bool TryAttach(TechnoExt owner, StyleType type, HouseExt? house = null, WarheadTypeExt? warhead = null,
+        Pointer<ObjectClass> pSource = default)
     {
         _type = type;
         _owner = owner;
-        House = house ?? HouseExt.ExtMap.Find(_owner.OwnerRef.Owner); 
-        Warhead = warhead; 
-        return true; 
+        _house = house ?? HouseExt.ExtMap.Find(_owner.OwnerRef.Owner);
+        _warhead = warhead;
+
+        if (pSource && pSource.CastToTechno(out var techno))
+            _source = TechnoExt.ExtMap.Find(techno);
+
+        _styleModules = type.ModulesFactory.CreateStyleModules(this);
+        _stateStyleModules = type.StateModulesFactory.CreateStyleModules(this);
+        
+        return true;
     }
-    
-    // protected int LoopTimes;
-    //
-    // protected bool Expired = false;
-    // protected bool Active = true;
-    // private HouseExt? _house;
-    // private WarheadTypeExt? _warhead;
+
     public bool IsActive()
     {
-        return Active;
+        return StyleActive;
     }
 
     public bool IsExpired()
     {
-        return Expired;
+        return StyleExpired;
     }
 
     public bool UpdateActive()
@@ -73,32 +85,32 @@ public class StyleInstance :  INaegleriaSerializable
                     if (IsHoldDuration() || IsLoopInProgress())
                     {
                         StartDelay();
-                        Active = false;
+                        StyleActive = false;
                     }
                     else
                     {
                         StyleStatus = StyleStatus.None;
-                        Active = false;
-                        Expired = true;
+                        StyleActive = false;
+                        StyleExpired = true;
                     }
                     OnDisable();
                     //manager.StateNeedReCheck = true;
                     break;
                 case StyleStatus.Delay:
                     StartDuration();
-                    Active = true;
+                    StyleActive = true;
                     OnEnable();
                     //manager.StateNeedReCheck = true;
                     break;
                 case StyleStatus.Initial:
                     StartDuration();
-                    Active = true;
+                    StyleActive = true;
                     OnEnable();
                     //manager.StateNeedReCheck = true;
                     break;
                 case StyleStatus.None:
-                    Active = false;
-                    Expired = true;
+                    StyleActive = false;
+                    StyleExpired = true;
                     break;
             }
         }
@@ -107,14 +119,14 @@ public class StyleInstance :  INaegleriaSerializable
             switch (Status)
             {
                 case StyleStatus.Duration:
-                    Active = true;
+                    StyleActive = true;
                     break;
                 case StyleStatus.None:
-                    Active = false;
-                    Expired = true;
+                    StyleActive = false;
+                    StyleExpired = true;
                     break;
                 default:
-                    Active = false;
+                    StyleActive = false;
                     break;
             }
 
@@ -138,12 +150,20 @@ public class StyleInstance :  INaegleriaSerializable
 
     public void OnEnable()
     {
-
+        foreach (var module in _styleModules)
+            module.Enable();
+        foreach (var state in _stateStyleModules)
+            ((StyleStateModule)state).Dirt();
     }
 
-    public void OnDisable()
+    public void OnDisable(bool expire = false)
     {
+        foreach (var module in _styleModules)
+            module.Disable();
+        foreach (var state in _stateStyleModules)
+            ((StyleStateModule)state).Dirt();
 
+        //Console.WriteLine($"OnDisable {Game.CurrentFrame}");
     }
 
     private int GetInitialDelay()
@@ -187,30 +207,38 @@ public class StyleInstance :  INaegleriaSerializable
         LoopTimes++;
         return LoopTimes <= _type!.Loop;
     }
-    public void OnDestroy()
+    public override void OnDestroy()
     {
-        Expired = true;
-        Active = false;
+        if(StyleActive && !StyleExpired)
+            OnDisable(true);
+        StyleExpired = true;
+        StyleActive = false;
     }
 
-    public void OnUpdate()
+    public override void OnUpdate()
     {
-        LaserHelpers.RedLineZ(Owner!.OwnerRef.Base.Location, LifeTime.GetTimeLeft() * 10, 3);
+        LaserHelpers.RedLineZ(Owner.OwnerRef.Base.Location, LifeTime.GetTimeLeft() * 10, 3);
+        foreach (var module in _styleModules)
+            module.OnUpdate();
+        Console.WriteLine($"{StyleType.Section}:{Game.CurrentFrame}");
     }
 
-    public void Awake()
+    public override void Awake()
     {
     }
 
     
     protected int LoopTimes;
 
-    protected bool Expired = false;
-    protected bool Active = true;
+    protected bool StyleExpired = false;
+    protected bool StyleActive = true;
     private HouseExt? _house;
     private WarheadTypeExt? _warhead;
     private TechnoExt? _owner; 
+    private TechnoExt? _source; 
     
+    public override bool Expired => StyleExpired;
+    public bool Active => StyleActive;
     public HouseExt? House
     {
         get => _house;
@@ -223,10 +251,16 @@ public class StyleInstance :  INaegleriaSerializable
         protected set => _warhead = value;
     }
     
-    public TechnoExt? Owner
+    public TechnoExt Owner
     {
-        get => _owner;
+        get => _owner!;
         protected set => _owner = value;
+    }
+
+    public TechnoExt? Source
+    {
+        get => _source;
+        protected set => _source = value;
     }
 
     public void ToTreeDisplay(StringBuilder sb, string linePrefix)
@@ -245,5 +279,3 @@ public enum StyleStatus
     Initial = 3,
     HoldOn = 4
 }
-
-

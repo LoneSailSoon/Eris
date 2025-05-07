@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.GeneralStructures;
 using PatcherYrSharp.Helpers;
+using PatcherYrSharp.Utilities;
 
 namespace PatcherYrSharp;
 
@@ -17,6 +18,13 @@ public struct ObjectClass
 
     public static readonly IntPtr ObjectsInLayersPointer = new IntPtr(0x8A0360);
 
+    public static unsafe Pointer<TechnoTypeClass> GetTechnoType(AbstractType abstractId, int idx)
+    {
+        var func = (delegate* unmanaged[Thiscall]<int, int, int, nint>)ASM.FastCallTransferStation;
+        return func(0x48DCD0, (int)abstractId, idx);
+    }
+
+    
     public unsafe Pointer<TechnoTypeClass> GetTechnoType()
     {
         var func = (delegate* unmanaged[Thiscall]<nint, nint>)this.GetVirtualFunctionPointer(33);
@@ -187,7 +195,7 @@ public struct ObjectClass
 
     public unsafe DamageState TakeDamage(int damage, bool crewed)
     {
-        return TakeDamage(damage, RulesClass.Instance.Ref.C4Warhead, crewed);
+        return TakeDamage(damage, RulesClass.Instance.C4Warhead, crewed);
     }
 
     public unsafe DamageState TakeDamage(int damage, Pointer<WarheadTypeClass> pWH, bool crewed)

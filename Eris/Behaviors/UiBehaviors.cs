@@ -14,6 +14,7 @@ public static class UiBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Ui_DrawOnTop_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe UInt32 Ui_DrawOnTop_Behaviors(Registers* r)
     {
+        //Surface.Current.Ref.DrawSHP(FileSystem.DARKEN_SHP, 0, FileSystem.ANIM_PAL, 0, 0);
         ErisUi.OnRender();
         return 0;
     }

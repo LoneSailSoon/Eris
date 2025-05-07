@@ -1,3 +1,6 @@
+using Eris.Extension.Eris.Generic;
+using Eris.Utilities.Ini;
+using NaegleriaSerializer.Streaming;
 using PatcherYrSharp;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.GeneralStructures;
@@ -38,5 +41,22 @@ public abstract class TechnoScriptable : Scriptable<TechnoExt>
     public static void OnFire(Component component, in (int weaponIndex, Pointer<AbstractClass> target) data)
     {
         (component as TechnoScriptable)?.OnFire(data.weaponIndex, data.target);
+    }
+}
+
+public abstract class TechnoScriptable<TData> : TechnoScriptable, IScriptConfigWrapper where TData : IniConfig
+{
+    private TData? _data;
+    protected TData Data { get => _data!; private set => _data = value; }
+
+    protected override void OnSerialize(INaegleriaStream stream)
+    {
+        base.OnSerialize(stream);
+        stream.ProcessObject(ref _data);
+    }
+
+    public void Attach(IniConfig? config)
+    {
+        Data = (TData)config!;
     }
 }

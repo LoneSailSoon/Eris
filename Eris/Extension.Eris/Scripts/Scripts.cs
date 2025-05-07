@@ -1,5 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using Eris.Extension.Eris.Generic;
 using Eris.Extension.Generic;
+using Eris.Utilities.Ini;
+using Eris.Utilities.Logger;
 using NaegleriaSerializer;
 using NaegleriaSerializer.Streaming;
 using PatcherYrSharp;
@@ -10,43 +13,37 @@ public static class ScriptManager
 {
     private static readonly Dictionary<string, Script> Scripts = [];
 
-    public static void RegisterScript(string scriptName, Func<Component> constructor) =>
-        Scripts[scriptName] = new(scriptName, constructor);
-
-    public static void RegisterScripts(string scriptName, params ReadOnlySpan<Func<Component>> scripts)
-    {
-        if (scripts.Length != 0)
-        {
-            var last = new Script(scriptName, scripts[^1]);
-
-            for (var i = scripts.Length - 2; i >= 0; i--)
-            {
-                last = new Script(scriptName, scripts[i], last);
-            }
-
-            Scripts[scriptName] = last;
-        }
-    }
+    public static void RegisterScript(string scriptName, Func<Component> constructor, Func<IniConfig>? dataConstructor = null) => 
+        Scripts[scriptName] = new(scriptName, constructor, dataConstructor);
 
     public static bool TryGetScript(string scriptName, [NotNullWhen(true)] out Script? script) =>
         Scripts.TryGetValue(scriptName, out script);
 
-    public static void AttachTo<TExt>(TExt ext, Script? script)
+    public static void AttachTo<TExt>(TExt ext, ScriptWithData? script)
         where TExt : IGameObjectOwner<TExt>, INaegleriaSerializable
     {
-        while (script is not null)
+        if (script?.Script.Constructor() is Scriptable<TExt> scriptable)
         {
-            if (script.Constructor() is Scriptable<TExt> scriptable)
-            {
-                (scriptable as IScriptable<TExt>).AttachTo(ext);
-                ext.GameObject.AttachComponent(scriptable);
-            }
-
-            script = script.Next;
+            (scriptable as IScriptable<TExt>).AttachTo(ext);
+            ext.GameObject.AttachComponent(scriptable);
+            (scriptable as IScriptConfigWrapper)?.Attach(script.Data);
         }
     }
 
-    public static void Serialize(Script[]? scripts, NaegleriaSerializeStream stream)
+    public static void AttachTo<TExt>(TExt ext, Script? script, string? data = null)
+        where TExt : IGameObjectOwner<TExt>, INaegleriaSerializable
+    {
+        if (script?.Constructor() is Scriptable<TExt> scriptable)
+        {
+            (scriptable as IScriptable<TExt>).AttachTo(ext);
+            ext.GameObject.AttachComponent(scriptable);
+            var config = script.DataConstructor?.Invoke();
+            config?.Parser(data);
+            (scriptable as IScriptConfigWrapper)?.Attach(config);
+        }
+    }
+
+    public static void Serialize(ScriptWithData[]? scripts, NaegleriaSerializeStream stream)
     {
         if (scripts is { Length: var length })
         {
@@ -54,7 +51,10 @@ public static class ScriptManager
 
             for (var i = 0; i < length; i++)
             {
-                stream.Buffer.WriteString(scripts[i].Name);
+                var script = scripts[i];
+                stream.Buffer.WriteString(script.Script.Name);
+                var data = script.Data;
+                stream.ProcessObject(ref data);
             }
             
         }
@@ -65,15 +65,25 @@ public static class ScriptManager
 
     }
 
-    public static void Deserialize(ref Script[]? scripts, NaegleriaDeserializeStream stream)
+    public static void Deserialize(ref ScriptWithData[]? scripts, NaegleriaDeserializeStream stream)
     {
         var length = stream.Buffer.ReadInt32();
         if (length >= 0)
         {
-            scripts = new Script[length];
+            scripts = new ScriptWithData[length];
             for (var i = 0; i < length; i++)
             {
-                TryGetScript(stream.Buffer.ReadString(), out scripts[i]!);
+                if(TryGetScript(stream.Buffer.ReadString(), out var script))
+                {
+                    IniConfig? data = null;
+                    stream.ProcessObject(ref data);
+                    scripts[i] = new(script, data);
+                }
+                else
+                {
+                    IniConfig? _ = null;
+                    stream.ProcessObject(ref _);
+                }
             }
         }
         else
@@ -82,84 +92,58 @@ public static class ScriptManager
         }
     }
 
-    public static bool Parse(string? val, ref Script[]? scripts)
+    public static bool Parse(Section section, string? val, ref ScriptWithData[]? scripts)
     {
-        if (string.IsNullOrWhiteSpace(val)) return false;
-        
-        var ids = val.Split(',');
-        var array = new Script[ids.Length];
-
-        var count = 0;
-        for (var i = 0; i < array.Length; i++)
+        if (!string.IsNullOrWhiteSpace(val))
         {
-            if (TryGetScript(ids[i], out var script))
+            var ids = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            var array = new ScriptWithData[ids.Length];
+
+            var count = 0;
+            for (var i = 0; i < array.Length; i++)
             {
-                array[count] = script;
-                count++;
+                if (TryGetScript(ids[i], out var script))
+                {
+                    var data = script.DataConstructor?.Invoke();
+                    data?.Read(section);
+
+                    array[count] = new(script, data);
+                    count++;
+                }
+            }
+
+            if (count == 0)
+            {
+                scripts = [];
+                return true;
+            }
+
+            if (array.Length != count)
+            {
+                Array.Resize(ref array, count);
+            }
+
+            scripts = array;
+            return true;
+        }
+        
+        if (scripts is { Length: > 0 })
+        {
+            foreach (var script in scripts)
+            {
+                script.Data?.Read(section);
             }
         }
 
-        if (count == 0)
-        {
-            scripts = [];
-            return true;
-        } 
-        if (array.Length != count)
-        {
-            Array.Resize(ref array, count);
-        }
-        scripts = array;
-        return true;
+        return false;
     }
 }
 
-public record Script(string Name, Func<Component> Constructor, Script? Next = null);
+public record Script(string Name, Func<Component> Constructor, Func<IniConfig>? DataConstructor = null);
+
+public record ScriptWithData(Script Script, IniConfig? Data);
 
 public interface IScriptable<TExt>
 {
     void AttachTo(TExt owner);
-}
-
-public abstract class Scriptable<TExt> : Component, IScriptable<TExt>
-    where TExt : IGameObjectOwner<TExt>, INaegleriaSerializable
-{
-    private TExt? _owner;
-
-    public TExt Owner => _owner!;
-
-
-    void IScriptable<TExt>.AttachTo(TExt owner)
-    {
-        _owner = owner;
-    }
-
-    public sealed override void Serialize(INaegleriaStream stream)
-    {
-        base.Serialize(stream);
-        stream.ProcessObject(ref _owner);
-        OnSerialize(stream);
-        if (stream is NaegleriaSerializeStream ss)
-        {
-            OnSave(ss);
-        }
-        else if (stream is NaegleriaDeserializeStream ds)
-        {
-            OnLoad(ds);
-        }
-    }
-
-    protected virtual void OnSerialize(INaegleriaStream stream)
-    {
-
-    }
-
-    protected virtual void OnSave(NaegleriaSerializeStream stream)
-    {
-
-    }
-
-    protected virtual void OnLoad(NaegleriaDeserializeStream stream)
-    {
-
-    }
 }

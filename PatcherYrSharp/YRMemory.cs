@@ -42,6 +42,4 @@ public static class YRMemory
 	{
 		return AllocateChecked((uint)Marshal.SizeOf<T>());
 	}
-
-	
 }

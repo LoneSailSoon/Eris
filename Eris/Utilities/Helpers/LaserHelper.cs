@@ -29,101 +29,99 @@ namespace Eris.Utilities.Helpers
 
         public class CoordHandle
         {
-            private static CoordHandle? s_handle;
+            private static CoordHandle? _sHandle;
             public static CoordHandle Handle
             {
                 get
                 {
-                    s_handle ??= new CoordHandle();
-                    return s_handle;
+                    _sHandle ??= new CoordHandle();
+                    return _sHandle;
                 }
             }
 
 
             public unsafe CoordHandle()
             {
-                m_vfptr = Marshal.AllocHGlobal(0x58 + 4);
-                m_abstract = Marshal.AllocHGlobal(24);
+                _mVfptr = Marshal.AllocHGlobal(0x58 + 4);
+                _mAbstract = Marshal.AllocHGlobal(24);
 
-                Pointer<IntPtr> pAbstract = m_abstract;
-                pAbstract.Ref = m_vfptr;
+                Pointer<IntPtr> pAbstract = _mAbstract;
+                pAbstract.Ref = _mVfptr;
 
-                GetCoord = GetCoordImpl;
-                *(IntPtr*)((uint)m_vfptr + 0x58) = Marshal.GetFunctionPointerForDelegate(GetCoord);
+                _getCoord = GetCoordImpl;
+                *(IntPtr*)((uint)_mVfptr + 0x58) = Marshal.GetFunctionPointerForDelegate(_getCoord);
             }
 
             [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
             private delegate IntPtr GetCoordDelegate(IntPtr pThis, ref CoordStruct input);
 
-            private GetCoordDelegate GetCoord;
+            private GetCoordDelegate _getCoord;
 
             private IntPtr GetCoordImpl(IntPtr pThis, ref CoordStruct input)
             {
-                m_copylocation = m_location;
-                input = m_copylocation;
-                return m_copylocation.GetThisPointer();
+                _mCopylocation = _mLocation;
+                input = _mCopylocation;
+                return _mCopylocation.GetThisPointer();
             }
 
             ~CoordHandle()
             {
-                Marshal.FreeHGlobal(m_abstract);
-                Marshal.FreeHGlobal(m_vfptr);
+                Marshal.FreeHGlobal(_mAbstract);
+                Marshal.FreeHGlobal(_mVfptr);
             }
 
-            private IntPtr m_abstract;
-            private IntPtr m_vfptr;
-            private CoordStruct m_location;
-            private CoordStruct m_copylocation;
+            private IntPtr _mAbstract;
+            private IntPtr _mVfptr;
+            private CoordStruct _mLocation;
+            private CoordStruct _mCopylocation;
 
             public IntPtr GetFakeTarget(CoordStruct location)
             {
-                m_location = location;
-                return m_abstract;
+                _mLocation = location;
+                return _mAbstract;
             }
         }
 
 
-        public static Pointer<LaserDrawClass> DrawLine(this CoordStruct sourcePos, CoordStruct targetPos, ColorStruct InnerColor, ColorStruct OuterColor = default, int thickness = 2, int Duration = 15, ColorStruct houseColor = default)
+        public static Pointer<LaserDrawClass> DrawLine(this CoordStruct sourcePos, CoordStruct targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
         {
-            ColorStruct innerColor = InnerColor;
-            ColorStruct outerColor = OuterColor;
             if (default != houseColor)
             {
                 innerColor = houseColor;
                 outerColor = default;
             }
-            return YrCreater.Create<LaserDrawClass>().Constructor(sourcePos, targetPos, innerColor, outerColor, default(ColorStruct), Duration).SetThickness(thickness);
+            return YrCreater.Create<LaserDrawClass>().Constructor(sourcePos, targetPos, innerColor, outerColor, default(ColorStruct), duration).SetThickness(thickness);
         }
 
-        public static void DrawLine(this Vector3 sourcePos, Vector3 targetPos, ColorStruct InnerColor, ColorStruct OuterColor = default, int thickness = 2, int Duration = 15, ColorStruct houseColor = default)
-            => DrawLine(sourcePos, targetPos, InnerColor, OuterColor, thickness, Duration, houseColor);
+        public static void DrawLine(this Vector3 sourcePos, Vector3 targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
+            => DrawLine(sourcePos, targetPos, innerColor, outerColor, thickness, duration, houseColor);
 
-        public static void DrawLine(this BulletVelocity sourcePos, BulletVelocity targetPos, ColorStruct InnerColor, ColorStruct OuterColor = default, int thickness = 2, int Duration = 15, ColorStruct houseColor = default)
-            => DrawLine(sourcePos, targetPos, InnerColor, OuterColor, thickness, Duration, houseColor);
+        public static void DrawLine(this BulletVelocity sourcePos, BulletVelocity targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
+            => DrawLine(sourcePos, targetPos, innerColor, outerColor, thickness, duration, houseColor);
 
-        public static Pointer<LaserDrawClass> SetInnerColor(this Pointer<LaserDrawClass> pLaser, byte? R = null, byte? G = null, byte? B = null)
+        public static Pointer<LaserDrawClass> SetInnerColor(this Pointer<LaserDrawClass> pLaser, byte? r = null, byte? g = null, byte? b = null)
         {
-            pLaser.Ref.InnerColor.R = R ?? pLaser.Ref.InnerColor.R;
-            pLaser.Ref.InnerColor.G = G ?? pLaser.Ref.InnerColor.G;
-            pLaser.Ref.InnerColor.B = B ?? pLaser.Ref.InnerColor.B;
+            pLaser.Ref.InnerColor.R = r ?? pLaser.Ref.InnerColor.R;
+            pLaser.Ref.InnerColor.G = g ?? pLaser.Ref.InnerColor.G;
+            pLaser.Ref.InnerColor.B = b ?? pLaser.Ref.InnerColor.B;
 
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetOuterColor(this Pointer<LaserDrawClass> pLaser, byte? R = null, byte? G = null, byte? B = null)
+        public static Pointer<LaserDrawClass> SetOuterColor(this Pointer<LaserDrawClass> pLaser, byte? r = null, byte? g = null, byte? b = null)
         {
-            pLaser.Ref.OuterColor.R = R ?? pLaser.Ref.OuterColor.R;
-            pLaser.Ref.OuterColor.G = G ?? pLaser.Ref.OuterColor.G;
-            pLaser.Ref.OuterColor.B = B ?? pLaser.Ref.OuterColor.B;
+            pLaser.Ref.OuterColor.R = r ?? pLaser.Ref.OuterColor.R;
+            pLaser.Ref.OuterColor.G = g ?? pLaser.Ref.OuterColor.G;
+            pLaser.Ref.OuterColor.B = b ?? pLaser.Ref.OuterColor.B;
 
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetOuterSpread(this Pointer<LaserDrawClass> pLaser, byte? R = null, byte? G = null, byte? B = null)
+        public static Pointer<LaserDrawClass> SetOuterSpread(this Pointer<LaserDrawClass> pLaser, byte? r = null, byte? g = null, byte? b = null)
         {
-            pLaser.Ref.OuterSpread.R = R ?? pLaser.Ref.OuterSpread.R;
-            pLaser.Ref.OuterSpread.G = G ?? pLaser.Ref.OuterSpread.G;
-            pLaser.Ref.OuterSpread.B = B ?? pLaser.Ref.OuterSpread.B;
+            pLaser.Ref.OuterSpread.R = r ?? pLaser.Ref.OuterSpread.R;
+            pLaser.Ref.OuterSpread.G = g ?? pLaser.Ref.OuterSpread.G;
+            pLaser.Ref.OuterSpread.B = b ?? pLaser.Ref.OuterSpread.B;
 
             return pLaser;
         }
@@ -149,109 +147,109 @@ namespace Eris.Utilities.Helpers
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetSource(this Pointer<LaserDrawClass> pLaser, int? X = null, int? Y = null, int? Z = null)
+        public static Pointer<LaserDrawClass> SetSource(this Pointer<LaserDrawClass> pLaser, int? x = null, int? y = null, int? z = null)
         {
-            pLaser.Ref.Source.X = X ?? pLaser.Ref.Source.X;
-            pLaser.Ref.Source.Y = Y ?? pLaser.Ref.Source.Y;
-            pLaser.Ref.Source.Z = Z ?? pLaser.Ref.Source.Z;
+            pLaser.Ref.Source.X = x ?? pLaser.Ref.Source.X;
+            pLaser.Ref.Source.Y = y ?? pLaser.Ref.Source.Y;
+            pLaser.Ref.Source.Z = z ?? pLaser.Ref.Source.Z;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetTarget(this Pointer<LaserDrawClass> pLaser, int? X = null, int? Y = null, int? Z = null)
+        public static Pointer<LaserDrawClass> SetTarget(this Pointer<LaserDrawClass> pLaser, int? x = null, int? y = null, int? z = null)
         {
-            pLaser.Ref.Target.X = X ?? pLaser.Ref.Target.X;
-            pLaser.Ref.Target.Y = Y ?? pLaser.Ref.Target.Y;
-            pLaser.Ref.Target.Z = Z ?? pLaser.Ref.Target.Z;
+            pLaser.Ref.Target.X = x ?? pLaser.Ref.Target.X;
+            pLaser.Ref.Target.Y = y ?? pLaser.Ref.Target.Y;
+            pLaser.Ref.Target.Z = z ?? pLaser.Ref.Target.Z;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> OffsetSource(this Pointer<LaserDrawClass> pLaser, int? X = null, int? Y = null, int? Z = null)
+        public static Pointer<LaserDrawClass> OffsetSource(this Pointer<LaserDrawClass> pLaser, int? x = null, int? y = null, int? z = null)
         {
-            pLaser.Ref.Source.X += X ?? 0;
-            pLaser.Ref.Source.Y += Y ?? 0;
-            pLaser.Ref.Source.Z += Z ?? 0;
+            pLaser.Ref.Source.X += x ?? 0;
+            pLaser.Ref.Source.Y += y ?? 0;
+            pLaser.Ref.Source.Z += z ?? 0;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> OffsetTarget(this Pointer<LaserDrawClass> pLaser, int? X = null, int? Y = null, int? Z = null)
+        public static Pointer<LaserDrawClass> OffsetTarget(this Pointer<LaserDrawClass> pLaser, int? x = null, int? y = null, int? z = null)
         {
-            pLaser.Ref.Target.X += X ?? 0;
-            pLaser.Ref.Target.Y += Y ?? 0;
-            pLaser.Ref.Target.Z += Z ?? 0;
+            pLaser.Ref.Target.X += x ?? 0;
+            pLaser.Ref.Target.Y += y ?? 0;
+            pLaser.Ref.Target.Z += z ?? 0;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetSource(this Pointer<LaserDrawClass> pLaser, CoordStruct Pos)
+        public static Pointer<LaserDrawClass> SetSource(this Pointer<LaserDrawClass> pLaser, CoordStruct pos)
         {
-            pLaser.Ref.Source = Pos;
+            pLaser.Ref.Source = pos;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetTarget(this Pointer<LaserDrawClass> pLaser, CoordStruct Pos)
+        public static Pointer<LaserDrawClass> SetTarget(this Pointer<LaserDrawClass> pLaser, CoordStruct pos)
         {
-            pLaser.Ref.Target = Pos;
+            pLaser.Ref.Target = pos;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> OffsetSource(this Pointer<LaserDrawClass> pLaser, CoordStruct Pos)
+        public static Pointer<LaserDrawClass> OffsetSource(this Pointer<LaserDrawClass> pLaser, CoordStruct pos)
         {
-            pLaser.Ref.Source += Pos;
+            pLaser.Ref.Source += pos;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> OffsetTarget(this Pointer<LaserDrawClass> pLaser, CoordStruct Pos)
+        public static Pointer<LaserDrawClass> OffsetTarget(this Pointer<LaserDrawClass> pLaser, CoordStruct pos)
         {
-            pLaser.Ref.Target += Pos;
+            pLaser.Ref.Target += pos;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetIntensity(this Pointer<LaserDrawClass> pLaser, float Start, float End)
+        public static Pointer<LaserDrawClass> SetIntensity(this Pointer<LaserDrawClass> pLaser, float start, float end)
         {
-            pLaser.Ref.StartIntensity = Start;
-            pLaser.Ref.EndIntensity = End;
+            pLaser.Ref.StartIntensity = start;
+            pLaser.Ref.EndIntensity = end;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetStartIntensity(this Pointer<LaserDrawClass> pLaser, float Start)
+        public static Pointer<LaserDrawClass> SetStartIntensity(this Pointer<LaserDrawClass> pLaser, float start)
         {
-            pLaser.Ref.StartIntensity = Start;
+            pLaser.Ref.StartIntensity = start;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetEndIntensity(this Pointer<LaserDrawClass> pLaser, float End)
+        public static Pointer<LaserDrawClass> SetEndIntensity(this Pointer<LaserDrawClass> pLaser, float end)
         {
-            pLaser.Ref.EndIntensity = End;
+            pLaser.Ref.EndIntensity = end;
             return pLaser;
         }
 
-        public static Pointer<LaserDrawClass> SetThickness(this Pointer<LaserDrawClass> pLaser, int Thickness)
+        public static Pointer<LaserDrawClass> SetThickness(this Pointer<LaserDrawClass> pLaser, int thickness)
         {
-            if (Thickness >= 2)
+            if (thickness >= 2)
             {
                 pLaser.Ref.IsHouseColor = true;
-                pLaser.Ref.Thickness = Thickness;
+                pLaser.Ref.Thickness = thickness;
             }
             return pLaser;
         }
-        public static Pointer<LaserDrawClass> SingleLine(this CoordStruct Source, CoordStruct Target, ColorStruct Color, int thickness = 1, int duration = 1)
-            => DrawLine(Source, Target, Color, default, thickness, duration);
+        public static Pointer<LaserDrawClass> SingleLine( CoordStruct source, CoordStruct target, ColorStruct color, int thickness = 1, int duration = 1)
+            => DrawLine(source, target, color, default, thickness, duration);
 
-        public static Pointer<LaserDrawClass> RedLine(this CoordStruct Source, CoordStruct Target, int thickness = 1, int duration = 1)
-            => DrawLine(Source, Target, new ColorStruct(255, 0, 0), default, thickness, duration);
+        public static Pointer<LaserDrawClass> RedLine( CoordStruct source, CoordStruct target, int thickness = 1, int duration = 1)
+            => DrawLine(source, target, new ColorStruct(255, 0, 0), default, thickness, duration);
 
-        public static Pointer<LaserDrawClass> RedLineZ(this CoordStruct Source, int Lenth, int thickness = 1, int duration = 1)
-            => RedLine(Source, Source + new CoordStruct(0, 0, Lenth), thickness, duration);
+        public static Pointer<LaserDrawClass> RedLineZ( CoordStruct source, int lenth, int thickness = 1, int duration = 1)
+            => RedLine(source, source + new CoordStruct(0, 0, lenth), thickness, duration);
 
-        public static Pointer<LaserDrawClass> GreenLine(this CoordStruct Source, CoordStruct Target, int thickness = 1, int duration = 1)
-            => DrawLine(Source, Target, new ColorStruct(0, 255, 0), default, thickness, duration);
+        public static Pointer<LaserDrawClass> GreenLine( CoordStruct source, CoordStruct target, int thickness = 1, int duration = 1)
+            => DrawLine(source, target, new ColorStruct(0, 255, 0), default, thickness, duration);
 
-        public static Pointer<LaserDrawClass> GreenLineZ(this CoordStruct Source, int Lenth, int thickness = 1, int duration = 1)
-            => GreenLine(Source, Source + new CoordStruct(0, 0, Lenth), thickness, duration);
-        public static Pointer<LaserDrawClass> BlueLine(this CoordStruct Source, CoordStruct Target, int thickness = 1, int duration = 1)
-            => DrawLine(Source, Target, new ColorStruct(0, 0, 255), default, thickness, duration);
+        public static Pointer<LaserDrawClass> GreenLineZ( CoordStruct source, int lenth, int thickness = 1, int duration = 1)
+            => GreenLine(source, source + new CoordStruct(0, 0, lenth), thickness, duration);
+        public static Pointer<LaserDrawClass> BlueLine( CoordStruct source, CoordStruct target, int thickness = 1, int duration = 1)
+            => DrawLine(source, target, new ColorStruct(0, 0, 255), default, thickness, duration);
 
-        public static Pointer<LaserDrawClass> BlueLineZ(this CoordStruct Source, int Lenth, int thickness = 1, int duration = 1)
-            => BlueLine(Source, Source + new CoordStruct(0, 0, Lenth), thickness, duration);
+        public static Pointer<LaserDrawClass> BlueLineZ( CoordStruct source, int lenth, int thickness = 1, int duration = 1)
+            => BlueLine(source, source + new CoordStruct(0, 0, lenth), thickness, duration);
 
         public static void MapCell(CoordStruct sourcePos, ColorStruct lineColor, ColorStruct outerColor = default, int thickness = 1, int duration = 1)
         {

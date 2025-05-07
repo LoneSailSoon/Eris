@@ -27,11 +27,23 @@ public abstract class Extension<T>(Pointer<T> owner) : INaegleriaSerializable
     public void Expire()
     {
         OnExpire();
-    
+
         _ownerObject = nint.Zero;
     }
 
     protected virtual void OnExpire()
+    {
+    }
+    
+    void INaegleriaSerializable.OnSave(NaegleriaSerializeStream stream) => OnSave(stream);
+
+    void INaegleriaSerializable.OnLoad(NaegleriaDeserializeStream stream) => OnLoad(stream);
+    
+    protected virtual void OnSave(NaegleriaSerializeStream stream)
+    {
+    }
+
+    protected virtual void OnLoad(NaegleriaDeserializeStream stream)
     {
     }
 }

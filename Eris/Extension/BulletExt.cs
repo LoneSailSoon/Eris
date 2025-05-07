@@ -22,9 +22,6 @@ public class BulletExt : CommonInstanceExtension<BulletExt, BulletClass, BulletT
     public override void Serialize(INaegleriaStream stream)
     {
         base.Serialize(stream);
-        stream.ProcessObject(ref TypeField!)
-            .Process(ref TokenField)
-            .ProcessObject(ref ObjectField);
     }
 
     public override int SerializeType => SerializeRegister.BulletExtSerializeType;

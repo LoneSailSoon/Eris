@@ -4,6 +4,7 @@ using PatcherYrSharp.FileFormats;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.GeneralStructures;
 using PatcherYrSharp.Helpers;
+using PatcherYrSharp.Utilities;
 
 namespace PatcherYrSharp;
 
@@ -285,12 +286,14 @@ public struct Surface
 
     public unsafe void DrawSHP(Pointer<ConvertClass> Palette, Pointer<ShpStruct> SHP, int frameIdx,
         Pointer<Point2D> pos, Pointer<RectangleStruct> boundingRect, BlitterFlags flags, uint arg7,
-        int zAdjust, uint arg9, uint bright, int TintColor, Pointer<ShpStruct> BUILDINGZ_SHA, uint argD, int ZS_X, int ZS_Y)
+        int zAdjust, uint arg9, uint bright, int TintColor, Pointer<ShpStruct> BUILDINGZ_SHA, uint argD, int ZS_X,
+        int ZS_Y)
     {
         var func =
-            (delegate* unmanaged[Fastcall]<nint, IntPtr, IntPtr, int, IntPtr, IntPtr, BlitterFlags, uint,
-                int, uint, uint, int, IntPtr, uint, int, int, void>)0x4AED70;//ASM.FastCallTransferStation;
-        func(this.GetThisPointer(), Palette, SHP, frameIdx, pos, boundingRect, flags, arg7, zAdjust, arg9, bright, TintColor, BUILDINGZ_SHA, argD, ZS_X, ZS_Y);
+            (delegate* unmanaged[Thiscall]<nint, nint, nint, nint, int, nint, nint, BlitterFlags, uint,
+                int, uint, uint, int, nint, uint, int, int, void>)ASM.FastCallTransferStation;
+        func(0x4AED70, this.GetThisPointer(), Palette, SHP, frameIdx, pos, boundingRect, flags, arg7, zAdjust, arg9,
+            bright, TintColor, BUILDINGZ_SHA, argD, ZS_X, ZS_Y);
     }
 
     public unsafe void DrawText(string text, Pointer<RectangleStruct> pBound, Pointer<Point2D> pLocation, int foreColor, int backColor, TextPrintType flags)

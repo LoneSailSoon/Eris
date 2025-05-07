@@ -1,4 +1,6 @@
 using Eris.Extension.Eris.Generic;
+using Eris.Extension.Eris.Style.Modules.DamageSelf;
+using Eris.Extension.Eris.Style.State.DestroySelf;
 using Eris.Serializer;
 using Eris.Utilities.Ini;
 using Eris.Utilities.Ini.Parsers;
@@ -10,39 +12,49 @@ namespace Eris.Extension.Eris.Style;
 public class StyleType : NewTypeExtension<StyleType>, INaegleriaSerializable
 {
     public static readonly NewTypeExtensionMapContainer<StyleType> ExtMap = new();
-    
-    
+
+
     private int _index;
     private string? _name;
-    
-    
+
+
     public override int Index => _index;
     public override string Section => _name!;
+
     public override void Initialize(int index, string section)
     {
         _index = index;
         _name = section;
     }
+
+    public int Duration;
+
+    public bool HoldDuration;
+
+    public int Delay;
+
+    public int InitialDelay;
+
+    public int Loop;
+
+    //Module
+    protected DamageSelfModuleData? DamageSelfModuleData;
+
+    //State
+    protected DestroySelfData? DestroySelfStateModuleData;
     
-    
-    
-    public int Duration = 0;
-
-    public bool HoldDuration = false;
-
-    public int Delay = 0;
-
-    public int InitialDelay = 0;
-
-    public int Loop = 0;
-
     public override void LoadFromIni(IniReader reader)
     {
-        Parsers.Parse(reader.Read(_name, "Duration"), ref Duration);
-        Parsers.Parse(reader.Read(_name, "HoldDuration"), ref HoldDuration);
-        Parsers.Parse(reader.Read(_name, "Delay"), ref Delay);
-        Parsers.Parse(reader.Read(_name, "InitialDelay"), ref InitialDelay);
-        Parsers.Parse(reader.Read(_name, "Loop"), ref Loop);
+        using var section = reader[_name!];
+
+        Parsers.Parse(section["Duration"u8], ref Duration);
+        Parsers.Parse(section["HoldDuration"u8], ref HoldDuration);
+        Parsers.Parse(section["Delay"u8], ref Delay);
+        Parsers.Parse(section["InitialDelay"u8], ref InitialDelay);
+        Parsers.Parse(section["Loop"u8], ref Loop);
+
+        IniConfig.CreateAndRead(ref DamageSelfModuleData, section);
+        IniConfig.CreateAndRead(ref DestroySelfStateModuleData, section);
     }
 
     public void Serialize(INaegleriaStream stream)
@@ -54,11 +66,68 @@ public class StyleType : NewTypeExtension<StyleType>, INaegleriaSerializable
             .Process(ref HoldDuration)
             .Process(ref Delay)
             .Process(ref InitialDelay)
-            .Process(ref Loop);
+            .Process(ref Loop)
+            .ProcessObject(ref DamageSelfModuleData!)
+            .ProcessObject(ref DestroySelfStateModuleData!);
     }
 
     public int SerializeType => SerializeRegister.StyleTypeType;
     public ulong SerializeId { get; } = SerializeIdCreater.NewId();
+
+    public override string ToString()
+    {
+        return $"{nameof(StyleType)}: {_name}";
+    }
+
+    //Module
+    private StyleModulesFactory? _modulesFactory;
+    public StyleModulesFactory ModulesFactory
+    {
+        get
+        {
+            if (_modulesFactory is null)
+            {
+                List<StyleModuleFactory> modules = [];
+
+                if (DamageSelfModuleData is { Enable : true })
+                    modules.Add(
+                        new StyleModuleFactory<DamageSelfModule, DamageSelfModuleData>(
+                            DamageSelfModule.Activator,
+                            DamageSelfModuleData));
+
+
+                _modulesFactory = new StyleModulesFactory(modules);
+            }
+
+            return _modulesFactory;
+        }
+    }
+    
+    
+    //State
+    private StyleModulesFactory? _stateModulesFactory;
+
+    public StyleModulesFactory StateModulesFactory
+    {
+        get
+        {
+            if (_stateModulesFactory is null)
+            {
+                List<StyleModuleFactory> modules = [];
+
+                if (DestroySelfStateModuleData is { Enable : true })
+                    modules.Add(
+                        new StyleModuleFactory<DestroySelfState, DestroySelfData>(
+                            DestroySelfState.Activator,
+                            DestroySelfStateModuleData));
+
+                _stateModulesFactory = new StyleModulesFactory(modules);
+            }
+
+            return _stateModulesFactory;
+        }
+    }
+
 }
 
 public static class StyleTypeParser
@@ -76,8 +145,18 @@ public static class StyleTypeParser
 
     }
 
-    //public static bool Parse(this ISection section, string key, ref StyleType? buffer) =>
-    //    Parse(section.GetValue(key), ref buffer);
+    public static bool Parse(string? val, ref StyleType[]? scripts)
+    {
+        if (string.IsNullOrWhiteSpace(val)) return false;
+        
+        var ids = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        scripts = new StyleType[ids.Length];
 
+        for (var i = 0; i < scripts.Length; i++)
+        {
+            scripts[i] = StyleType.ExtMap.FindOrCreate(ids[i], out _);
+        }
+        return true;
+    }
 }
 

@@ -1,4 +1,3 @@
-using Eris.Extension.Eris.Scripts;
 using NaegleriaSerializer;
 
 namespace Eris.Serializer;
@@ -19,6 +18,11 @@ public static class SerializeRegister
     public const int StyleTypeType = 12;
     public const int StyleInstanceType = 13;
     public const int GameObjectType = 14;
+    public const int StyleStateModuleType = 15;
+    public const int DamageSelfModuleType = 16;
+    public const int DamageSelfModuleDataType = 17;
+    public const int DestroySelfStateType = 18;
+    public const int DestroySelfDataType = 19;
 
 
     public static void Register()
@@ -36,6 +40,11 @@ public static class SerializeRegister
         DeserializeObjectActivator.Register(WeaponTypeExtSerializeType, static () => new Extension.WeaponTypeExt());
         DeserializeObjectActivator.Register(StyleTypeType, static () => new Eris.Extension.Eris.Style.StyleType());
         DeserializeObjectActivator.Register(StyleInstanceType, static () => new Eris.Extension.Eris.Style.StyleInstance());
-        DeserializeObjectActivator.Register(GameObjectType, static () => new GameObject());
+        DeserializeObjectActivator.Register(GameObjectType, static () => new Eris.Extension.Eris.Generic.GameObject());
+        DeserializeObjectActivator.Register(StyleStateModuleType, static () => new Eris.Extension.Eris.Style.StyleStateManager());
+        DeserializeObjectActivator.Register(DamageSelfModuleType, static () => new Eris.Extension.Eris.Style.Modules.DamageSelf.DamageSelfModule());
+        DeserializeObjectActivator.Register(DamageSelfModuleDataType, static () => new Eris.Extension.Eris.Style.Modules.DamageSelf.DamageSelfModuleData());
+        DeserializeObjectActivator.Register(DestroySelfStateType, static () => new Eris.Extension.Eris.Style.State.DestroySelf.DestroySelfState());
+        DeserializeObjectActivator.Register(DestroySelfDataType, static () => new Eris.Extension.Eris.Style.State.DestroySelf.DestroySelfData());
     }
 }

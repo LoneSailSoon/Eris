@@ -24,246 +24,246 @@ public struct DifficultyStruct
 [StructLayout(LayoutKind.Explicit, Size = 6336)]
 public struct RulesClass
 {
-    private static IntPtr ppInstance = new IntPtr(0x8871E0);
+    private const nint ppInstance = 0x8871E0;
 
-    public static ref Pointer<RulesClass> Instance => ref ppInstance.Convert<Pointer<RulesClass>>().Ref;
+    public static ref RulesClass Instance => ref ppInstance.Convert<Pointer<RulesClass>>().Ref.Ref;
         
 
     // call this instead of Init for the later files (gamemode, map)
     // reads the generic/list sections like [VehicleTypes] from pINI
     // doesn't actually load [MTNK] or other list contents' sections
-    public unsafe void Read_File(Pointer<CCINIClass> pINI)
+    public unsafe void Read_File(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x668BF0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_SpecialWeapons(Pointer<CCINIClass> pINI)
+    public unsafe void Read_SpecialWeapons(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x668FB0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_AudioVisual(Pointer<CCINIClass> pINI)
+    public unsafe void Read_AudioVisual(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6691E0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_CrateRules(Pointer<CCINIClass> pINI)
+    public unsafe void Read_CrateRules(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66B900;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_CombatDamage(Pointer<CCINIClass> pINI)
+    public unsafe void Read_CombatDamage(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66BBB0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Radiation(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Radiation(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66CF70;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_ElevationModel(Pointer<CCINIClass> pINI)
+    public unsafe void Read_ElevationModel(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66D150;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_WallModel(Pointer<CCINIClass> pINI)
+    public unsafe void Read_WallModel(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66D1F0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
         
-    public unsafe void Read_Difficulty(Pointer<CCINIClass> pINI, ref DifficultyStruct difficultyStruct, AnsiString difficulty)
+    public unsafe void Read_Difficulty(Pointer<CCINIClass> pIni, ref DifficultyStruct difficultyStruct, AnsiString difficulty)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, ref DifficultyStruct, IntPtr, void>)0x66D270;
-        func(ref this, pINI, ref difficultyStruct, difficulty);
+        func(ref this, pIni, ref difficultyStruct, difficulty);
     }
 
-    public unsafe void Read_Colors(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Colors(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66D3A0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_ColorAdd(Pointer<CCINIClass> pINI)
+    public unsafe void Read_ColorAdd(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66D480;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_General(Pointer<CCINIClass> pINI)
+    public unsafe void Read_General(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x66D530;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_MultiplayerDialogSettings(Pointer<CCINIClass> pINI)
+    public unsafe void Read_MultiplayerDialogSettings(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x671EA0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Maximums(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Maximums(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672230;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_InfantryTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_InfantryTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672280;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Countries(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Countries(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6722F0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_VehicleTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_VehicleTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672360;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_AircraftTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_AircraftTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6723D0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Sides(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Sides(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672440;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_SuperWeaponTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_SuperWeaponTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6725F0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_BuildingTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_BuildingTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672660;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_TerrainTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_TerrainTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6726D0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Teams_obsolete(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Teams_obsolete(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672740;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_SmudgeTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_SmudgeTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6727D0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_OverlayTypes(Pointer<CCINIClass> pINI)
+    public unsafe void Read_OverlayTypes(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672840;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Animations(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Animations(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6728B0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_VoxelAnims(Pointer<CCINIClass> pINI)
+    public unsafe void Read_VoxelAnims(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672920;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Warheads(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Warheads(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672990;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Particles(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Particles(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672A00;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_ParticleSystems(Pointer<CCINIClass> pINI)
+    public unsafe void Read_ParticleSystems(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672A70;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_AI(Pointer<CCINIClass> pINI)
+    public unsafe void Read_AI(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x672AE0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Powerups(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Powerups(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x673E80;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_LandCharacteristics(Pointer<CCINIClass> pINI)
+    public unsafe void Read_LandCharacteristics(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x674000;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_IQ(Pointer<CCINIClass> pINI)
+    public unsafe void Read_IQ(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x674240;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_JumpjetControls(Pointer<CCINIClass> pINI)
+    public unsafe void Read_JumpjetControls(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x6743D0;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Difficulties(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Difficulties(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x674500;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_Movies(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Movies(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x674550;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
-    public unsafe void Read_AdvancedCommandBar(Pointer<CCINIClass> pINI, bool isMultiplayer)
+    public unsafe void Read_AdvancedCommandBar(Pointer<CCINIClass> pIni, bool isMultiplayer)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, Bool, void>)0x674650;
-        func(ref this, pINI, isMultiplayer);
+        func(ref this, pIni, isMultiplayer);
     }
 
-    public unsafe void Read_Tiberiums(Pointer<CCINIClass> pINI)
+    public unsafe void Read_Tiberiums(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x721D10;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
     /// <summary>
     /// invoke AbstractTypeClass.LoadFromINI for some classes and load MissionControlClass.
@@ -274,11 +274,11 @@ public struct RulesClass
     /// SmudgeTypeClass, OverlayTypeClass, ParticleTypeClass, ParticleSystemTypeClass,
     /// VoxelAnimTypeClass
     /// </summary>
-    /// <param name="pINI"></param>
-    public unsafe void Read_Types(Pointer<CCINIClass> pINI)
+    /// <param name="pIni"></param>
+    public unsafe void Read_Types(Pointer<CCINIClass> pIni)
     {
         var func = (delegate* unmanaged[Thiscall]<ref RulesClass, IntPtr, void>)0x679A10;
-        func(ref this, pINI);
+        func(ref this, pIni);
     }
 
     [FieldOffset(1640)] public double VeteranRatio;

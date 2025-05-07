@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Eris.Extension.Eris.Style;
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 using NaegleriaSerializer;
 using NaegleriaSerializer.Streaming;
 using PatcherYrSharp.Helpers;
@@ -21,7 +22,7 @@ public static class GlobalSerializer
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
         
     }
@@ -38,7 +39,7 @@ public static class GlobalSerializer
         }
         catch (Exception ex)
         {
-            LogHelper.Log(ex);
+            Logger.LogException(ex);
         }
 
     }
@@ -53,7 +54,7 @@ public static class GlobalSerializer
         catch (Exception ex)
         {
 
-            LogHelper.Log(ex);
+            Logger.LogException(ex);
         }
         
     }
@@ -69,7 +70,7 @@ public static class GlobalSerializer
         catch (Exception ex)
         {
 
-            LogHelper.Log(ex);
+            Logger.LogException(ex);
         }
 
     }
@@ -103,7 +104,7 @@ public static class GlobalSerializer
         }
         catch (Exception ex)
         {
-            LogHelper.Log(ex);
+            Logger.LogException(ex);
         }
 
     }
@@ -116,7 +117,7 @@ public static class GlobalSerializer
         }
         catch (Exception ex)
         {
-            LogHelper.Log(ex);
+            Logger.LogException(ex);
         }
         return null;
     }
@@ -167,4 +168,19 @@ public static class GlobalSerializer
         return 0;
     }
 
+    [UnmanagedCallersOnly(EntryPoint = "SwizzleManagerClass_Here_I_Am", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 SwizzleManagerClass_Here_I_Am(Registers* r)
+    {
+        SwizzleNode.HereIAm(r->Stack<nint>(8), r->Stack<nint>(12));
+        //Console.WriteLine($"SwizzleManagerClass_Here_I_Am {r->Stack<nint>(8)} -> {r->Stack<nint>(12)}");
+        return 0;
+    }
+
+    [UnmanagedCallersOnly(EntryPoint = "SwizzleManagerClass_ConvertNodes", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe UInt32 SwizzleManagerClass_ConvertNodes(Registers* r)
+    {
+        SwizzleNode.Clear();
+        //Console.WriteLine("SwizzleManagerClass_ConvertNodes");
+        return 0;
+    }
 }

@@ -24,14 +24,14 @@ public class NewTypeExtensionMapContainer<TExt> where TExt : NewTypeExtension<TE
     public int FindIndex(string key) => _sectionMap.TryGetValue(key, out var value) ? value.Index : -1;
     public TExt? Find(string key) => _sectionMap.TryGetValue(key, out var value) ? value : default;
 
-    public TExt FindOrCreate(string key,out bool find)
+    public TExt FindOrCreate(string key, out bool find)
     {
         find = true;
         if (Find(key) is { } ext) return ext;
         find = false;
         ext = new TExt();
         var index = _sectionMap.Count;
-        
+
         ext.Initialize(index, key);
         _indexMap.Add(index, ext);
         _sectionMap.Add(key, ext);

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 using PatcherYrSharp;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.Helpers;
@@ -26,7 +27,6 @@ public class LoadIntoTransportsCommand
 
     public static void ExecuteProxy(IntPtr pThis, WwKey input)
     {
-        LogHelper.Log("LoadIntoTransportsCommand", "Command");
         if (ObjectClass.CurrentObjects.Count != 0)
         {
             List<Pointer<TechnoClass>> transports = [];

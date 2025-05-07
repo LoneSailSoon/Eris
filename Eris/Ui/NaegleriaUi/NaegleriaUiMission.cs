@@ -1,4 +1,5 @@
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 using Eris.Utilities.Network;
 using PatcherYrSharp;
 using PatcherYrSharp.GeneralDefinitions;
@@ -59,7 +60,7 @@ public partial class NaegleriaUiMissionManager
             }
             catch (Exception e)
             {
-                LogHelper.Log(e);
+                Logger.LogException(e);
             }
 
             result = ex;
@@ -375,7 +376,7 @@ public partial class NaegleriaUiMissionManager
         }
         catch (Exception e)
         {
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
     }
     

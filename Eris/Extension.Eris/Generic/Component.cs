@@ -11,8 +11,7 @@ public abstract class Component : INaegleriaSerializable
     }
 
     private bool _expired;
-    public bool Expired => _expired;
-    
+    public virtual bool Expired => _expired;
     
     public abstract int SerializeType { get; }
     public ulong SerializeId { get; } = SerializeIdCreater.NewId();
@@ -28,6 +27,21 @@ public abstract class Component : INaegleriaSerializable
     }
     public virtual void OnDestroy()
     {
-        
+    }
+
+    public virtual void OnUpdate()
+    {
+    }
+    
+    void INaegleriaSerializable.OnSave(NaegleriaSerializeStream stream) => OnSave(stream);
+
+    void INaegleriaSerializable.OnLoad(NaegleriaDeserializeStream stream) => OnLoad(stream);
+    
+    protected virtual void OnSave(NaegleriaSerializeStream stream)
+    {
+    }
+
+    protected virtual void OnLoad(NaegleriaDeserializeStream stream)
+    {
     }
 }

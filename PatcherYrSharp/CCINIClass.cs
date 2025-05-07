@@ -112,8 +112,24 @@ public struct CCINIClass
 
     public unsafe int ReadString(AnsiString section, AnsiString key, AnsiString def, byte[] buffer, int bufferSize)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref CCINIClass, IntPtr, IntPtr, IntPtr, byte[], int, int>)0x528A10;
-        return func(ref this, section, key, def, buffer, bufferSize);
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, nint, nint, byte[], int, int>)0x528A10;
+        return func(this.GetThisPointer(), section, key, def, buffer, bufferSize);
+    }
+
+    public unsafe int ReadString(string section, string key, string def, byte[] buffer, int bufferSize)
+    {
+        using var pSection = new AnsiStringSpan(section);
+        using var pKey = new AnsiStringSpan(key);
+        using var pDef = new AnsiStringSpan(def);
+        
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, nint, nint, byte[], int, int>)0x528A10;
+        return func(this.GetThisPointer(), pSection, pKey, pDef, buffer, bufferSize);
+    }
+
+    public unsafe int ReadString(nint section, nint key, nint def, byte[] buffer, int bufferSize)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, nint, nint, byte[], int, int>)0x528A10;
+        return func(this.GetThisPointer(), section, key, def, buffer, bufferSize);
     }
 
     public unsafe int ReadHouseTypesList(AnsiString section, AnsiString key, int def = 0)
@@ -121,7 +137,6 @@ public struct CCINIClass
         var func = (delegate* unmanaged[Thiscall]<ref CCINIClass, IntPtr, IntPtr, int, int>)0x4750D0;
         return func(ref this, section, key, def);
     }
-
 
     public static unsafe void Constructor(Pointer<CCINIClass> pThis)
     {
@@ -138,35 +153,36 @@ public struct CCINIClass
     }
 
     [FieldOffset(0)] public INIClass Base;
+    [FieldOffset(4)] public nint CurrentSectionName;
     [FieldOffset(12)] public YRList<INIClass.INISection> Sections;
     [FieldOffset(64)] public Bool Digested;
 }
 
-public static class INIClassHelper
+public static class IniClassHelper
 {
-    public static bool TryGetSection(this Pointer<CCINIClass> pINI, string Section, out Pointer<INIClass.INISection> pSection) => (pSection = pINI.Ref.Sections.FirstOrDefault(o => o.IsNotNull && o.Ref.Name == Section)).IsNotNull;
-    public static bool TryGetEntries(this Pointer<INIClass.INISection> pSection, string Entrie, out Pointer<INIClass.INIEntry> pEntries) => (pEntries = pSection.Ref.Entries.FirstOrDefault(o => o.IsNotNull && o.Ref.Key == Entrie)).IsNotNull;
-    public static bool GetString(this Pointer<CCINIClass> pINI, string Section, string Key, out string Val)
+    public static bool TryGetSection(this Pointer<CCINIClass> pIni, string section, out Pointer<INIClass.INISection> pSection) => (pSection = pIni.Ref.Sections.FirstOrDefault(o => o.IsNotNull && o.Ref.Name == section)).IsNotNull;
+    public static bool TryGetEntries(this Pointer<INIClass.INISection> pSection, string entrie, out Pointer<INIClass.INIEntry> pEntries) => (pEntries = pSection.Ref.Entries.FirstOrDefault(o => o.IsNotNull && o.Ref.Key == entrie)).IsNotNull;
+    public static bool GetString(this Pointer<CCINIClass> pIni, string section, string key, out string val)
     {
-        Val = null;
-        if (null == Section || null == Key) return false;
+        val = null;
+        if (null == section || null == key) return false;
 
-        return pINI.TryGetSection(Section, out Pointer<INIClass.INISection> pSection) && pSection.TryGetEntries(Key, out Pointer<INIClass.INIEntry> pEntries) && !string.IsNullOrWhiteSpace((Val = pEntries.Ref.Value));
+        return pIni.TryGetSection(section, out Pointer<INIClass.INISection> pSection) && pSection.TryGetEntries(key, out Pointer<INIClass.INIEntry> pEntries) && !string.IsNullOrWhiteSpace((val = pEntries.Ref.Value));
     }
         
-    public static Dictionary<string, string> ReadRegister(this Pointer<CCINIClass> pINI, string Section)
+    public static Dictionary<string, string> ReadRegister(this Pointer<CCINIClass> pIni, string section)
     {
-        if (pINI.TryGetSection(Section, out var pSection))
+        if (pIni.TryGetSection(section, out var pSection))
         {
-            Dictionary<string, string> Dic = new();
-            foreach(var Entrie in pSection.Ref.Entries)
+            Dictionary<string, string> dic = new();
+            foreach(var entrie in pSection.Ref.Entries)
             {
-                if (!!Entrie)
+                if (entrie)
                 {
-                    Dic.Add(Entrie.Ref.Key, Entrie.Ref.Value);
+                    dic.Add(entrie.Ref.Key, entrie.Ref.Value);
                 }
             }
-            return Dic;
+            return dic;
         }
         return null;
     }

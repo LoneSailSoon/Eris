@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Eris.Utilities.Logger;
 
 namespace Eris.Extension.Eris.Commands;
 
@@ -79,7 +80,7 @@ public struct Command
         catch (Exception e)
         {
 
-            LogHelper.Log(e);
+            Logger.LogException(e);
         }
         
     }

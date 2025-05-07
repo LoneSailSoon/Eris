@@ -2,6 +2,7 @@
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.GeneralStructures;
 using PatcherYrSharp.Helpers;
+using PatcherYrSharp.Utilities;
 
 namespace PatcherYrSharp;
 
@@ -60,31 +61,31 @@ public struct MapClass
     //    func(Damage, WH, CLDisableFlags, Force, coords);
     //}
 
-    // public static unsafe int GetTotalDamage(int Damage, Pointer<WarheadTypeClass> WH, Armor armor, int distance)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, int, IntPtr, Armor, int, int>)ASM.FastCallTransferStation;
-    //     return func(0x489180, Damage, WH, armor, distance);
-    // }
-    //
-    //
-    // public static unsafe DamageAreaResult DamageArea(CoordStruct Coords, int Damage, Pointer<TechnoClass> SourceObject,
-    //     Pointer<WarheadTypeClass> WH, bool AffectsTiberium, Pointer<HouseClass> SourceHouse)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, in CoordStruct, int, IntPtr, IntPtr, Bool, IntPtr, DamageAreaResult>)ASM.FastCallTransferStation;
-    //     return func(0x489280, in Coords, Damage, SourceObject, WH, AffectsTiberium, SourceHouse);
-    // }
-    // public static unsafe Pointer<AnimTypeClass> SelectDamageAnimation(int Damage, Pointer<WarheadTypeClass> WH, LandType LandType, CoordStruct coords)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, int, IntPtr, LandType, in CoordStruct, IntPtr>)ASM.FastCallTransferStation;
-    //     return func(0x48A4F0, Damage, WH, LandType, in coords);
-    // }
-    //
-    //
-    // public static unsafe void FlashbangWarheadAt(int Damage, Pointer<WarheadTypeClass> WH, CoordStruct coords, bool Force = false, SpotlightFlags CLDisableFlags = SpotlightFlags.None)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, int, IntPtr, CoordStruct, Bool, SpotlightFlags, void>)ASM.FastCallTransferStation;
-    //     func(0x48A620, Damage, WH, coords, Force, CLDisableFlags);
-    // }
+    public static unsafe int GetTotalDamage(int damage, Pointer<WarheadTypeClass> wh, Armor armor, int distance)
+    {
+        var func = (delegate* unmanaged[Thiscall]<int, int, nint, Armor, int, int>)ASM.FastCallTransferStation;
+        return func(0x489180, damage, wh, armor, distance);
+    }
+    
+    
+    public static unsafe DamageAreaResult DamageArea(CoordStruct coords, int damage, Pointer<TechnoClass> sourceObject,
+        Pointer<WarheadTypeClass> wh, bool affectsTiberium, Pointer<HouseClass> sourceHouse)
+    {
+        var func = (delegate* unmanaged[Thiscall]<int, in CoordStruct, int, IntPtr, IntPtr, Bool, IntPtr, DamageAreaResult>)ASM.FastCallTransferStation;
+        return func(0x489280, in coords, damage, sourceObject, wh, affectsTiberium, sourceHouse);
+    }
+    public static unsafe Pointer<AnimTypeClass> SelectDamageAnimation(int damage, Pointer<WarheadTypeClass> wh, LandType landType, CoordStruct coords)
+    {
+        var func = (delegate* unmanaged[Thiscall]<int, int, IntPtr, LandType, in CoordStruct, IntPtr>)ASM.FastCallTransferStation;
+        return func(0x48A4F0, damage, wh, landType, in coords);
+    }
+    
+    
+    public static unsafe void FlashbangWarheadAt(int damage, Pointer<WarheadTypeClass> wh, CoordStruct coords, bool force = false, SpotlightFlags clDisableFlags = SpotlightFlags.None)
+    {
+        var func = (delegate* unmanaged[Thiscall]<int, int, IntPtr, CoordStruct, Bool, SpotlightFlags, void>)ASM.FastCallTransferStation;
+        func(0x48A620, damage, wh, coords, force, clDisableFlags);
+    }
 
     public unsafe CellStruct PickCellOnEdge(Edge edge, CellStruct currentLocation, CellStruct fallback,
         SpeedType speedType, bool validateReachability, MovementZone movZone)
@@ -157,4 +158,5 @@ public struct MapClass
     [FieldOffset(312)] public DynamicVectorClass<Pointer<CellClass>> Cells;
 
     [FieldOffset(4444)] public DynamicVectorClass<CellStruct> TaggedCells;
+
 }

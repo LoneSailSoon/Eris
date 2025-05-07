@@ -4,6 +4,7 @@ using System.Text;
 using Eris.Scripts;
 using Eris.Serializer;
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 
 namespace Eris;
 public static class Program
@@ -35,8 +36,7 @@ public static class Program
             fixed (byte* pchName = Encoding.ASCII.GetBytes(HandshakeMassage))
             {
                 Buffer.MemoryCopy(pchName, Unsafe.AsRef<SyringeHandshakeInfo>(pInfo.ToPointer()).Message.ToPointer(), HandshakeMassage.Length, HandshakeMassage.Length);
-            }
-
+            } 
             return 0;
         }
         return 0;
@@ -47,33 +47,15 @@ public static class Program
     {
         if (AllocConsole())
         {
-          
             Console.Title = "Eris Debug Console";
-            //ConsoleColor originFgColor = Console.ForegroundColor;
-            //ConsoleColor originBgColor = Console.BackgroundColor;
-            ////LogHelper.Log($".NETVersion:{Environment.Version}", "Eris active", 20 , ConsoleColor.Green);
-            //Console.ForegroundColor = ConsoleColor.Black;
-            //Console.BackgroundColor = ConsoleColor.White;
-
+            
             Console.Write(Logo);
-
-            //Console.ForegroundColor = originFgColor;
-            //Console.BackgroundColor = originBgColor;s
-
-
-            //Console.WriteLine("[+] Eris active");
-            //Console.WriteLine($"[+] .NETVersion:{Environment.Version}");
-            LogHelper.Log($"{Environment.Version}", ".NETVersion", 15, ConsoleColor.Green);
-        
-            //LogHelper.Log($"Failed to parse Ini file content: [MultipleMindControlTower]Anim=YURICNTL", "Warning", 15, ConsoleColor.Yellow);
-            //LogHelper.Log($"HTNK", "ObjectInfo", 15);
-            //LogHelper.Log(new Exception());
         }
+
         SerializeRegister.Register();
         ScriptsRegister.Register();
         return 0;
     }
-
 
     [DllImport("kernel32.dll")]
     public static extern bool AllocConsole();

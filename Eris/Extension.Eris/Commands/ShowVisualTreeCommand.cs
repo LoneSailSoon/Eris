@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Eris.Utilities.Logger;
 
 namespace Eris.Extension.Eris.Commands;
 
@@ -30,7 +31,6 @@ public static class ShowVisualTreeCommand
 
     public static void ExecuteProxy(IntPtr pThis, WwKey input)
     {
-        LogHelper.Log("ShowVisualTreeCommand", "Command");
         foreach(var pObj in ObjectClass.CurrentObjects)
         {
             if(pObj.CastToTechno(out var techno) && TechnoExt.ExtMap.Find(techno) is { } ext)

@@ -54,5 +54,5 @@ public struct TacticalClass
         func(ref this, pCell);
     }
 
-    [FieldOffset(3472)] public LTRBStruct Band;
+    [FieldOffset(3472)] public LtrbStruct Band;
 }

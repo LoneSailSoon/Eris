@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace PatcherYrSharp.Helpers;
 
-public class AnsiString : IDisposable
+public sealed class AnsiString : IDisposable
 {
     public readonly nint HGlobal;
     private readonly bool _allocated;
@@ -44,7 +44,7 @@ public class AnsiString : IDisposable
 
     private bool _disposedValue;
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {
@@ -75,7 +75,7 @@ public class AnsiString : IDisposable
 
 [StructLayout(LayoutKind.Sequential)]
 [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
-public struct AnsiStringPointer(nint ptr)
+public struct AnsiStringPointer(nint ptr) : IEquatable<AnsiStringPointer>
 {
     nint buffer = ptr;
 
@@ -102,10 +102,60 @@ public struct AnsiStringPointer(nint ptr)
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static AnsiStringPointer From(nint ptr) => new(ptr);
-    
+
+    public unsafe ReadOnlySpan<byte> AsSpan()
+    {
+        var length = ((delegate* unmanaged[Cdecl]<nint, uint>)0x7D15A0)(buffer);
+        return new ReadOnlySpan<byte>(buffer.ToPointer(), (int)length);
+    } 
+
+    public bool Equals(AnsiStringPointer other)
+    {
+        return buffer == other.buffer;
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is AnsiStringPointer other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return buffer.GetHashCode();
+    }
+
+    public static bool operator ==(AnsiStringPointer left, AnsiStringPointer right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(AnsiStringPointer left, AnsiStringPointer right)
+    {
+        return !left.Equals(right);
+    }
 }
 
-public class UniString : IDisposable
+[StructLayout(LayoutKind.Sequential)]
+[method: MethodImpl(MethodImplOptions.AggressiveInlining)]
+public readonly ref struct AnsiStringSpan(string str)
+{
+    public readonly nint Handle = Marshal.StringToHGlobalAnsi(str);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Dispose()
+    {
+        if (Handle != 0)
+        {
+            Marshal.FreeHGlobal(Handle);
+        }
+    }
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator nint(AnsiStringSpan pointer) => pointer.Handle;
+
+}
+
+public sealed class UniString : IDisposable
 {
     public readonly nint HGlobal;
     private readonly bool _allocated;
@@ -143,7 +193,7 @@ public class UniString : IDisposable
 
     private bool _disposedValue;
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {
@@ -203,4 +253,32 @@ public struct UniStringPointer(nint ptr)
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static UniStringPointer From(nint ptr) => new(ptr);
 
+    
+    public unsafe ReadOnlySpan<char> AsSpan()
+    {
+        var length = ((delegate* unmanaged[Cdecl]<nint, uint>)0x7CA405)(buffer);
+        return new ReadOnlySpan<char>(buffer.ToPointer(), (int)length);
+    } 
+
 }
+
+[StructLayout(LayoutKind.Sequential)]
+[method: MethodImpl(MethodImplOptions.AggressiveInlining)]
+public readonly ref struct UniStringSpan(string str)
+{
+    public readonly nint Handle = Marshal.StringToHGlobalUni(str);
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Dispose()
+    {
+        if (Handle != 0)
+        {
+            Marshal.FreeHGlobal(Handle);
+        }
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static implicit operator nint(UniStringSpan pointer) => pointer.Handle;
+
+}
+
+

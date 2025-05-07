@@ -77,17 +77,7 @@ public struct FootClass
     [FieldOffset(1408)] public double SpeedMultiplier;
     [FieldOffset(1444)] public Pointer<AbstractClass> Destination;
     [FieldOffset(1448)] public Pointer<AbstractClass> LastDestination;
+    [FieldOffset(1652)] private nint locomotor;
 
-
-    // [FieldOffset(1652)] public COMPtr<ILocomotion> locomotor;
-    //
-    // public ILocomotion Locomotor
-    // {
-    //     get => locomotor.Object;
-    //     set
-    //     {
-    //         locomotor.Release();
-    //         locomotor.Object = value;
-    //     }
-    // }
+    public ComPointer<ILocomotion> Locomotor => locomotor;
 }

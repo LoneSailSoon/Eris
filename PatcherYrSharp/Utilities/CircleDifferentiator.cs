@@ -1,5 +1,6 @@
 using System.Numerics;
 using PatcherYrSharp.GeneralStructures;
+using Quaternion = System.Numerics.Quaternion;
 
 namespace PatcherYrSharp.Utilities;
 

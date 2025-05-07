@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 using PatcherYrSharp;
 using PatcherYrSharp.GeneralDefinitions;
 using PatcherYrSharp.Helpers;
@@ -25,7 +26,6 @@ public static class UnselectLastCommand
 
     public static void ExecuteProxy(IntPtr pThis, WwKey input)
     {
-        LogHelper.Log("UnselectLastCommand", "Command");
         if (ObjectClass.CurrentObjects.Count != 0 && ObjectClass.CurrentObjects[ObjectClass.CurrentObjects.Count - 1] is {IsNotNull:true} last)
         {
             last.Ref.Deselect();

@@ -22,6 +22,7 @@ public class GlobalDvcArray<T>(IntPtr pVector) : IEnumerable<Pointer<T>>
 
     public int FindIndex(string id)
     {
+        if (string.IsNullOrWhiteSpace(id)) return -1;
         int i = 0;
         foreach (var ptr in Array)
         {

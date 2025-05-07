@@ -22,9 +22,6 @@ public class HouseExt: CommonInstanceExtension<HouseExt, HouseClass, HouseTypeEx
     public override void Serialize(INaegleriaStream stream)
     {
         base.Serialize(stream);
-        stream.ProcessObject(ref TypeField!)
-            .Process(ref TokenField)
-            .ProcessObject(ref ObjectField);
     }
 
     public override int SerializeType => SerializeRegister.HouseExtSerializeType;

@@ -22,14 +22,16 @@ public abstract class CommonTypeExtension<TExt, TBase> : InstanceExtension<TExt,
         ext?.LoadFromIni(pIni);
     }
 
-    private Script[]? _scripts;
-    public Script[]? Scripts => _scripts;
+    private ScriptWithData[]? _scripts;
+    public ScriptWithData[]? Scripts => _scripts;
     public virtual void LoadFromIni(Pointer<CCINIClass> pIni)
     {
         var ini = IniReader.Default;
         ini.SetCurrentIni(pIni);
-
-        ScriptManager.Parse(ini.Read(OwnerObject.Cast<AbstractTypeClass>().Ref.ID, "SelectedBy.Scripts"), ref _scripts);
+        
+        var section = ini[OwnerObject.Cast<AbstractTypeClass>().Ref.ID];
+        
+        ScriptManager.Parse(section, section["SelectedBy.Scripts"u8], ref _scripts);
     }
 
     public override void Serialize(INaegleriaStream stream)

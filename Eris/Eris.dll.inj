@@ -6,15 +6,17 @@
 67D2F1 = SaveGame_End, 6
 67E440 = LoadGame_Start, 6
 67E720 = LoadGame_End, 6
+6CF316 = SwizzleManagerClass_Here_I_Am, 5
+6CF400 = SwizzleManagerClass_ConvertNodes, 5
 
 ;/Behaviors/GeneralBehaviors.cs
 6875F3 = Scenario_Start1_Behaviors, 6
 55AFB3 = LogicClass_Update_Behaviors, 6
 55B719 = LogicClass_Update_Late_Behaviors, 5
 685659 = Scenario_ClearClasses_Behaviors, 10
-679CAF = RulesData_LoadAfterTypeData, 5
-533066 = CommandClassCallback_Register, 6
-6BD68D = WinMain_PhobosRegistrations, 6
+679CAF = RulesData_LoadAfterTypeData_Behaviors, 5
+533066 = CommandClassCallback_Register_Behaviors, 6
+6BD68D = WinMain_Registrations_Behaviors, 6
 
 ;/Behaviors/NetworkBehaviors.cs
 4C6CB0 = Network_RespondToEvent_Behaviors, 6
@@ -57,6 +59,7 @@
 6D471A = TechnoClass_RenderLater, 6
 701900 = TechnoClass_ReceiveDamage_Behaviors, 6
 6FDD50 = TechnoClass_Fire_Behaviors, 6
+7077C0 = TechnoClass_PointerExpired_Behaviors, 7
 
 
 ;/Extension/CellExt.cs

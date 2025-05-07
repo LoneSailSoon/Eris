@@ -1,3 +1,4 @@
+using Eris.Extension.Eris.Generic;
 using Eris.Extension.Generic;
 
 namespace Eris.Extension.Eris.Style;
@@ -6,83 +7,29 @@ public class StyleManager
 {
     public static readonly StyleManager Instance = new StyleManager();
 
-    public bool TryCreate(TechnoExt owner, List<StyleInstance> styles, StyleType type)
+    public bool TryCreate(TechnoExt owner, GameObject manager, StyleType type)
     {
         var style = new StyleInstance();
-
-
-        if (style.Attach(owner, type, null, null))
+        if (style.TryAttach(owner, type))
         {
-            styles.Add(style);
-            style.Awake();
+            manager.AttachComponent(style);
             style.Enable();
             return true;
         }
-
         return false;
     }
 
-    public void Remove(List<StyleInstance> styles, StyleInstance style)
+    public void Remove(GameObject manager, StyleInstance style)
     {
-        styles.Remove(style);
-        style.OnDestroy();
+        manager.ReleaseComponent(style);
     }
 
-    public void ForEach(List<StyleInstance> styles, Action<StyleInstance> action)
+    public void OnUpdate(GameObject manager)
     {
-        if (styles.Count > 0)
+        manager.ForEach(c =>
         {
-            foreach (var style in styles.ToArray().Where(IsStyleActive))
-            {
-                action(style);
-            }
-        }
-
-        static bool IsStyleActive(StyleInstance ae) => ae.IsActive() && !ae.IsExpired();
-    }
-
-    public void UpdateAll(List<StyleInstance> styles)
-    {
-        if (styles.Count > 0)
-        {
-            foreach (var style in styles.ToArray().Where(IsStyleActive))
-            {
+            if(c is StyleInstance style && style.UpdateActive())
                 style.OnUpdate();
-            }
-        }
-
-        static bool IsStyleActive(StyleInstance ae) => ae.UpdateActive();
-    }
-
-    public void ClearExpired(List<StyleInstance> styles)
-    {
-        if (styles.Count > 0)
-        {
-            for (var i = styles.Count - 1; i >= 0; i--)
-            {
-                StyleInstance style = styles[i];
-                if (style.IsExpired())
-                {
-                    Remove(styles, style);
-                }
-            }
-        }
-    }
-
-    public void OnUpdate(List<StyleInstance> styles)
-    {
-
-        UpdateAll(styles);
-        ClearExpired(styles);
-    }
-
-    public void OnDestroy(List<StyleInstance> styles)
-    {
-        foreach (var style in styles)
-        {
-            style.OnDestroy();
-        }
-
-        styles.Clear();
+        });
     }
 }

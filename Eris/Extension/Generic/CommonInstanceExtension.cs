@@ -1,5 +1,6 @@
 using Eris.Extension.Eris.Generic;
 using Eris.Extension.Eris.Scripts;
+using NaegleriaSerializer.Streaming;
 using PatcherYrSharp;
 using PatcherYrSharp.Helpers;
 
@@ -10,11 +11,10 @@ public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> 
     where TTypeExt : CommonTypeExtension<TTypeExt, TTypeBase>, IExtensionActivator<TTypeExt, TTypeBase>
     where TBase : IYrObject<TTypeBase>
 {
-    protected TTypeExt TypeField;
-    protected GameToken TokenField;
+    protected TTypeExt? TypeField;
     protected GameObject? ObjectField;
 
-    public TTypeExt Type => TypeField;
+    public TTypeExt Type => TypeField!;
     
     public GameObject GameObject
     {
@@ -45,11 +45,23 @@ public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> 
         }
         
     }
-    
+
+    protected override void OnExpire()
+    {
+        base.OnExpire();
+        GameObject.Destroy();
+    }
+
+    public override void Serialize(INaegleriaStream stream)
+    {
+        base.Serialize(stream);
+        stream.ProcessObject(ref TypeField!)
+            .ProcessObject(ref ObjectField);
+    }
+
     public CommonInstanceExtension(Pointer<TBase> owner) : base(owner)
     {
         TypeField = null!;
-        //Console.WriteLine($"HasType:{TypeFiled is not null}");
     }
 
     public CommonInstanceExtension()

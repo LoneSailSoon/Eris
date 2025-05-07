@@ -5,13 +5,15 @@ namespace Eris.Scripts;
 
 public static class ScriptsRegister
 {
-    public const int ScriptStart = 500;
+    private const int ScriptStart = 500;
 
     public const int TestScriptType = ScriptStart + 0;
+    public const int TestScriptDataType = ScriptStart + 1;
 
     public static void Register()
     {
-        ScriptManager.RegisterScript(nameof(TestScript),  static () => new TestScript());
+        ScriptManager.RegisterScript(nameof(TestScript),  static () => new TestScript(), static () => new TestScriptData());
         DeserializeObjectActivator.Register(TestScriptType, static () => new TestScript());
+        DeserializeObjectActivator.Register(TestScriptDataType, static () => new TestScriptData());
     }
 }

@@ -2,10 +2,12 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using Eris.Extension.Eris.Generic;
 using Eris.Extension.Eris.Style;
 using Eris.Extension.Generic;
 using Eris.Serializer;
 using Eris.Utilities.Helpers;
+using Eris.Utilities.Logger;
 using Microsoft.Win32;
 using NaegleriaSerializer.Streaming;
 using PatcherYrSharp;
@@ -18,7 +20,8 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 {
     public TechnoExt(Pointer<TechnoClass> owner) : base(owner)
     {
-        _styles = [];
+        _styles = GameObject.Create();
+        _styleStateManager = new StyleStateManager();
     }
 
     public TechnoExt()
@@ -28,19 +31,10 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
     public override void Serialize(INaegleriaStream stream)
     {
         base.Serialize(stream);
-        stream.ProcessObject(ref TypeField!)
-            .Process(ref TokenField)
+        stream
             .Process(ref _showVisualTree)
-            .ProcessObject(ref ObjectField);
-        
-        if (stream is NaegleriaSerializeStream serializeStream)
-        {
-            Formatters.ListSerialize(_styles, serializeStream);
-        }
-        else if(stream is NaegleriaDeserializeStream deserializeStream)
-        {
-            Formatters.ListDeserialize(ref _styles!, deserializeStream);
-        }
+            .ProcessObject(ref _styles!)
+            .ProcessObject(ref _styleStateManager!);
     }
 
     public override int SerializeType => SerializeRegister.TechnoExtSerializeType;
@@ -99,8 +93,13 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
         return 0;
     }
 
-    private List<StyleInstance> _styles = null!;
-    public List<StyleInstance> Styles => _styles;
+    private GameObject _styles = null!;
+    public GameObject Styles => _styles;
+    private StyleStateManager _styleStateManager = null!;
+    public StyleStateManager StyleStateManager => _styleStateManager;
+
+    //private List<StyleInstance> _styles = null!;
+    //public List<StyleInstance> Styles => _styles;
 
     private bool _showVisualTree = false;
     public bool ShowVisualTree { get => _showVisualTree; set => _showVisualTree = value; }
@@ -111,8 +110,18 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
         base.Awake();
         if (Type.SelectedBy is { } styleType)
         {
-            StyleManager.Instance.TryCreate(this, _styles, styleType);
+            foreach (var type in styleType)
+            {
+                StyleManager.Instance.TryCreate(this, _styles, type);
+            }
         }
+    }
+
+    protected override void OnExpire()
+    {
+        base.OnExpire();
+        _styles.Destroy();
+        _styleStateManager.Destroy();
     }
 
     public void ToTreeDisplay(StringBuilder sb, string linePrefix)
@@ -124,25 +133,25 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
            .AppendTreeLeaf(linePrefix, $"AbstractType:{OwnerRef.BaseAbstract.WhatAmI()}")
            .AppendTreeLeaf(linePrefix, "StyleManager");
 
-            if (_styles.Count != 0)
-            {
-                var subPrefix = TreeDisplayHelper.GetNextPrefix(linePrefix);
-                var subLastPrefix = TreeDisplayHelper.GetNextPrefix(subPrefix);
-                int i;
-                for (i = 0; i < _styles.Count - 1; i++)
-                {
-                    sb.AppendTreeLeaf(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
-                    _styles[i].ToTreeDisplay(sb, subLastPrefix);
-                    //_styles[i].ToTreeDisplay(sb, subPrefix);
-                }
-
-                //subPrefix = TreeDisplayHelper.GetNextPrefixLast(linePrefix);
-                sb.AppendTreeLeafLast(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
-
-                subLastPrefix = TreeDisplayHelper.GetNextPrefixLast(subPrefix);
-                _styles[i].ToTreeDisplay(sb, subLastPrefix);
-                //_styles[i].ToTreeDisplay(sb, subPrefix);
-            }
+            // if (_styles.Count != 0)
+            // {
+            //     var subPrefix = TreeDisplayHelper.GetNextPrefix(linePrefix);
+            //     var subLastPrefix = TreeDisplayHelper.GetNextPrefix(subPrefix);
+            //     int i;
+            //     for (i = 0; i < _styles.Count - 1; i++)
+            //     {
+            //         sb.AppendTreeLeaf(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
+            //         _styles[i].ToTreeDisplay(sb, subLastPrefix);
+            //         //_styles[i].ToTreeDisplay(sb, subPrefix);
+            //     }
+            //
+            //     //subPrefix = TreeDisplayHelper.GetNextPrefixLast(linePrefix);
+            //     sb.AppendTreeLeafLast(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
+            //
+            //     subLastPrefix = TreeDisplayHelper.GetNextPrefixLast(subPrefix);
+            //     _styles[i].ToTreeDisplay(sb, subLastPrefix);
+            //     //_styles[i].ToTreeDisplay(sb, subPrefix);
+            // }
 
             sb
                 .AppendTreeLeafLast(linePrefix, $"GameObject:null");
