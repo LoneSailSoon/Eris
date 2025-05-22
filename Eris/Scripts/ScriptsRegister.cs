@@ -1,4 +1,4 @@
-using Eris.Extension.Eris.Scripts;
+using Eris.Extension.Core.Scripts;
 using NaegleriaSerializer;
 
 namespace Eris.Scripts;

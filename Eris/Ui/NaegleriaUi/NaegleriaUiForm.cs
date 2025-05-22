@@ -1,11 +1,11 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using CommonRenderUi;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.Vector;
 using NaegleriaUi;
 using NaegleriaUi.Interface;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
 
 #pragma warning disable CA1416 // 验证平台兼容性
 

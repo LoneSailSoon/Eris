@@ -1,11 +1,12 @@
-using Eris.Utilities.Helpers;
+using Eris.Extension;
+using Eris.Extension.Core.Style;
 using Eris.Utilities.Logger;
 using Eris.Utilities.Network;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralDefinitions;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
-using PatcherYrSharp.Utilities;
+using Eris.YRSharp;
+using Eris.YRSharp.GeneralDefinitions;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.Utilities;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Ui.NaegleriaUi;
 
@@ -361,7 +362,7 @@ public partial class NaegleriaUiMissionManager
             var animType = AnimTypeClass.AbstractTypeArray["NUKEBALL"];
             if (animType)
             {
-                YrCreater.Create<AnimClass>().Constructor(animType, MapClass.Instance.Cells[value.Value2].Ref.GetCenterCoords());
+                YRCreater.Create<AnimClass>().Constructor(animType, MapClass.Instance.Cells[value.Value2].Ref.GetCenterCoords());
             }
             Pointer<CellClass> pCell;
             Pointer<TechnoTypeClass> pType;
@@ -622,6 +623,76 @@ public partial class NaegleriaUiMissionManager
 
         return null;
     }
+    
+    private static void StyleMission(NaegleriaUiMissionEventArg value)
+    {
+        Pointer<ObjectClass> pObject = new TargetClass { m_ID = value.Value1, m_RTTI = (byte)AbstractType.Abstract }
+            .UNPACK_Abstract().Cast<ObjectClass>();
+        if (pObject.CastToTechno(out var pTechno) && TechnoExt.ExtMap.Find(pTechno) is { } ext)
+        {
+            StyleManager.Instance.TryCreate(ext, ext.Styles, StyleType.ExtMap.IndexMap[value.Value2], HouseExt.ExtMap.Find(CurrentHouse));
+        }
+    }
+
+    private static string? StyleMissionParser(string val, out NaegleriaUiMissionEventArg data)
+    {
+        var list = val.Split('/');
+        data = default;
+        if (ObjectClass.CurrentObjects.Count <= 0) return "[提示] 需要先选中单位再执行此命令";
+
+        if (list.Length >= 2 && StyleType.ExtMap.FindIndex(list[1].Trim()) is >=0 and var index)
+        {
+            data.Value2 = index;
+        }
+        else
+        {
+            return "[提示] 请输入参数作为单位将要挂载的样式";
+        }
+
+        return null;
+    }
+
+    private static void ConsoleTestMission(NaegleriaUiMissionEventArg value)
+    {
+        Logger.Log($"NaegleriaUiMission: {value.Value1}, {value.Value2}, {value.Value3}, {value.Value4}, {value.Value5} from {HouseIndex}" );
+    }
+
+    private static string? ConsoleTestMissionParser(string val, out NaegleriaUiMissionEventArg data)
+    {
+        var list = val.Split('/');
+        data = default;
+
+        var i = 0;
+        foreach (var value in list.Select(o => (int.TryParse(o, out var n), n)).Where(o=>o.Item1).Select(o=>o.n))
+        {
+            switch (i)
+            {
+                case 0:
+                    data.Value1 = value;
+                    break;
+                case 1:
+                    data.Value2 = value;
+                    break;
+                case 2:
+                    data.Value3 = value;
+                    break;
+                case 3:
+                    data.Value4 = value;
+                    break;
+                case 4:
+                    data.Value5 = value;
+                    break;
+                default:
+                    return null;
+            }
+
+            i++;
+        }
+        
+        
+        return null;
+    }
+
 }
 
 public class NaegleriaUiMissionNetworkHandle : NetworkHandle<NaegleriaUiMissionEventArg>
@@ -633,7 +704,7 @@ public class NaegleriaUiMissionNetworkHandle : NetworkHandle<NaegleriaUiMissionE
     {
         var mission = NaegleriaUiMissionManager.GetMission(pArg.Ref.MissionIndex);
         
-        NaegleriaUiMissionManager.HouseIndex = HouseClass.Player.Ref.ArrayIndex;
+        NaegleriaUiMissionManager.HouseIndex = pEvent.Ref.HouseIndex;
         mission.Handler(pArg.Data);
         NaegleriaUiMissionManager.HouseIndex = -1;
     }

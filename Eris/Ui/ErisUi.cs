@@ -1,6 +1,6 @@
-using PatcherYrSharp;
 using Eris.Ui.NaegleriaUi;
 using Eris.Ui.TechnoGirdUi;
+using Eris.YRSharp;
 
 namespace Eris.Ui;
 

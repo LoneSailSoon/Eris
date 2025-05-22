@@ -1,5 +1,5 @@
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Utilities.Network;
 

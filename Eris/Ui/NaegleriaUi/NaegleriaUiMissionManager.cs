@@ -1,8 +1,6 @@
 using System.Runtime.InteropServices;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralDefinitions;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Ui.NaegleriaUi;
 
@@ -10,8 +8,8 @@ public static partial class NaegleriaUiMissionManager
 {
     static NaegleriaUiMissionManager()
     {
-        _indexes = [];
-        _missions = [];
+        Indexes = [];
+        Missions = [];
         
         //Register("consolemission", ConsoleMission, ConsoleMissionParser);
         Register("kill", KillMission, KillMissionParser, true);
@@ -34,31 +32,32 @@ public static partial class NaegleriaUiMissionManager
         //Register("helper", HelperMission, HelperMissionParser);
         //Register("develop", DeveloperMission, DeveloperMissionParser);
         //Register("briefingstart", BriefingMission, BriefingMissionParser);
-
+        Register("style", StyleMission, StyleMissionParser, true);
+        Register("test", ConsoleTestMission, ConsoleTestMissionParser);
     }
 
-    private static readonly Dictionary<string, int> _indexes;
-    private static readonly List<NaegleriaUiMissionData> _missions;
+    private static readonly Dictionary<string, int> Indexes;
+    private static readonly List<NaegleriaUiMissionData> Missions;
 
     public static void Register(string id, MissionHandler handler, MissionParser parser, bool forEach = false)
     {
-        _indexes[id] = _missions.Count;
-        _missions.Add(new NaegleriaUiMissionData(handler, parser, forEach));
+        Indexes[id] = Missions.Count;
+        Missions.Add(new NaegleriaUiMissionData(handler, parser, forEach));
     }
     
     public static bool TryFindIndex(string name, out int index)
     {
-        return _indexes.TryGetValue(name, out index);
+        return Indexes.TryGetValue(name, out index);
     }
 
 
-    public static NaegleriaUiMissionData GetMission(int index) => _missions[index];
+    public static NaegleriaUiMissionData GetMission(int index) => Missions[index];
     public static bool TryGetMission(string id, out NaegleriaUiMissionData mission)
     {
         mission = default;
-        if (_indexes.TryGetValue(id, out var index))
+        if (Indexes.TryGetValue(id, out var index))
         {
-            mission = _missions[index];
+            mission = Missions[index];
             return true;
         }
         return false;
@@ -82,12 +81,7 @@ public struct NaegleriaUiMissionEventArg
     public int Value5;
 }
 
-public struct NaegleriaUiMissionData(MissionHandler handler, MissionParser parser, bool forEach)
-{
-    public MissionHandler Handler = handler;
-    public MissionParser Parser = parser;
-    public bool ForEach = forEach;
-}
+public record struct NaegleriaUiMissionData(MissionHandler Handler, MissionParser Parser, bool ForEach);
 
 public delegate void MissionHandler(NaegleriaUiMissionEventArg value);
 

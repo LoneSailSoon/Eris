@@ -1,6 +1,6 @@
 # 阋神星(未完成)
 
-
+---
 [![license](https://www.gnu.org/graphics/gplv3-or-later.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 **阋神星**是由C#编写的《尤里的复仇》引擎扩展项目，在AOT发布和inj文件的协作下它能以类似[Ares](https://github.com/Ares-Developers/Ares)的方式被[Syringe](https://github.com/Ares-Developers/Syringe)注入到游戏中。

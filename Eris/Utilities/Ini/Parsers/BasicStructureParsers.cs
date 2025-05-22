@@ -1,4 +1,4 @@
-using PatcherYrSharp.GeneralStructures;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Utilities.Ini.Parsers;
 

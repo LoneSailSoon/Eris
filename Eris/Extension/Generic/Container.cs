@@ -1,5 +1,5 @@
 using Eris.Serializer;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Extension.Generic;
 

@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Eris.Utilities.Network;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Behaviors;
 

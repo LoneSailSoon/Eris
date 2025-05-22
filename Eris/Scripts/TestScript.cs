@@ -1,8 +1,8 @@
-using Eris.Extension.Eris.Scripts;
+using Eris.Extension.Core.Scripts;
 using Eris.Utilities.Ini;
 using Eris.Utilities.Ini.Parsers;
+using Eris.YRSharp;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp;
 
 namespace Eris.Scripts;
 

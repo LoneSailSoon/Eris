@@ -1,4 +1,4 @@
-using PatcherYrSharp;
+using Eris.YRSharp;
 
 namespace Eris.Utilities.Ini.Parsers;
 

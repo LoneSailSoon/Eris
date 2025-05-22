@@ -1,10 +1,10 @@
 ﻿using Eris.Ui.NaegleriaUi;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralDefinitions;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
-using PatcherYrSharp.Utilities;
-using System.Linq;
+using Eris.YRSharp;
+using Eris.YRSharp.GeneralDefinitions;
+using Eris.YRSharp.GeneralStructures;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.MathEx;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Ui.TechnoGirdUi;
 
@@ -401,7 +401,7 @@ public static class TechnoGird
                     if (offset != default)
                     {
                         var rad = Math.Atan2(offset.X, offset.Y);
-                        var dir = MathEx.Radians2Dir(rad + Math.PI * 1.25);
+                        var dir = MathUtilities.Radians2Dir(rad + Math.PI * 1.25);
 
                         var face = 16 - (int)Math.Round((Math.PI - rad) * 8 / Math.PI);
 
@@ -592,8 +592,8 @@ public static class TechnoGird
             var location = pTechno.Ref.Base.Location;
             //var bar =  pTechno.Ref.BarrelFacing;
 
-            pTechno.Ref.Facing      .set(dir);
-            pTechno.Ref.TurretFacing.set(dir);
+            pTechno.Ref.Facing      .Set(dir);
+            pTechno.Ref.TurretFacing.Set(dir);
             //pTechno.Ref.BarrelFacing.set(dir);
 
 

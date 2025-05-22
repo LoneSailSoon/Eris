@@ -1,7 +1,6 @@
 using Eris.Ui.NaegleriaUi;
-using Eris.Utilities.Helpers;
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Utilities.Network;
 

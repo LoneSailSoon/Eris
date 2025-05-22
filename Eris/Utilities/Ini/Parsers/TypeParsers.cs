@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Utilities.Ini.Parsers;
 

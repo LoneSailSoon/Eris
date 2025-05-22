@@ -1,10 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Eris.Ui;
-using Microsoft.Win32;
-using PatcherYrSharp;
-using PatcherYrSharp.Com;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Behaviors;
 
@@ -12,7 +10,7 @@ public static class UiBehaviors
 {
     //[Hook(0x4F4583, 6)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_DrawOnTop_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_DrawOnTop_Behaviors(Registers* r)
+    public static unsafe uint Ui_DrawOnTop_Behaviors(Registers* r)
     {
         //Surface.Current.Ref.DrawSHP(FileSystem.DARKEN_SHP, 0, FileSystem.ANIM_PAL, 0, 0);
         ErisUi.OnRender();
@@ -23,7 +21,7 @@ public static class UiBehaviors
 
     //[Hook(0x54F7F1, 8)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_KeyInput_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_KeyInput_Behaviors(Registers* r)
+    public static unsafe uint Ui_KeyInput_Behaviors(Registers* r)
     {
         var msg = r->Stack<uint>(0x20 + 8);
         switch (msg)
@@ -45,7 +43,7 @@ public static class UiBehaviors
 
     //[Hook(0x693268, 5)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_MouseLeftRelease_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_MouseLeftRelease_Behaviors(Registers* r)
+    public static unsafe uint Ui_MouseLeftRelease_Behaviors(Registers* r)
     {
         if (ErisUi.OnLeftRelease())
         {
@@ -58,7 +56,7 @@ public static class UiBehaviors
 
     //[Hook(0x6931A5, 6)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_MouseLeftPress_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_MouseLeftPress_Behaviors(Registers* r)
+    public static unsafe uint Ui_MouseLeftPress_Behaviors(Registers* r)
     {
         if (ErisUi.OnLeftPress())
         {
@@ -70,7 +68,7 @@ public static class UiBehaviors
 
     // [Hook(0x692F30, 5)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_MouseUpdate_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_MouseUpdate_Behaviors(Registers* r)
+    public static unsafe uint Ui_MouseUpdate_Behaviors(Registers* r)
     {
         if (ErisUi.OnUpdate())
         {
@@ -85,7 +83,7 @@ public static class UiBehaviors
 
     // [Hook(0x693325, 8)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_MouseRightPress_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_MouseRightPress_Behaviors(Registers* r)
+    public static unsafe uint Ui_MouseRightPress_Behaviors(Registers* r)
     {
         ErisUi.OnRightPress();
         return 0;
@@ -95,7 +93,7 @@ public static class UiBehaviors
 
     // [Hook(0x6933C0, 5)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_MouseRightRelease_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_MouseRightRelease_Behaviors(Registers* r)
+    public static unsafe uint Ui_MouseRightRelease_Behaviors(Registers* r)
     {
         ErisUi.OnRightRelease();
         return 0;
@@ -104,7 +102,7 @@ public static class UiBehaviors
 
     //[Hook(0x693119, 6)]
     [UnmanagedCallersOnly(EntryPoint = "Ui_WindowProc_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 Ui_WindowProc_Behaviors(Registers* r)
+    public static unsafe uint Ui_WindowProc_Behaviors(Registers* r)
     {
         Pointer<uint> p = r->Stack<IntPtr>(0x24 + 8);
         if (ErisUi.OnWindowProc(p.Data))

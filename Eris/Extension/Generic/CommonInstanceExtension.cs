@@ -1,15 +1,15 @@
-using Eris.Extension.Eris.Generic;
-using Eris.Extension.Eris.Scripts;
+using Eris.Extension.Core.Generic;
+using Eris.Extension.Core.Scripts;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension.Generic;
 
 public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> : InstanceExtension<TExt, TBase>, IGameObjectOwner<TExt>
     where TExt : InstanceExtension<TExt, TBase>, IExtensionActivator<TExt, TBase>, IGameObjectOwner<TExt>
     where TTypeExt : CommonTypeExtension<TTypeExt, TTypeBase>, IExtensionActivator<TTypeExt, TTypeBase>
-    where TBase : IYrObject<TTypeBase>
+    where TBase : IYRObject<TTypeBase>
 {
     protected TTypeExt? TypeField;
     protected GameObject? ObjectField;

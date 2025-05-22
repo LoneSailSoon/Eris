@@ -1,14 +1,9 @@
 ﻿using Eris.Extension;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Utilities.Helpers
 {
@@ -90,7 +85,7 @@ namespace Eris.Utilities.Helpers
                 innerColor = houseColor;
                 outerColor = default;
             }
-            return YrCreater.Create<LaserDrawClass>().Constructor(sourcePos, targetPos, innerColor, outerColor, default(ColorStruct), duration).SetThickness(thickness);
+            return YRCreater.Create<LaserDrawClass>().Constructor(sourcePos, targetPos, innerColor, outerColor, default(ColorStruct), duration).SetThickness(thickness);
         }
 
         public static void DrawLine(this Vector3 sourcePos, Vector3 targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)

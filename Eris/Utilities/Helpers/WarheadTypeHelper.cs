@@ -1,7 +1,7 @@
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralDefinitions;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.GeneralDefinitions;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Utilities.Helpers;
 
@@ -14,7 +14,7 @@ public static class WarheadTypeHelper
         
         var pAnimType = MapClass.SelectDamageAnimation(damage, wh, landType, location);
         
-        return pAnimType ? YrCreater.Create<AnimClass>().Constructor(pAnimType, location) : 0;
+        return pAnimType ? YRCreater.Create<AnimClass>().Constructor(pAnimType, location) : 0;
     }
 
 }

@@ -2,9 +2,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Eris.Extension.Generic;
 using Eris.Serializer;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension;
 
@@ -32,7 +32,7 @@ public class CellExt : InstanceExtension<CellExt, CellClass>,
     
     //[Hook(HookType.AresHook, Address = 0x47BDA1, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "CellClass_CTOR", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CellClass_CTOR(Registers* r)
+    public static unsafe uint CellClass_CTOR(Registers* r)
     {
         var pItem = (Pointer<CellClass>)r->ESI;
         if (!GlobalSerializer.IsLoading)
@@ -44,7 +44,7 @@ public class CellExt : InstanceExtension<CellExt, CellClass>,
 
 //[Hook(HookType.AresHook, Address = 0x47BB60, Size = 6)]
     [UnmanagedCallersOnly(EntryPoint = "CellClass_DTOR", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CellClass_DTOR(Registers* r)
+    public static unsafe uint CellClass_DTOR(Registers* r)
     {
         var pItem = (Pointer<CellClass>)r->ECX;
 
@@ -55,7 +55,7 @@ public class CellExt : InstanceExtension<CellExt, CellClass>,
 //[Hook(HookType.AresHook, Address = 0x483C10, Size = 5)]
 //[Hook(HookType.AresHook, Address = 0x4839F0, Size = 7)]
     [UnmanagedCallersOnly(EntryPoint = "CellClass_SaveLoad_Prefix", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CellClass_SaveLoad_Prefix(Registers* r)
+    public static unsafe uint CellClass_SaveLoad_Prefix(Registers* r)
     {
         var pItem = r->Stack<Pointer<CellClass>>(0x4);
 
@@ -65,7 +65,7 @@ public class CellExt : InstanceExtension<CellExt, CellClass>,
 
 //[Hook(HookType.AresHook, Address = 0x483C00, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "CellClass_Load_Suffix", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CellClass_Load_Suffix(Registers* r)
+    public static unsafe uint CellClass_Load_Suffix(Registers* r)
     {
         CellExt.ExtMap.Load();
         return 0;
@@ -73,7 +73,7 @@ public class CellExt : InstanceExtension<CellExt, CellClass>,
 
 //[Hook(HookType.AresHook, Address = 0x483C79, Size = 6)]
     [UnmanagedCallersOnly(EntryPoint = "CellClass_Save_Suffix", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 CellClass_Save_Suffix(Registers* r)
+    public static unsafe uint CellClass_Save_Suffix(Registers* r)
     {
         CellExt.ExtMap.Save();
         return 0;

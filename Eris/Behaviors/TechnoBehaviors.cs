@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using Eris.Extension;
-using Eris.Extension.Eris.Scripts;
-using Eris.Extension.Eris.Style;
-using Eris.Utilities.Helpers;
+using Eris.Extension.Core.Scripts;
+using Eris.Extension.Core.Style;
 using Eris.Utilities.Logger;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralDefinitions;
-using PatcherYrSharp.GeneralStructures;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.GeneralDefinitions;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Behaviors;
 
@@ -113,18 +108,18 @@ public static class TechnoBehaviors
                 {
 
                     var sb = new StringBuilder();
-                    sb.Append($"[{ext.OwnerTypeRef.BaseAbstractType.ID}]").AppendLine();
-                    ext.ToTreeDisplay(sb, "");
+                    sb.Append($" [{ext.OwnerTypeRef.BaseAbstractType.ID}]").AppendLine();
+                    ext.ToTreeDisplay(sb, " ");
                     var text = sb.ToString();
                     Surface.GetTextDimension(text, out var w, out var h, 300);
-                    if (Surface.ViewBound.InRect(pos + (w, h)))
+                    if (Surface.ViewBound.InRect(pos + (w, h + 12)))
                     {
 
-                        Surface.Current.Ref.FillRectEx(Surface.ViewBound, new(pos, (w, h)), 0);
-
+                        Surface.Current.Ref.FillRectEx(Surface.ViewBound, new(pos, (w, h + 12)), (0x28, 0x28, 0x28));
+                        pos.Y += 6;
                         foreach (var line in text.Split(Environment.NewLine))
                         {
-                            Surface.Temp.Ref.DrawText(line, pos, Drawing.TooltipColor);
+                            Surface.Temp.Ref.DrawText(line, pos, (200, 200, 200));
                             pos.Y += 19;
                         }
                     }
@@ -154,7 +149,7 @@ public static class TechnoBehaviors
             Pointer<TechnoClass> pTechno = (nint)r->ECX;
             var pDamage = r->Stack<Pointer<int>>(0x4);
             var distanceFromEpicenter = r->Stack<int>(0x8);
-            var pWH = r->Stack<Pointer<WarheadTypeClass>>(0xC);
+            var pWh = r->Stack<Pointer<WarheadTypeClass>>(0xC);
             var pAttacker = r->Stack<Pointer<ObjectClass>>(0x10);
             var ignoreDefenses = r->Stack<bool>(0x14);
             var preventPassengerEscape = r->Stack<bool>(0x18);
@@ -164,7 +159,8 @@ public static class TechnoBehaviors
 
             if (ext is not null)
             {
-                ext.GameObject.ForEach((pDamage, distanceFromEpicenter, pWH, pAttacker, ignoreDefenses, preventPassengerEscape, pAttackingHouse), TechnoScriptable.OnReceiveDamage);
+                ext.GameObject.ForEach((pDamage, distanceFromEpicenter, pWH: pWh, pAttacker, ignoreDefenses, preventPassengerEscape, pAttackingHouse), TechnoScriptable.OnReceiveDamage);
+                ext.StyleStateManager.OnReceiveDamage(ext, distanceFromEpicenter, pWh, pAttacker, pAttackingHouse);
             }
 
         }

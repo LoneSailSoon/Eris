@@ -1,4 +1,4 @@
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Serializer;
 
@@ -12,18 +12,12 @@ public class SwizzleNode
 
     public static SwizzleNode? Swizzle<T>(ref Pointer<T> pointer)
     {
-        if (SwizzlePointers.TryGetValue(pointer, out var node))
-        {
-            if (node._newPointer != 0)
-            {
-                pointer = node._newPointer;
-                return null;
-            }
+        if (!SwizzlePointers.TryGetValue(pointer, out var node)) return SwizzlePointers[pointer] = new();
+        if (node._newPointer == 0) return node;
+        
+        pointer = node._newPointer;
+        return null;
 
-            return node;
-        }
-
-        return SwizzlePointers[pointer] = new();
     }
 
     public static void HereIAm(nint old, nint newPointer)

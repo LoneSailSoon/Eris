@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Eris.Extension.Eris.Style;
-using Eris.Utilities.Helpers;
+using Eris.Extension.Core.World;
 using Eris.Utilities.Logger;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.String.Ansi;
 using NaegleriaSerializer;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Serializer;
 
@@ -31,7 +31,8 @@ public static class GlobalSerializer
     {
         try
         {
-            StyleType.ExtMap.Serialize(Saver);
+            
+            World.Serialize(Saver);
             
             File.WriteAllBytes(GetSavePath(savePath), Saver.Buffer.AsSpan());
             Saver.Reset();
@@ -63,7 +64,9 @@ public static class GlobalSerializer
     {
         try
         {
-            StyleType.ExtMap.Deserialize(Loader);
+            
+            World.Deserialize(Loader);
+            
             Loader.Reset();
             IsLoading = false;
         }
@@ -128,7 +131,7 @@ public static class GlobalSerializer
 
     //[Hook(HookType.AresHook, Address = 0x67CEF0, Size = 6)]
     [UnmanagedCallersOnly(EntryPoint = "SaveGame_Start", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 SaveGame_Start(Registers* r)
+    public static unsafe uint SaveGame_Start(Registers* r)
     {
         string fileName = AnsiStringPointer.From((nint)r->ECX);
         
@@ -139,7 +142,7 @@ public static class GlobalSerializer
 
     //[Hook(HookType.AresHook, Address = 0x67D2F1, Size = 0x6)]
     [UnmanagedCallersOnly(EntryPoint = "SaveGame_End", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 SaveGame_End(Registers* r)
+    public static unsafe uint SaveGame_End(Registers* r)
     {
         string fileName = AnsiStringPointer.From((nint)r->EDI);
         
@@ -150,7 +153,7 @@ public static class GlobalSerializer
 
     //[Hook(HookType.AresHook, Address = 0x67E440, Size = 6)]
     [UnmanagedCallersOnly(EntryPoint = "LoadGame_Start", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 LoadGame_Start(Registers* r)
+    public static unsafe uint LoadGame_Start(Registers* r)
     {
         string fileName = AnsiStringPointer.From((nint)r->ECX);
         StartLoad(fileName);
@@ -160,7 +163,7 @@ public static class GlobalSerializer
 
     //[Hook(HookType.AresHook, Address = 0x67E720, Size = 6)]
     [UnmanagedCallersOnly(EntryPoint = "LoadGame_End", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 LoadGame_End(Registers* r)
+    public static unsafe uint LoadGame_End(Registers* r)
     {
         string fileName = AnsiStringPointer.From((nint)r->ESI);
         EndLoad(fileName);
@@ -169,7 +172,7 @@ public static class GlobalSerializer
     }
 
     [UnmanagedCallersOnly(EntryPoint = "SwizzleManagerClass_Here_I_Am", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 SwizzleManagerClass_Here_I_Am(Registers* r)
+    public static unsafe uint SwizzleManagerClass_Here_I_Am(Registers* r)
     {
         SwizzleNode.HereIAm(r->Stack<nint>(8), r->Stack<nint>(12));
         //Console.WriteLine($"SwizzleManagerClass_Here_I_Am {r->Stack<nint>(8)} -> {r->Stack<nint>(12)}");
@@ -177,7 +180,7 @@ public static class GlobalSerializer
     }
 
     [UnmanagedCallersOnly(EntryPoint = "SwizzleManagerClass_ConvertNodes", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 SwizzleManagerClass_ConvertNodes(Registers* r)
+    public static unsafe uint SwizzleManagerClass_ConvertNodes(Registers* r)
     {
         SwizzleNode.Clear();
         //Console.WriteLine("SwizzleManagerClass_ConvertNodes");

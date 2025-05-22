@@ -1,15 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text;
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.String.Ansi;
 
 namespace Eris.Utilities.Ini;
 
 public class IniReader
 {
-    private Pointer<CCINIClass> _pIni;
+    private Pointer<CCIniClass> _pIni;
     private readonly byte[] _readBuffer = new byte[2048];
     
     public Encoding Encoding { get; set; } = Encoding.UTF8;
@@ -17,7 +16,7 @@ public class IniReader
     public static readonly IniReader Default = new();
     
 
-    public void SetCurrentIni(Pointer<CCINIClass> pIni)
+    public void SetCurrentIni(Pointer<CCIniClass> pIni)
     {
         _pIni = pIni;
     }
@@ -88,6 +87,8 @@ public class IniReader
             _pIni.Ref.CurrentSectionName = 0;
         }
     }
+     
+    public Pointer<IniClass.IniSection> GetIniSection(nint section) => _pIni.Ref.GetSection(section);
 
     public string? this[string section, string key] => Read(section, key); 
     public string? this[nint section, nint key] => Read(section, key); 
@@ -95,41 +96,4 @@ public class IniReader
     
     public Section this[AnsiStringPointer section] => new(this, section, false);
 
-}
-
-public readonly ref struct Section
-{
-    private readonly nint _handle;
-    private readonly IniReader _iniReader;
-    private readonly bool _allocate;
-    
-    public Section(IniReader iniReader, string section, bool allocate = true)
-    {
-        _iniReader = iniReader;
-        iniReader.ResetCurrentSectionName();
-        _handle = Marshal.StringToHGlobalAnsi(section);
-        _allocate = allocate;
-    }
-
-    public void Dispose()
-    {
-        if (_allocate && _handle != 0)
-            Marshal.FreeHGlobal(_handle);
-    }
-    
-    public string? this[string key]
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            using var pKey = new AnsiStringSpan(key);
-            return _iniReader[_handle, pKey];
-        }
-    }
-    
-    public unsafe string? this[ReadOnlySpan<byte> key]
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _iniReader[_handle, (nint)Unsafe.AsPointer(ref MemoryMarshal.GetReference(key))];
-    }
 }

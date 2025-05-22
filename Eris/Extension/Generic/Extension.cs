@@ -1,6 +1,6 @@
+using Eris.YRSharp.Helpers;
 using NaegleriaSerializer;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension.Generic;
 

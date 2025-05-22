@@ -1,21 +1,18 @@
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using Eris.Extension.Eris.Generic;
-using Eris.Extension.Eris.Style;
+using Eris.Extension.Core.Generic;
+using Eris.Extension.Core.Style;
 using Eris.Extension.Generic;
 using Eris.Serializer;
-using Eris.Utilities.Helpers;
 using Eris.Utilities.Logger;
-using Microsoft.Win32;
+using Eris.YRSharp;
+using Eris.YRSharp.Helpers;
 using NaegleriaSerializer.Streaming;
-using PatcherYrSharp;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Extension;
 
-public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoTypeExt, TechnoTypeClass>,
+public class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoTypeExt, TechnoTypeClass>,
     IExtensionActivator<TechnoExt, TechnoClass>
 {
     public TechnoExt(Pointer<TechnoClass> owner) : base(owner)
@@ -46,7 +43,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
     
     //[Hook(HookType.AresHook, Address = 0x6F3260, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "TechnoClass_CTOR", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 TechnoClass_CTOR(Registers* r)
+    public static unsafe uint TechnoClass_CTOR(Registers* r)
     {
         var pItem = (Pointer<TechnoClass>)r->ESI;
 
@@ -59,7 +56,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     //[Hook(HookType.AresHook, Address = 0x6F4500, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "TechnoClass_DTOR", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 TechnoClass_DTOR(Registers* r)
+    public static unsafe uint TechnoClass_DTOR(Registers* r)
     {
         var pItem = (Pointer<TechnoClass>)r->ECX;
         ExtMap.Remove(pItem);
@@ -69,7 +66,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
     //[Hook(HookType.AresHook, Address = 0x70C250, Size = 8)]
     //[Hook(HookType.AresHook, Address = 0x70BF50, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "TechnoClass_SaveLoad_Prefix", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 TechnoClass_SaveLoad_Prefix(Registers* r)
+    public static unsafe uint TechnoClass_SaveLoad_Prefix(Registers* r)
     {
         var pItem = r->Stack<Pointer<TechnoClass>>(0x4);
 
@@ -79,7 +76,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     //[Hook(HookType.AresHook, Address = 0x70C249, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "TechnoClass_Load_Suffix", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 TechnoClass_Load_Suffix(Registers* r)
+    public static unsafe uint TechnoClass_Load_Suffix(Registers* r)
     {
         TechnoExt.ExtMap.Load();
         return 0;
@@ -87,7 +84,7 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
 
     //[Hook(HookType.AresHook, Address = 0x70C264, Size = 5)]
     [UnmanagedCallersOnly(EntryPoint = "TechnoClass_Save_Suffix", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe UInt32 TechnoClass_Save_Suffix(Registers* r)
+    public static unsafe uint TechnoClass_Save_Suffix(Registers* r)
     {
         TechnoExt.ExtMap.Save();
         return 0;
@@ -129,14 +126,19 @@ public partial class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass,
         //if (Token.Initialized)
         {
             sb
-           .AppendTreeLeaf(linePrefix, $"UniqueID:{OwnerRef.BaseAbstract.UniqueID}")
-           .AppendTreeLeaf(linePrefix, $"AbstractType:{OwnerRef.BaseAbstract.WhatAmI()}")
+           .AppendTreeLeaf(linePrefix, $"UniqueID: {OwnerRef.BaseAbstract.UniqueID} ")
+           .AppendTreeLeaf(linePrefix, $"AbstractType: {OwnerRef.BaseAbstract.WhatAmI()}" )
            .AppendTreeLeaf(linePrefix, "StyleManager");
+            
+            var subPrefix = TreeDisplayHelper.GetNextPrefix(linePrefix);
+            _styles.ForEach((sb, subPrefix), StyleInstance.ToTreeDisplay);
 
+            sb.AppendTreeLeafLast(subPrefix, "StyleStateManager");
+            _styleStateManager.ToTreeDisplay(sb, TreeDisplayHelper.GetNextPrefixLast(subPrefix));
             // if (_styles.Count != 0)
             // {
-            //     var subPrefix = TreeDisplayHelper.GetNextPrefix(linePrefix);
-            //     var subLastPrefix = TreeDisplayHelper.GetNextPrefix(subPrefix);
+            //     
+            //     
             //     int i;
             //     for (i = 0; i < _styles.Count - 1; i++)
             //     {

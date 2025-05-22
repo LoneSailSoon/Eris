@@ -1,7 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Eris.Utilities.Logger.LogFormatter;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp.Helpers;
+using Eris.YRSharp.String.Ansi;
 
 namespace Eris.Utilities.Logger.LogHandle;
 

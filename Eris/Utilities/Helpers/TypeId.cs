@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using PatcherYrSharp;
-using PatcherYrSharp.GeneralDefinitions;
-using PatcherYrSharp.Helpers;
+using Eris.YRSharp;
+using Eris.YRSharp.GeneralDefinitions;
+using Eris.YRSharp.Helpers;
 
 namespace Eris.Utilities.Helpers;
 

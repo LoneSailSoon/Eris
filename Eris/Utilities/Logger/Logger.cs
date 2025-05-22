@@ -1,9 +1,7 @@
-using System.Runtime.InteropServices;
 using System.Text;
 using Eris.Utilities.Logger.LogFormatter;
 using Eris.Utilities.Logger.LogHandle;
 using Eris.Utilities.Logger.LogHandlersManager;
-using PatcherYrSharp.Helpers;
 
 namespace Eris.Utilities.Logger;
 
