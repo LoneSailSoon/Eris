@@ -17,32 +17,25 @@ public abstract class Container<TExt, TBase> where TExt : Extension<TBase>
 
     public abstract void Clear();
 
-    public TExt FindOrAllocate(Pointer<TBase> key,out bool isAllocate )
+    public TExt FindOrAllocate(Pointer<TBase> key, out bool isAllocate)
     {
         isAllocate = false;
-        TExt? val = Find(key);
-        if (val is null)
-        {
-            isAllocate = true;
-            val = Allocate(key);
-        }
-        
+        var val = Find(key);
+        if (val is not null) return val;
+        isAllocate = true;
+        val = Allocate(key);
+
         return val;
     }
+
     public TExt FindOrAllocate(Pointer<TBase> key)
     {
-        TExt? val = Find(key);
-        if (val is null)
-        {
-            val = Allocate(key);
-        }
-        
-        return val;
+        return Find(key) ?? Allocate(key);
     }
 
     public void Remove(Pointer<TBase> key)
     {
-        TExt? val = Find(key);
+        var val = Find(key);
         val?.Expire();
 
         RemoveItem(key);
@@ -123,5 +116,7 @@ public class MapContainer<TExt, TBase> : Container<TExt, TBase>
     {
         _items.Remove(key);
     }
+    
+    public int Count => _items.Count;
 
 }

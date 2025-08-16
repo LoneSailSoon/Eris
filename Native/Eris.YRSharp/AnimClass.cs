@@ -1,19 +1,28 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
+﻿using Eris.YRSharp.GeneralDefinitions;
 using Eris.YRSharp.String.Ansi;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 456)]
-public struct AnimClass : IYRObject<AnimTypeClass>
+public struct AnimClass : IYRObject<AnimClass, AnimTypeClass>
 {
 	public const nint ArrayPointer = 0xA8E9A8;
 	public static ref DynamicVectorClass<Pointer<AnimClass>> Array => ref DynamicVectorClass<Pointer<AnimClass>>.GetDynamicVector(ArrayPointer);
 
-	Pointer<AnimTypeClass> IYRObject<AnimTypeClass>.Type => Type;
+	static Pointer<AnimTypeClass> IYRObject<AnimClass, AnimTypeClass>.Type(Pointer<AnimClass> pThis) => pThis.Ref.Type;
+
+	public unsafe int AnimExtras()
+	{
+		var func = (delegate* unmanaged[Thiscall]<nint, int>)this.GetVirtualFunctionPointer(122);
+		return func(this.GetThisPointer());
+	}
+
+	public unsafe int GetEnd()
+	{
+		var func = (delegate* unmanaged[Thiscall]<nint, int>)this.GetVirtualFunctionPointer(123);
+		return func(this.GetThisPointer());
+	}
 
 
 	public unsafe void SetOwnerObject(Pointer<ObjectClass> pOwner)
@@ -24,15 +33,15 @@ public struct AnimClass : IYRObject<AnimTypeClass>
 
 	public void Pause()
 	{
-		this.Paused = true;
-		this.Unpaused = false;
-		this.PausedAnimFrame = this.Animation.Value;
+		Paused = true;
+		Unpaused = false;
+		PausedAnimFrame = Animation.Value;
 	}
 
 	public void Unpause()
 	{
-		this.Paused = false;
-		this.Unpaused = true;
+		Paused = false;
+		Unpaused = true;
 	}
 
 	public static void Constructor(Pointer<AnimClass> pThis, Pointer<AnimTypeClass> pAnimType, CoordStruct location)

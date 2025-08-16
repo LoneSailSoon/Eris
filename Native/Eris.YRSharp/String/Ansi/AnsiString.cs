@@ -1,6 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp.String.Ansi;
 
@@ -36,7 +34,7 @@ public sealed class AnsiString : IDisposable
     public static implicit operator AnsiString(string str) => new(str);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator AnsiString(IntPtr ptr) => new(ptr);
+    public static implicit operator AnsiString(nint ptr) => new(ptr);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator AnsiString(Pointer<byte> ptr) => new(ptr);

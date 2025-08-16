@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace Eris.YRSharp.String.Ansi;
 
@@ -17,6 +16,18 @@ public readonly ref struct AnsiStringSpan(string str)
             Marshal.FreeHGlobal(Handle);
         }
     }
+    
+    public unsafe ReadOnlySpan<byte> AsSpan()
+    {
+        var length = ((delegate* unmanaged[Cdecl]<nint, uint>)0x7D15A0)(Handle);
+        return new ReadOnlySpan<byte>(Handle.ToPointer(), (int)length);
+    } 
+
+    public unsafe ReadOnlySpan<byte> AsSpan(int length)
+    {
+        return new ReadOnlySpan<byte>(Handle.ToPointer(), length);
+    } 
+
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator nint(AnsiStringSpan pointer) => pointer.Handle;

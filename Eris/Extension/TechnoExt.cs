@@ -1,11 +1,8 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using Eris.Extension.Core.Generic;
-using Eris.Extension.Core.Style;
 using Eris.Extension.Generic;
 using Eris.Serializer;
-using Eris.Utilities.Logger;
 using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
 using NaegleriaSerializer.Streaming;
@@ -15,10 +12,8 @@ namespace Eris.Extension;
 public class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoTypeExt, TechnoTypeClass>,
     IExtensionActivator<TechnoExt, TechnoClass>
 {
-    public TechnoExt(Pointer<TechnoClass> owner) : base(owner)
+    private TechnoExt(Pointer<TechnoClass> owner) : base(owner)
     {
-        _styles = GameObject.Create();
-        _styleStateManager = new StyleStateManager();
     }
 
     public TechnoExt()
@@ -29,9 +24,7 @@ public class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoT
     {
         base.Serialize(stream);
         stream
-            .Process(ref _showVisualTree)
-            .ProcessObject(ref _styles!)
-            .ProcessObject(ref _styleStateManager!);
+            .Process(ref _showVisualTree);
     }
 
     public override int SerializeType => SerializeRegister.TechnoExtSerializeType;
@@ -90,14 +83,6 @@ public class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoT
         return 0;
     }
 
-    private GameObject _styles = null!;
-    public GameObject Styles => _styles;
-    private StyleStateManager _styleStateManager = null!;
-    public StyleStateManager StyleStateManager => _styleStateManager;
-
-    //private List<StyleInstance> _styles = null!;
-    //public List<StyleInstance> Styles => _styles;
-
     private bool _showVisualTree = false;
     public bool ShowVisualTree { get => _showVisualTree; set => _showVisualTree = value; }
 
@@ -105,60 +90,11 @@ public class TechnoExt : CommonInstanceExtension<TechnoExt, TechnoClass, TechnoT
     public override void Awake()
     {
         base.Awake();
-        if (Type.SelectedBy is { } styleType)
-        {
-            foreach (var type in styleType)
-            {
-                StyleManager.Instance.TryCreate(this, _styles, type);
-            }
-        }
     }
 
     protected override void OnExpire()
     {
         base.OnExpire();
-        _styles.Destroy();
-        _styleStateManager.Destroy();
-    }
-
-    public void ToTreeDisplay(StringBuilder sb, string linePrefix)
-    {
-        //if (Token.Initialized)
-        {
-            sb
-           .AppendTreeLeaf(linePrefix, $"UniqueID: {OwnerRef.BaseAbstract.UniqueID} ")
-           .AppendTreeLeaf(linePrefix, $"AbstractType: {OwnerRef.BaseAbstract.WhatAmI()}" )
-           .AppendTreeLeaf(linePrefix, "StyleManager");
-            
-            var subPrefix = TreeDisplayHelper.GetNextPrefix(linePrefix);
-            _styles.ForEach((sb, subPrefix), StyleInstance.ToTreeDisplay);
-
-            sb.AppendTreeLeafLast(subPrefix, "StyleStateManager");
-            _styleStateManager.ToTreeDisplay(sb, TreeDisplayHelper.GetNextPrefixLast(subPrefix));
-            // if (_styles.Count != 0)
-            // {
-            //     
-            //     
-            //     int i;
-            //     for (i = 0; i < _styles.Count - 1; i++)
-            //     {
-            //         sb.AppendTreeLeaf(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
-            //         _styles[i].ToTreeDisplay(sb, subLastPrefix);
-            //         //_styles[i].ToTreeDisplay(sb, subPrefix);
-            //     }
-            //
-            //     //subPrefix = TreeDisplayHelper.GetNextPrefixLast(linePrefix);
-            //     sb.AppendTreeLeafLast(subPrefix, $"Style:{_styles[i].StyleType?.Section ?? "null"}");
-            //
-            //     subLastPrefix = TreeDisplayHelper.GetNextPrefixLast(subPrefix);
-            //     _styles[i].ToTreeDisplay(sb, subLastPrefix);
-            //     //_styles[i].ToTreeDisplay(sb, subPrefix);
-            // }
-
-            sb
-                .AppendTreeLeafLast(linePrefix, $"GameObject:null");
-        }
-       
-
+        Console.WriteLine("OnExpire");
     }
 }

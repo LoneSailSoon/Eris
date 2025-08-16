@@ -1,5 +1,4 @@
 using System.Numerics;
-using Eris.YRSharp.GeneralStructures;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp.MathEx;

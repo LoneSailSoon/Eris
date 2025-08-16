@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.String.Ansi;
+﻿using Eris.YRSharp.String.Ansi;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp.FileFormats;

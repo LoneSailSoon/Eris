@@ -1,7 +1,9 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Eris.Extension;
 using Eris.Extension.Core.World;
 using Eris.Utilities.Logger;
+using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
 using Eris.YRSharp.String.Ansi;
 using NaegleriaSerializer;
@@ -13,7 +15,7 @@ public static class GlobalSerializer
 {
     public static bool IsSaving { get; private set; }
     public static bool IsLoading { get; private set; }
-    public static void StartSave(string savePath)
+    private static void StartSave(string savePath)
     {
         try
         {
@@ -27,16 +29,18 @@ public static class GlobalSerializer
         
     }
 
-    public static void EndSave(string savePath)
+    private static void EndSave(string savePath)
     {
         try
         {
-            
+
             World.Serialize(Saver);
-            
+
             File.WriteAllBytes(GetSavePath(savePath), Saver.Buffer.AsSpan());
             Saver.Reset();
             IsSaving = false;
+            
+            GC.Collect();
         }
         catch (Exception ex)
         {
@@ -45,7 +49,7 @@ public static class GlobalSerializer
 
     }
 
-    public static void StartLoad(string savePath)
+    private static void StartLoad(string savePath)
     {
         try
         {
@@ -60,7 +64,7 @@ public static class GlobalSerializer
         
     }
 
-    public static void EndLoad(string savePath)
+    private static void EndLoad(string savePath)
     {
         try
         {
@@ -69,10 +73,10 @@ public static class GlobalSerializer
             
             Loader.Reset();
             IsLoading = false;
+            GC.Collect();
         }
         catch (Exception ex)
         {
-
             Logger.LogException(ex);
         }
 

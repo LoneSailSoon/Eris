@@ -1,6 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
+﻿using System.Runtime.CompilerServices;
+using Eris.YRSharp.Blitters;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
@@ -8,8 +7,10 @@ namespace Eris.YRSharp;
 [StructLayout(LayoutKind.Explicit, Size = 392)]
 public struct ConvertClass
 {
-    static public readonly IntPtr ArrayPointer = new IntPtr(0x89ECF8);
-    //static public YRPP.GLOBAL_DVC_ARRAY<ConvertClass> GLOBAL_ARRAY = new YRPP.GLOBAL_DVC_ARRAY<ConvertClass>(ArrayPointer);
+    public const nint ArrayPointer = 0x89ECF8;
+
+    public static ref DynamicVectorClass<Pointer<ConvertClass>> Arraay =>
+        ref DynamicVectorClass<Pointer<ConvertClass>>.GetDynamicVector(ArrayPointer);
 
     public static void Constructor(Pointer<ConvertClass> pThis, Pointer<BytePalette> palette, Pointer<BytePalette> palette2, Pointer<Surface> pSurface, uint ShadeCount, bool skipBlitters)
     {
@@ -21,19 +22,36 @@ public struct ConvertClass
         func(pThis, palette, palette2, pSurface, ShadeCount, skipBlitters);
     }
 
+    public unsafe Pointer<Blitter> SelectPlainBlitter(BlitterFlags flags)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, BlitterFlags, nint>)0x490B90;
+        return func(this.GetThisPointer(), flags);
+    }
+    public unsafe Pointer<RLEBlitter> SelectRLEBlitter(BlitterFlags flags)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, BlitterFlags, nint>)0x490E50;
+        return func(this.GetThisPointer(), flags);
+    }
+
 
     [FieldOffset(0)] public int Vfptr;
+    
+    [FieldOffset(4)] public int BytesPerPixel;
+    [FieldOffset(8)] public nint blitters;
+    public FixedArray<Pointer<Blitter>> Blitters => new(ref Unsafe.As<nint, Pointer<Blitter>>(ref blitters), 50);
+    [FieldOffset(208)] public nint rLEBlitters;
+    public FixedArray<Pointer<RLEBlitter>> RLEBlitters => new(ref Unsafe.As<nint, Pointer<RLEBlitter>>(ref rLEBlitters), 39);
+    [FieldOffset(364)] public int ShadeCount;
+    [FieldOffset(368)] public nint fullColorData;
+    public readonly Pointer<byte> FullColorData => fullColorData;
+    [FieldOffset(372)] public nint paletteData;
+    public readonly Pointer<byte> PaletteData => paletteData;
+    [FieldOffset(376)] public nint byteColorData;
+    public readonly Pointer<byte> ByteColorData => byteColorData;
+    [FieldOffset(380)] public uint CurrentZRemap;
+    [FieldOffset(384)] public uint HalfTranslucencyMask;
+    [FieldOffset(388)] public uint QuatTranslucencyMask;
 
-    [FieldOffset(4)] public int LeanAndMean;
-    // [FieldOffset(8)] public Pointer<BlitterCore> Blitters_first;
-    // public Pointer<Pointer<BlitterCore>> Blitters => Pointer<Pointer<BlitterCore>>.AsPointer(ref Blitters_first);
-    [FieldOffset(364)] public int Count;
-    [FieldOffset(368)] public Pointer<byte> BufferA;
-    [FieldOffset(372)] public Pointer<byte> Midpoint;
-    [FieldOffset(376)] public Pointer<byte> BufferB;
-    [FieldOffset(380)] public int f_17C;
-    [FieldOffset(384)] public int f_180;
-    [FieldOffset(388)] public int f_184;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 436)]
@@ -44,11 +62,14 @@ public struct LightConvertClass
 
     [FieldOffset(0)] public ConvertClass Base;
 
-    [FieldOffset(392)] public Pointer<BytePalette> UsedPalette1;
-    [FieldOffset(396)] public Pointer<BytePalette> UsedPalette2;
-    [FieldOffset(400)] public IntPtr _190;
-    [FieldOffset(404)] public int UsageCount;
+    [FieldOffset(392)] public nint usedPalette1;
+    public readonly Pointer<BytePalette> UsedPalette1 => usedPalette1;
+    [FieldOffset(396)] public nint usedPalette2;
+    public readonly Pointer<BytePalette> UsedPalette2 => usedPalette2;
+    [FieldOffset(400)] public nint indexesToIgnore;
+    public readonly Pointer<byte> IndexesToIgnore => indexesToIgnore;
+    [FieldOffset(404)] public int RefCount;
     [FieldOffset(408)] public TintStruct Color1;
     [FieldOffset(420)] public TintStruct Color2;
-    [FieldOffset(432)] public byte _1B0;
+    [FieldOffset(432)] public Bool Tinted;
 }

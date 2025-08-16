@@ -1,6 +1,4 @@
-using System.Runtime.InteropServices;
 using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.Helpers;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
@@ -16,7 +14,6 @@ public struct EventClass
     /// </summary>
     /// <param name="event">事件</param>
     public static bool AddEvent(in EventClass @event)
-
     {
         if (OutList.Count >= 127)
         {
@@ -31,7 +28,6 @@ public struct EventClass
         return true;
     } /**/
 
-    #region 一些函数23333
 
     public unsafe Pointer<EventClass> EventClass_Special(int houseIndex, int id)
     {
@@ -118,10 +114,7 @@ public struct EventClass
         var func = (delegate* unmanaged[Thiscall]<nint, int, NetworkEvents, AbstractType, int, nint>)0x4C6BE0;
         return func(this.GetThisPointer(), houseIndex, eventType, rttitype, id);
     }
-
-    #endregion
-
-
+    
     [FieldOffset(0)] public EventType Type;
     [FieldOffset(1)] public Bool IsExecuted;
     [FieldOffset(2)] public byte HouseIndex;
@@ -193,7 +186,6 @@ public struct EventList
 [StructLayout(LayoutKind.Explicit, Size = 104)]
 public struct EventData
 {
-    #region yr原生EventData
     [FieldOffset(0)] public Nothing nothing;
     [FieldOffset(0)] public Animation Animation;
     [FieldOffset(0)] public FrameInfo FrameInfo;
@@ -206,14 +198,7 @@ public struct EventData
     [FieldOffset(0)] public Place Place;
     [FieldOffset(0)] public SpecialPlace SpecialPlace;
     [FieldOffset(0)] public Specific Specific;
-    #endregion
-
-    #region 自定义EventData
-    #endregion
-
 }
-
-#region  yr原生EventData
 
 [StructLayout(LayoutKind.Explicit, Size = 104)]
 public struct Nothing
@@ -324,11 +309,6 @@ public struct Specific
     [FieldOffset(4)] public int ID;
     [FieldOffset(8)] public byte ExtraData;
 }
-
-#endregion
-
-#region 自定义EventData
-#endregion
 
 public enum EventType : byte
 {

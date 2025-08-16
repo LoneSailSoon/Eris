@@ -1,12 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Eris.Extension.Core.Commands;
 using Eris.Extension.Core.World;
-using Eris.Ui.NaegleriaUi;
 using Eris.Utilities.Ini;
 using Eris.Utilities.Logger;
 using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
+using Eris.YRSharp.Vector;
 
 namespace Eris.Behaviors;
 
@@ -16,6 +15,7 @@ public static class GeneralBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Scenario_Start1_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Scenario_Start1_Behaviors(Registers* r)
     {
+        GC.Collect();
         return 0;
     }
 
@@ -23,7 +23,6 @@ public static class GeneralBehaviors
     [UnmanagedCallersOnly(EntryPoint = "LogicClass_Update_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint LogicClass_Update_Behaviors(Registers* r)
     {
-        NaegleriaUiMissionManager.Running();
         return 0;
     }
 
@@ -34,11 +33,18 @@ public static class GeneralBehaviors
         return 0;
     }
 
+    //[Hook(0x6851F0, 5)]
+    [UnmanagedCallersOnly(EntryPoint = "Scenario_ClearClasses_Start_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe uint Scenario_ClearClasses_Start_Behaviors(Registers* r)
+    {
+        World.Clear();
+        return 0;
+    }
+
     //[Hook(0x685659, 10)]
     [UnmanagedCallersOnly(EntryPoint = "Scenario_ClearClasses_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Scenario_ClearClasses_Behaviors(Registers* r)
     {
-        World.Clear();
         
         return 0;
     }
@@ -60,8 +66,6 @@ public static class GeneralBehaviors
     [UnmanagedCallersOnly(EntryPoint = "CommandClassCallback_Register_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint CommandClassCallback_Register_Behaviors(Registers* r)
     {
-        Command.Register();
-
         return 0;
     }
 
@@ -71,15 +75,41 @@ public static class GeneralBehaviors
     {
         try
         {
-            //nint factory = YRMemory.Allocate<TestLocomotionClassFactory>();
-            //TestLocomotionClassFactory.Constructor(factory);
-            //ComManager.RegisterFactoryForClass(TestLocomotion.UuId, factory);
+            
         }
         catch (Exception e)
         {
             Logger.LogException(e);
         }
 
+        return 0;
+    }
+    
+    //623880 5
+    [UnmanagedCallersOnly(EntryPoint = "TextLabelClass_Render_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe uint TextLabelClass_Render_Behaviors(Registers* r)
+    {
+        Pointer<Point2D> pos = (nint)r->EDX;
+        pos.Ref += Surface.ViewBound.BottomLeft - (- Math.Max((Surface.ViewBound.Width - 800)/2, 0), 300);
+        
+        return 0;
+    }
+    
+    //623AA8 7
+    [UnmanagedCallersOnly(EntryPoint = "TextLabelClass_Render_Text_Back_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
+    public static unsafe uint TextLabelClass_Render_Text_Back_Behaviors(Registers* r)
+    {
+        Pointer<RectangleStruct> pRectangleStruct = r->LeaStack<nint>(0x8 + 0x30);
+        Pointer<DSurface> pSurface = r->Stack<nint>(0x8 + 0x2C);
+        
+        if (!pRectangleStruct || !pSurface) return 0;
+        
+        pRectangleStruct.Ref.X -= 1;
+        pRectangleStruct.Ref.Width -= 2;
+        pSurface.Ref.Base.FillRectTrans(pRectangleStruct.Data, 0, 60);
+        pRectangleStruct.Ref.Height = 0;
+        pRectangleStruct.Ref.Width = 0;
+        
         return 0;
     }
 }

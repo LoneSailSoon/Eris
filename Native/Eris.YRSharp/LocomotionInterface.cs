@@ -1,6 +1,4 @@
 using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;

@@ -1,6 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp.String.Ansi;
 
@@ -10,6 +8,12 @@ public struct AnsiStringPointer(nint ptr) : IEquatable<AnsiStringPointer>
 {
     nint buffer = ptr;
 
+    public AnsiStringPointer(ref byte buffer, int _) : this(buffer.GetThisPointer())
+    {
+        
+    }
+    
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator AnsiString(AnsiStringPointer pointer) => new(pointer.buffer);
 
@@ -33,12 +37,18 @@ public struct AnsiStringPointer(nint ptr) : IEquatable<AnsiStringPointer>
     
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static AnsiStringPointer From(nint ptr) => new(ptr);
-
+    
     public unsafe ReadOnlySpan<byte> AsSpan()
     {
         var length = ((delegate* unmanaged[Cdecl]<nint, uint>)0x7D15A0)(buffer);
         return new ReadOnlySpan<byte>(buffer.ToPointer(), (int)length);
     } 
+    
+    public unsafe ReadOnlySpan<byte> AsSpan(int length)
+    {
+        return new ReadOnlySpan<byte>(buffer.ToPointer(), length);
+    } 
+
 
     public bool Equals(AnsiStringPointer other)
     {

@@ -1,7 +1,4 @@
 using Eris.Extension.Core.Generic;
-using Eris.Extension.Core.Style;
-using Eris.Extension.Core.Style.Modules.Behavior;
-using Eris.Extension.Core.Style.Modules.DamageSelf;
 using NaegleriaSerializer;
 
 namespace Eris.Serializer;
@@ -19,16 +16,7 @@ public static class SerializeRegister
     public const int SuperWeaponExtSerializeType = 9;
     public const int WarheadTypeExtSerializeType = 10;
     public const int WeaponTypeExtSerializeType = 11;
-    public const int StyleTypeType = 12;
-    public const int StyleInstanceType = 13;
-    public const int GameObjectType = 14;
-    public const int StyleStateModuleType = 15;
-    public const int DamageSelfModuleType = 16;
-    public const int DamageSelfModuleDataType = 17;
-    public const int DestroySelfStateType = 18;
-    public const int DestroySelfDataType = 19;
-    public const int BehaviorMoudleType = 20;
-    public const int BehaviorMoudleDataType = 21;
+    public const int GameObjectType = 12;
 
 
     public static void Register()
@@ -44,13 +32,6 @@ public static class SerializeRegister
         DeserializeObjectActivator.Register(SuperWeaponExtSerializeType, static () => new Extension.SuperWeaponExt());
         DeserializeObjectActivator.Register(WarheadTypeExtSerializeType, static () => new Extension.WarheadTypeExt());
         DeserializeObjectActivator.Register(WeaponTypeExtSerializeType, static () => new Extension.WeaponTypeExt());
-        DeserializeObjectActivator.Register(StyleTypeType, static () => new StyleType());
-        DeserializeObjectActivator.Register(StyleInstanceType, static () => new StyleInstance());
         DeserializeObjectActivator.Register(GameObjectType, static () => new GameObject());
-        DeserializeObjectActivator.Register(StyleStateModuleType, static () => new StyleStateManager());
-        DeserializeObjectActivator.Register(DamageSelfModuleType, static () => new DamageSelfModule());
-        DeserializeObjectActivator.Register(DamageSelfModuleDataType, static () => new DamageSelfModuleData());
-        DeserializeObjectActivator.Register(DestroySelfStateType, static () => new BehaviorMoudle());
-        DeserializeObjectActivator.Register(DestroySelfDataType, static () => new BehaviorMoudleData());
     }
 }

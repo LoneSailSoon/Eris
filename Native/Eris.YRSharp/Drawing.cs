@@ -1,14 +1,21 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
+﻿using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
 
 public static class Drawing
 {
-    private const nint tooltipColor = 0xB0FA1C;
+    public const nint tooltipColor = 0xB0FA1C;
     public static ref ColorStruct TooltipColor => ref tooltipColor.Convert<ColorStruct>().Ref;
 
+    public const nint dirtyAreas = 0xB0CE78;
+
+    public static ref DynamicVectorClass<DirtyAreaStruct> DirtyAreas =>
+        ref DynamicVectorClass<DirtyAreaStruct>.GetDynamicVector(dirtyAreas);
+
+    public const nint colorMode = 0x8205D0;
+    
+    public static ref ColorStruct ColorMode => ref colorMode.Convert<ColorStruct>().Ref;
+    
     public static int Color16Bit(ColorStruct color)
     {
         return (color.B >> 3) | ((color.G >> 2) << 5) | ((color.R >> 3) << 11);
@@ -17,57 +24,12 @@ public static class Drawing
     public static ColorStruct WordColor(int bits)
     {
         ColorStruct color;
-        color.R = (byte)(((bits & 0b1111100000000000) >> 11) << 3);
-        color.G = (byte)((byte)((bits & 0b11111100000) >> 5) << 2); // msvc stupid warning
-        color.B = (byte)((bits & 0b11111) << 3);
+        color.R = (byte)(((bits & 0b_11111_000000_00000) >> 11) << 3);
+        color.G = (byte)((byte)((bits & 0b_111111_00000) >> 5) << 2); // msvc stupid warning
+        color.B = (byte)((bits & 0b_11111) << 3);
         return color;
     }
-
-    //TextBox dimensions for tooltip-style boxes
-    // public static unsafe Pointer<RectangleStruct> GetTextDimensions(Pointer<RectangleStruct> pOutBuffer, UniString text, Point2D location, int flags, int marginX = 0, int marginY = 0)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, IntPtr, IntPtr, Point2D, int, int, int, IntPtr>)ASM.FastCallTransferStation;
-    //     return func(0x4A59E0, pOutBuffer, text, location, flags, marginX, marginY);
-    // }
-
-    // public static unsafe RectangleStruct GetTextDimensions(string text, Point2D location, int flags, int marginX = 0, int marginY = 0)
-    // {
-    //     RectangleStruct outBuffer = default;
-    //     GetTextDimensions(Pointer<RectangleStruct>.AsPointer(ref outBuffer), text, location, flags, marginX, marginY);
-    //     return outBuffer;
-    // }
-
-    // public static unsafe int RGB2DWORD(int red, int green, int blue)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, int, int, int, int>)ASM.FastCallTransferStation;
-    //     return func(0x4355D0, red, green, blue);
-    // }
-    //
-    // public static unsafe int RGB2DWORD(ColorStruct color)
-    // {
-    //     return RGB2DWORD(color.R, color.G, color.B);
-    // }
-
-    // public static unsafe Pointer<RectangleStruct> Intersect(Pointer<RectangleStruct> pOutBuffer,
-    //     Pointer<RectangleStruct> rect1,
-    //     Pointer<RectangleStruct> rect2,
-    //     Pointer<int> delta_left,
-    //     Pointer<int> delta_top)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, IntPtr, IntPtr, IntPtr, IntPtr, IntPtr, IntPtr>)ASM.FastCallTransferStation;
-    //     return func(0x421B60, pOutBuffer, rect1, rect2, delta_left, delta_top);
-    // }
-
-    // public static Pointer<RectangleStruct> Intersect(Pointer<RectangleStruct> pOutBuffer,
-    //     Pointer<RectangleStruct> rect1,
-    //     Pointer<RectangleStruct> rect2)
-    //     => Intersect(pOutBuffer, rect1, rect2, IntPtr.Zero, IntPtr.Zero);
-
-    // public static RectangleStruct CCIntersect(RectangleStruct rect1, RectangleStruct rect2)
-    // {
-    //     RectangleStruct pOutBuffer = new();
-    //     return Intersect(pOutBuffer.GetThisPointer(), rect1.GetThisPointer(), rect2.GetThisPointer()).Ref;
-    // }
+    
     public static RectangleStruct Intersect(RectangleStruct rect1, RectangleStruct rect2)
     {
         rect1 = rect1.Sort();
@@ -85,22 +47,76 @@ public static class Drawing
 [StructLayout(LayoutKind.Explicit, Size = 48)]
 public struct ABufferClass
 {
-    private static IntPtr ppABuffer = new IntPtr(0x87E8A4);
-    public static Pointer<ABufferClass> ABuffer { get => ((Pointer<Pointer<ABufferClass>>)ppABuffer).Data; set => ((Pointer<Pointer<ABufferClass>>)ppABuffer).Ref = value; }
+    private const nint ppABuffer = 0x87E8A4;
+
+    public static Pointer<ABufferClass> ABuffer
+    {
+        get => ((Pointer<Pointer<ABufferClass>>)ppABuffer).Data;
+        set => ((Pointer<Pointer<ABufferClass>>)ppABuffer).Ref = value;
+    }
 
     public unsafe Pointer<short> GetBufferAt(Point2D point)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref ABufferClass, int,int,IntPtr>)0x4114B0;
+        var func = (delegate* unmanaged[Thiscall]<ref ABufferClass, int, int, IntPtr>)0x4114B0;
         return func(ref this, point.X, point.Y);
     }
+
     public unsafe Pointer<short> AdjustedGetBufferAt(Point2D point)
     {
         return GetBufferAt(point - new Point2D(0, Rect.Y));
     }
 
+    public unsafe bool BlitTo(Pointer<Surface> pSurface, int X, int Y, int Offset, int Size)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, int, int, int, int, bool>)0x410DC0;
+        return func(this.GetThisPointer(), pSurface, X, Y, Offset, Size);
+    }
+
+    public unsafe void ReleaseSurface()
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, void>)0x410E50;
+        func(this.GetThisPointer());
+    }
+
+    public unsafe void Blitter(Pointer<ushort> Data, int Length, ushort Value)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, int, ushort, void>)0x410E70;
+        func(this.GetThisPointer(), Data, Length, Value);
+    }
+
+    public unsafe void BlitAt(int X, int Y, uint Color)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, int, int, uint, void>)0x410ED0;
+        func(this.GetThisPointer(), X, Y, Color);
+    }
+
+    public unsafe bool Fill(ushort Color)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, ushort, bool>)0x4112D0;
+        return func(this.GetThisPointer(), Color);
+    }
+
+    public unsafe bool FillRect(ushort Color, RectangleStruct rect)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, ushort, RectangleStruct, bool>)0x411310;
+        return func(this.GetThisPointer(), Color, rect);
+    }
+
+    public unsafe void BlitRect(RectangleStruct rect)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, RectangleStruct, void>)0x411330;
+        func(this.GetThisPointer(), rect);
+    }
+
+    public unsafe Pointer<byte> GetBuffer(int X, int Y)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, int, int, nint>)0x4114B0;
+        return func(this.GetThisPointer(), X, Y);
+    }
+
     [FieldOffset(0)] public RectangleStruct Rect;
     [FieldOffset(16)] public int _10;
-    //[FieldOffset(20)] public Pointer<Surface> BSurface;
+    [FieldOffset(20)] public Pointer<Surface> BSurface;
     [FieldOffset(24)] public Pointer<byte> BufferStart;
     [FieldOffset(28)] public Pointer<byte> BufferEndpoint;
     [FieldOffset(32)] public int BufferSize;
@@ -110,10 +126,10 @@ public struct ABufferClass
 
 }
 
-[StructLayout(LayoutKind.Explicit, Size = 0x30)]
+[StructLayout(LayoutKind.Explicit, Size = 48)]
 public struct ZBufferClass
 {
-    private static IntPtr ppZBuffer = new IntPtr(0x887644);
+    private const nint ppZBuffer = 0x887644;
     public static Pointer<ZBufferClass> ZBuffer { get => ((Pointer<Pointer<ZBufferClass>>)ppZBuffer).Data; set => ((Pointer<Pointer<ZBufferClass>>)ppZBuffer).Ref = value; }
 
     public unsafe Pointer<short> GetBufferAt(Point2D point)
@@ -125,10 +141,53 @@ public struct ZBufferClass
     {
         return GetBufferAt(point - new Point2D(0, Rect.Y));
     }
+    
+    public unsafe bool BlitTo(Pointer<Surface> pSurface, int X, int Y, int Offset, int Size)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, int, int, int, int, bool>)0x7BCA50;
+        return func(this.GetThisPointer(), pSurface, X, Y, Offset, Size);
+    }
+    public unsafe void ReleaseSurface()
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, void>)0x7BCAE0;
+        func(this.GetThisPointer());
+    }
+    public unsafe void Blitter(Pointer<ushort> Data, int Length, ushort Value)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, int, ushort, void>)0x7BCAF0;
+        func(this.GetThisPointer(), Data, Length, Value);
+    }
+    public unsafe void BlitAt(int X, int Y, uint Color)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, int, int, uint, void>)0x7BCB50;
+        func(this.GetThisPointer(), X, Y, Color);
+    }
+    public unsafe bool Fill(ushort Color)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, ushort, bool>)0x7BCF50;
+        return func(this.GetThisPointer(), Color);
+    }
+    public unsafe bool FillRect(ushort Color, RectangleStruct rect)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, ushort, RectangleStruct, bool>)0x7BCF90;
+        return func(this.GetThisPointer(), Color, rect);
+    }
+    public unsafe void BlitRect(RectangleStruct rect)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, RectangleStruct, void>)0x7BCFB0;
+        func(this.GetThisPointer(), rect);
+    }
+    public unsafe Pointer<byte> GetBuffer(int X, int Y)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, int, int, nint>)0x7BD130;
+        return func(this.GetThisPointer(), X, Y);
+    }
+
+
 
     [FieldOffset(0)] public RectangleStruct Rect;
     [FieldOffset(16)] public int CurrentOffset;
-    //[FieldOffset(20)] public Pointer<Surface> BSurface;
+    [FieldOffset(20)] public Pointer<Surface> BSurface;
     [FieldOffset(24)] public Pointer<byte> BufferStart;
     [FieldOffset(28)] public Pointer<byte> BufferEndpoint;
     [FieldOffset(32)] public int BufferSize;
@@ -136,3 +195,21 @@ public struct ZBufferClass
     [FieldOffset(40)] public int Width;
     [FieldOffset(44)] public int Height;
 }
+
+[StructLayout(LayoutKind.Sequential, Size = 20)]
+public struct DirtyAreaStruct
+{
+    public RectangleStruct Rect;
+    public Bool alphabool10;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct VoxelCacheStruct
+{
+    public short X;
+    public short Y;
+    public ushort Width;
+    public ushort Height;
+    public nint Buffer;
+}
+

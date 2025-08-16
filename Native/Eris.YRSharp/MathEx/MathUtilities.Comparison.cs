@@ -73,5 +73,9 @@ partial class MathUtilities
     public static (double min, double max) GetMinMaxFromDelta(double initialValue, double delta) =>
         delta < 0 ? (initialValue + delta, initialValue) : (initialValue, initialValue + delta);
     
+    public static (int min, int max) GetMinMax(int a, int b) => a < b ? (a, b) : (b, a);
+
+    public static (int min, int max) GetMinMaxFromDelta(int initialValue, int delta) =>
+        delta < 0 ? (initialValue + delta, initialValue) : (initialValue, initialValue + delta);
     
 }

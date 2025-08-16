@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Eris.Extension;
 using Eris.Extension.Core.Scripts;
-using Eris.Extension.Core.Style;
 using Eris.Utilities.Logger;
 using Eris.YRSharp;
 using Eris.YRSharp.GeneralDefinitions;
@@ -24,20 +23,13 @@ public static class TechnoBehaviors
 
             var ext = TechnoExt.ExtMap.Find(pTechno);
 
-            if (ext is not null)
-            {
-                
-                StyleManager.Instance.OnUpdate(ext.Styles);
-                ext.StyleStateManager.OnUpdate();
-                ext.GameObject.ForEach(o => o.OnUpdate());
-
-                
-            }
+            ext?.GameObject.ForEach(o => o.OnUpdate());
         }
         catch (Exception e)
         {
             Logger.LogException(e);
         }
+
         return 0;
     }
 
@@ -52,10 +44,7 @@ public static class TechnoBehaviors
             var faceDir = r->Stack<Direction>(0x8);
             var ext = TechnoExt.ExtMap.Find(pTechno);
 
-            if (ext is not null)
-            {
-                ext.GameObject.ForEach((pCoord, faceDir), TechnoScriptable.OnPut);
-            }
+            ext?.GameObject.ForEach((pCoord, faceDir), TechnoScriptable.OnPut);
 
         }
         catch (Exception e)
@@ -99,38 +88,6 @@ public static class TechnoBehaviors
         {
             Pointer<TechnoClass> pTechno = (nint)r->ESI;
             var ext = TechnoExt.ExtMap.Find(pTechno);
-            if (ext is not null && ext.ShowVisualTree)
-            {
-
-                var pos = TacticalClass.Instance.CoordsToClient(ext.OwnerRef.BaseAbstract.GetCoords()) + (10, 10);
-                
-                if (Surface.ViewBound.InRect(pos))
-                {
-
-                    var sb = new StringBuilder();
-                    sb.Append($" [{ext.OwnerTypeRef.BaseAbstractType.ID}]").AppendLine();
-                    ext.ToTreeDisplay(sb, " ");
-                    var text = sb.ToString();
-                    Surface.GetTextDimension(text, out var w, out var h, 300);
-                    if (Surface.ViewBound.InRect(pos + (w, h + 12)))
-                    {
-
-                        Surface.Current.Ref.FillRectEx(Surface.ViewBound, new(pos, (w, h + 12)), (0x28, 0x28, 0x28));
-                        pos.Y += 6;
-                        foreach (var line in text.Split(Environment.NewLine))
-                        {
-                            Surface.Temp.Ref.DrawText(line, pos, (200, 200, 200));
-                            pos.Y += 19;
-                        }
-                    }
-
-                    
-
-                    //Console.WriteLine($"{w} : {h}");
-                    //Surface.Current.Ref.BitTextDraw("ABCD", new(pos, (w, h)));
-                    //Surface.Current.Ref.DrawText(sb.ToString(), pos, Drawing.TooltipColor);
-                }
-            }
         }
         catch (Exception e)
         {
@@ -143,7 +100,6 @@ public static class TechnoBehaviors
     [UnmanagedCallersOnly(EntryPoint = "TechnoClass_ReceiveDamage_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint TechnoClass_ReceiveDamage_Behaviors(Registers* r)
     {
-        
         try
         {
             Pointer<TechnoClass> pTechno = (nint)r->ECX;
@@ -157,11 +113,7 @@ public static class TechnoBehaviors
             
             var ext = TechnoExt.ExtMap.Find(pTechno);
 
-            if (ext is not null)
-            {
-                ext.GameObject.ForEach((pDamage, distanceFromEpicenter, pWH: pWh, pAttacker, ignoreDefenses, preventPassengerEscape, pAttackingHouse), TechnoScriptable.OnReceiveDamage);
-                ext.StyleStateManager.OnReceiveDamage(ext, distanceFromEpicenter, pWh, pAttacker, pAttackingHouse);
-            }
+            ext?.GameObject.ForEach((pDamage, distanceFromEpicenter, pWH: pWh, pAttacker, ignoreDefenses, preventPassengerEscape, pAttackingHouse), TechnoScriptable.OnReceiveDamage);
 
         }
         catch (Exception e)
@@ -213,7 +165,6 @@ public static class TechnoBehaviors
 
             if (ext is not null)
             {
-                //ext.GameObject.ForEach((nWeaponIndex, pTarget), TechnoScriptable.OnFire);
             }
 
         }

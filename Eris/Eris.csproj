@@ -10,6 +10,8 @@
 		<PlatformTarget>x86</PlatformTarget>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<InvariantGlobalization>true</InvariantGlobalization>
+		<AssemblyVersion>0.0.0.3</AssemblyVersion>
+		<FileVersion>0.0.0.3</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -23,14 +25,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="CommonRenderUi">
-        <HintPath>Ui\NaegleriaUi\CommonRenderUi.dll</HintPath>
-      </Reference>
       <Reference Include="NaegleriaSerializer">
         <HintPath>Serializer\NaegleriaSerializer.dll</HintPath>
-      </Reference>
-      <Reference Include="NaegleriaUi">
-        <HintPath>Ui\NaegleriaUi\NaegleriaUi.dll</HintPath>
       </Reference>
     </ItemGroup>
 

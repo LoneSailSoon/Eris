@@ -1,15 +1,11 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-
-namespace Eris.YRSharp;
+﻿namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 464)]
 public struct WarheadTypeClass
 {
-    public static readonly IntPtr ArrayPointer = new IntPtr(0x8874C0);
+    private const nint ArrayPointer = 0x8874C0;
 
-    public static GlobalDvcArray<WarheadTypeClass> AbstractTypeArray { get; } = new GlobalDvcArray<WarheadTypeClass>(ArrayPointer);
+    public static readonly GlobalDvcArray<WarheadTypeClass> AbstractTypeArray = new(ArrayPointer);
 
     [FieldOffset(0)] public AbstractTypeClass Base;
     [FieldOffset(152)] public float Deform;
@@ -63,4 +59,12 @@ public struct WarheadTypeClass
     [FieldOffset(424)] public DynamicVectorClass<int> DebrisMaximums;
     [FieldOffset(452)] public int MaxDebris;
     [FieldOffset(456)] public int MinDebris;
+}
+
+[StructLayout(LayoutKind.Explicit)]
+public struct WarheadFlags
+{
+    [FieldOffset(0)]public Bool ForceFire;
+    [FieldOffset(1)]public Bool Retaliate;
+    [FieldOffset(2)]public Bool PassiveAcquire;
 }

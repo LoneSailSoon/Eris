@@ -1,0 +1,63 @@
+using Eris.YRSharp.String.Ansi;
+
+namespace Eris.YRSharp;
+
+public static class GameStrings
+{
+    public static AnsiStringPointer YurisRevenge => 0x849F48;
+    public static AnsiStringPointer BlowfishDll => 0x840A78;
+    public static AnsiStringPointer XxiconShp => 0x8204FC;
+    public static AnsiStringPointer LssobsShp => 0x8297F4;
+    public static AnsiStringPointer _800 => 0x8297DC;
+    public static AnsiStringPointer _640 => 0x8297E0;
+    public static AnsiStringPointer None => 0x817474;
+    public static AnsiStringPointer _none => 0x817694;
+    public static AnsiStringPointer Neutral => 0x82BA08;
+    public static AnsiStringPointer Civilian => 0x818164;
+    public static AnsiStringPointer Special => 0x817318;
+    public static AnsiStringPointer UimdIni => 0x827DC8;
+    public static AnsiStringPointer ThememdIni => 0x825D94;
+    public static AnsiStringPointer EvamdIni => 0x825DF0;
+    public static AnsiStringPointer SoundmdIni => 0x825E50;
+    public static AnsiStringPointer BattlemdIni => 0x826198;
+    public static AnsiStringPointer AimdIni => 0x82621C;
+    public static AnsiStringPointer ArtmdIni => 0x826254;
+    public static AnsiStringPointer RulesmdIni => 0x826260;
+    public static AnsiStringPointer Ra2mdIni => 0x826444;
+    public static AnsiStringPointer MapselmdIni => 0x830370;
+    public static AnsiStringPointer MissionmdIni => 0x839724;
+    public static AnsiStringPointer General => 0x826278;
+    public static AnsiStringPointer Basic => 0x82BF9C;
+    public static AnsiStringPointer AudioVisual => 0x839EA8;
+    public static AnsiStringPointer CombatDamage => 0x839E8C;
+    public static AnsiStringPointer Radiation => 0x839E80;
+    public static AnsiStringPointer ToolTips => 0x833188;
+    public static AnsiStringPointer CrateRules => 0x839E9C;
+    public static AnsiStringPointer JumpjetControls => 0x839D58;
+    public static AnsiStringPointer Waypoints => 0x82DB0C;
+    public static AnsiStringPointer VariableNames => 0x83D824;
+    public static AnsiStringPointer McvRedeploys => 0x83CF68;
+    public static AnsiStringPointer EvaStructuresold => 0x819030;
+    public static AnsiStringPointer EvaInsufficientfunds => 0x819044;
+    public static AnsiStringPointer EvaUnitsold => 0x822630;
+    public static AnsiStringPointer EvaOreminerunderattack => 0x824784;
+    public static AnsiStringPointer EvaCannotdeployhere => 0x82012C;
+    public static AnsiStringPointer EvaUnitready => 0x8249A0;
+    public static AnsiStringPointer TxttoReplay => 0x83DB24;
+    public static AnsiStringPointer TxtOk => 0x825FB0;
+    public static AnsiStringPointer TxtCancel => 0x825FD0;
+    public static AnsiStringPointer TxtControl => 0x82729C;
+    public static AnsiStringPointer TxtInterface => 0x826FEC;
+    public static AnsiStringPointer TxtSelection => 0x827250;
+    public static AnsiStringPointer TxtTaunt => 0x827218;
+    public static AnsiStringPointer TxtTeam => 0x826FA4;
+    public static AnsiStringPointer TxtSavingGame => 0x820DD4;
+    public static AnsiStringPointer TxtGameWasSaved => 0x829FE0;
+    public static AnsiStringPointer TxtErrorSavingGame => 0x829EBC;
+    public static AnsiStringPointer TxtPri => 0x843150;
+    public static AnsiStringPointer TxtPrimary => 0x843158;
+    public static AnsiStringPointer TxtPowerDrain2 => 0x843164;
+    public static AnsiStringPointer TxtMoneyFormat1 => 0x83FAB0;
+    public static AnsiStringPointer TxtMoneyFormat2 => 0x83FA9C;
+    public static AnsiStringPointer GuiDebug => 0x827AF8;
+}

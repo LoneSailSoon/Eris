@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Eris.YRSharp;
+﻿namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 3600)]
 public struct AircraftTypeClass
@@ -16,5 +14,17 @@ public struct AircraftTypeClass
     [FieldOffset(0)] public ObjectTypeClass BaseObjectType;
     [FieldOffset(0)] public AbstractTypeClass BaseAbstractType;
     [FieldOffset(3576)] public int ArrayIndex;
+    [FieldOffset(3580)] public Bool Carryall;
+    [FieldOffset(3584)] public nint trailer;
 
+    public Pointer<AnimTypeClass> Trailer => trailer;
+    
+    [FieldOffset(3588)] public int SpawnDelay;
+    [FieldOffset(3592)] public bool Rotors;
+    [FieldOffset(3593)] public bool CustomRotor;
+    [FieldOffset(3594)] public bool Landable;
+    [FieldOffset(3595)] public bool FlyBy;
+    [FieldOffset(3596)] public bool FlyBack;
+    [FieldOffset(3597)] public bool AirportBound;
+    [FieldOffset(3598)] public bool Fighter;
 }

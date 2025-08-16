@@ -14,4 +14,14 @@ public static class NativeCode
     ]);
     
     public static nint FastCallTransferStation => FastCallHandle.Handle;
+    
+    private static readonly VirtualMemoryor Std2ThisCallHandle = new([
+        0x8B, 0x4C, 0x24, 0x08, //MOV ECX, [ESP + 8]
+        0x58, //POP EAX
+        0x89, 0x44, 0x24, 0x04, // MOV [ESP + 4], EAX
+        0x58, //POP EAX
+        0xFF, 0xE0 // JMP EAX
+    ]);
+    
+    public static nint Std2ThisCallTransferStation => Std2ThisCallHandle.Handle;
 }

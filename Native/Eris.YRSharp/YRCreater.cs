@@ -1,6 +1,4 @@
-﻿using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
+﻿using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
 
@@ -21,6 +19,13 @@ public static class YRCreater
     //     SHPReference.Constructor(pThis.Pointer, fileName);
     //     return pThis.Pointer;
     // }
+    
+    public static Pointer<AirstrikeClass> Constructor(this UnCotrPointer<AirstrikeClass> pThis, Pointer<TechnoClass> pOwner)
+    {
+        AirstrikeClass.Constructor(pThis.Pointer, pOwner);
+        return pThis.Pointer;
+    }
+
 
     public static Pointer<AnimClass> Constructor(this UnCotrPointer<AnimClass> pThis, Pointer<AnimTypeClass> pAnimType, CoordStruct location)
     {
@@ -62,6 +67,12 @@ public static class YRCreater
     public static Pointer<ConvertClass> Constructor(this UnCotrPointer<ConvertClass> pThis, Pointer<BytePalette> palette, Pointer<BytePalette> palette2, Pointer<Surface> pSurface, uint ShadeCount, bool skipBlitters)
     {
         ConvertClass.Constructor(pThis.Pointer, palette, palette2, pSurface, ShadeCount, skipBlitters);
+        return pThis.Pointer;
+    }
+    
+    public static Pointer<EBolt> Constructor(this UnCotrPointer<EBolt> pThis, Pointer<BytePalette> palette, Pointer<BytePalette> palette2, Pointer<Surface> pSurface, uint ShadeCount, bool skipBlitters)
+    {
+        EBolt.Constructor(pThis.Pointer);
         return pThis.Pointer;
     }
     

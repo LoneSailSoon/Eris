@@ -9,7 +9,7 @@ namespace Eris.Extension.Generic;
 public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> : InstanceExtension<TExt, TBase>, IGameObjectOwner<TExt>
     where TExt : InstanceExtension<TExt, TBase>, IExtensionActivator<TExt, TBase>, IGameObjectOwner<TExt>
     where TTypeExt : CommonTypeExtension<TTypeExt, TTypeBase>, IExtensionActivator<TTypeExt, TTypeBase>
-    where TBase : IYRObject<TTypeBase>
+    where TBase : IYRObject<TBase, TTypeBase>
 {
     protected TTypeExt? TypeField;
     protected GameObject? ObjectField;
@@ -35,7 +35,7 @@ public abstract class CommonInstanceExtension<TExt, TBase, TTypeExt, TTypeBase> 
 
     public virtual void Awake()
     {
-        TypeField ??= CommonTypeExtension<TTypeExt, TTypeBase>.ExtMap.Find(OwnerRef.Type)!;
+        TypeField ??= CommonTypeExtension<TTypeExt, TTypeBase>.ExtMap.Find(TBase.Type(OwnerObject))!;
         if (TypeField.Scripts is { } scripts)
         {
             foreach (var script in scripts)

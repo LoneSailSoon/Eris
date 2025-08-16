@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
+﻿using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
 

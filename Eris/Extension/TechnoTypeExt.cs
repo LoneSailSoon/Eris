@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Eris.Extension.Core.Style;
 using Eris.Extension.Generic;
 using Eris.Serializer;
 using Eris.Utilities.Ini;
@@ -24,8 +23,6 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
     public override void Serialize(INaegleriaStream stream)
     {
         base.Serialize(stream);
-        stream
-            .ProcessObjectArrayInline(ref SelectedBy!);
     }
 
     public override int SerializeType => SerializeRegister.TechnoTypeExtSerializeType;
@@ -93,7 +90,6 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
         ini.SetCurrentIni(pIni);
 
         var section = ini[OwnerRef.BaseAbstractType.ID];
-        StyleTypeParser.Parse(section["Style.Types"u8], ref SelectedBy);
 
         //Parsers.Parse(ini.Read(OwnerRef.BaseAbstractType.ID, "Strength"), ref _typeTest);
     }
@@ -109,6 +105,4 @@ public class TechnoTypeExt : CommonTypeExtension<TechnoTypeExt, TechnoTypeClass>
         LoadFromIni(pItem, pIni);
         return 0;
     }
-
-    public StyleType[]? SelectedBy;
 }

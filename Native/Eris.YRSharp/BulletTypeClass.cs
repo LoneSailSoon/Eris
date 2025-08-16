@@ -1,14 +1,11 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-
-namespace Eris.YRSharp;
+﻿namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 760)]
 public struct BulletTypeClass
 {
 	public const nint ArrayPointer = 0xA83C80;
 
-	public static GlobalDvcArray<BulletTypeClass> AbstractTypeArray { get; } = new(ArrayPointer);
+	public static readonly GlobalDvcArray<BulletTypeClass> AbstractTypeArray = new(ArrayPointer);
 
 	public unsafe Pointer<BulletClass> CreateBullet(Pointer<AbstractClass> target, Pointer<TechnoClass> owner, int damage, Pointer<WarheadTypeClass> wh, int speed, bool bright)
 	{

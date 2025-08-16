@@ -1,46 +1,73 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.String.Ansi;
+﻿using Eris.YRSharp.String.Ansi;
 
 namespace Eris.YRSharp;
 
-[StructLayout(LayoutKind.Explicit, Size = 88)]
+[StructLayout(LayoutKind.Explicit, Size = 64)]
 public struct IniClass
 {
-    [StructLayout(LayoutKind.Explicit, Size = 68)]
-    public struct IniSection
+    [StructLayout(LayoutKind.Sequential)]
+    public struct INIComment
     {
-        [FieldOffset(0)] public GenericNode Base;
-
-        [FieldOffset(12)] public AnsiStringPointer Name;
-
-        [FieldOffset(16)] public YRList<IniEntry> Entries;
+        public nint value;
+        public AnsiStringPointer Value => value;
+        public nint next;
+        public Pointer<INIComment>  Next => next;
     }
-
-    [StructLayout(LayoutKind.Explicit, Size = 28)]
+    
+    [StructLayout(LayoutKind.Explicit, Size = 40)]
     public struct IniEntry
     {
         [FieldOffset(0)] public GenericNode Base;
         [FieldOffset(12)] public AnsiStringPointer Key;
         [FieldOffset(16)] public AnsiStringPointer Value;
+        [FieldOffset(20)] public nint comments;
+        public Pointer<INIComment>  Comments => comments;
+        [FieldOffset(24)]public nint  commentString;
+        public AnsiStringPointer CommentString => commentString;
+        [FieldOffset(28)]public int PreIndentCursor;
+        [FieldOffset(32)]public int PostIndentCursor;
+        [FieldOffset(36)]public int CommentCursor;
     }
+    
+    [StructLayout(LayoutKind.Explicit, Size = 68)]
+    public struct IniSection
+    {
+        [FieldOffset(0)] public GenericNode Base;
+
+        [FieldOffset(12)] public nint name;
+        public AnsiStringPointer Name => name;
+
+        [FieldOffset(16)] public YRList<IniEntry> Entries;
+        //TODO:
+        //IndexClass
+        [FieldOffset(64)] public nint comments;
+        public Pointer<INIComment>  Comments => comments;
+    }
+
+    [FieldOffset(0)] public nint vftable;
+    [FieldOffset(4)] public nint CurrentSectionName;
+    [FieldOffset(12)] public YRList<IniSection> Sections;
+    //TODO:
+    //IndexType
+    [FieldOffset(60)]public nint  commentString;
+    public AnsiStringPointer CommentString => commentString;
 }
 
 [StructLayout(LayoutKind.Explicit, Size = 88)]
 public struct CCIniClass
 {
     private const nint PIniRulesFileName = 0x826260; // rulesmd.ini
-    private static string ruelsFileName = null;
+    private static string ruelsFileName;
 
     public static string IniRulesFileName => ruelsFileName ??= (AnsiStringPointer)PIniRulesFileName;
 
     private const nint PIniArtFileName = 0x826254; // artmd.ini
-    private static string artFileName = null;
+    private static string artFileName;
 
     public static string IniArtFileName => artFileName ??= (AnsiStringPointer)PIniArtFileName;
 
     private const nint PIniAiFileName = 0x82621C; // aimd.ini
-    private static string aiFileName = null;
+    private static string aiFileName;
 
     public static string IniAiFileName => aiFileName ??= (AnsiStringPointer)PIniAiFileName;
 
@@ -155,44 +182,6 @@ public struct CCIniClass
     [FieldOffset(4)] public nint CurrentSectionName;
     [FieldOffset(12)] public YRList<IniClass.IniSection> Sections;
     [FieldOffset(64)] public Bool Digested;
-}
-
-public static class IniClassHelper
-{
-    public static bool TryGetSection(this Pointer<CCIniClass> pIni, string section,
-        out Pointer<IniClass.IniSection> pSection) =>
-        (pSection = pIni.Ref.Sections.FirstOrDefault(o => o.IsNotNull && o.Ref.Name == section)).IsNotNull;
-
-    public static bool TryGetEntries(this Pointer<IniClass.IniSection> pSection, string entrie,
-        out Pointer<IniClass.IniEntry> pEntries) =>
-        (pEntries = pSection.Ref.Entries.FirstOrDefault(o => o.IsNotNull && o.Ref.Key == entrie)).IsNotNull;
-
-    public static bool GetString(this Pointer<CCIniClass> pIni, string section, string key, out string val)
-    {
-        val = null;
-        if (null == section || null == key) return false;
-
-        return pIni.TryGetSection(section, out Pointer<IniClass.IniSection> pSection) &&
-               pSection.TryGetEntries(key, out Pointer<IniClass.IniEntry> pEntries) &&
-               !string.IsNullOrWhiteSpace((val = pEntries.Ref.Value));
-    }
-
-    public static Dictionary<string, string> ReadRegister(this Pointer<CCIniClass> pIni, string section)
-    {
-        if (pIni.TryGetSection(section, out var pSection))
-        {
-            Dictionary<string, string> dic = new();
-            foreach (var entrie in pSection.Ref.Entries)
-            {
-                if (entrie)
-                {
-                    dic.Add(entrie.Ref.Key, entrie.Ref.Value);
-                }
-            }
-
-            return dic;
-        }
-
-        return null;
-    }
+    [FieldOffset(65)] public byte digest;
+    public FixedArray<byte> Digest => new(ref digest, 20);
 }

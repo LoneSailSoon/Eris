@@ -1,8 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-
-namespace Eris.YRSharp;
+﻿namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Sequential)]
 public struct ControlNode

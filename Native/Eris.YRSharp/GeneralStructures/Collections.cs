@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp.GeneralStructures;
 
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Sequential, Size = 24)]
 public struct DynamicVectorClass<T> : IEnumerable<T>
 {
     public static ref DynamicVectorClass<T> GetDynamicVector(nint ptr) => ref Helper.GetUnmanagedRef<DynamicVectorClass<T>>(ptr);
@@ -169,4 +167,41 @@ public struct Vector<T> : IEnumerable<T>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ref T Get(int index) => ref Helper.GetUnmanagedRef<T>(Items, index);
+    
+    
+}
+
+
+[StructLayout(LayoutKind.Sequential)]
+public struct Int32BitSet
+{
+    public uint Data;
+
+
+    public readonly bool Contains(int index)
+    {
+        return (Data & (1u << index)) != 0u;
+    }
+
+    public void Add(int i)
+    {
+        Data |= (1u << i);
+    }
+
+    public void Remove(int i)
+    {
+        Data &= ~(1u << i);
+    }
+
+    public void Clear()
+    {
+        Data = 0u;
+    }
+
+}
+
+public struct TypeList<T>
+{
+    public static ref TypeList<T> From(Pointer<byte> first) =>
+        ref first.Convert<TypeList<T>>().Ref;
 }

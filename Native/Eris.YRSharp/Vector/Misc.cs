@@ -1,6 +1,4 @@
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp.Vector;
 

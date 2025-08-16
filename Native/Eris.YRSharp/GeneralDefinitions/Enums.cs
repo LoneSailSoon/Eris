@@ -142,7 +142,7 @@ public enum BuildCat : uint
     Combat = 5
 }
 
-public enum CcAction : uint
+public enum CCAction : uint
 {
     None = 0,
     Move = 1,
@@ -936,7 +936,7 @@ public enum TriggerAction : uint
     JumpCameraHome = 0x91
 }
 
-public enum VoxType : int
+public enum VoxType
 {
     Standard = 0,
     Queue = 1,
@@ -944,10 +944,428 @@ public enum VoxType : int
     QueuedInterrupt = 3
 }
 
-public enum VoxPriority : int
+public enum VoxPriority
 {
     Low = 0,
     Normal = 1,
     Important = 2,
     Critical = 3
+}
+
+public enum BuildingAnimSlot
+{
+    All = -2,
+    None = -1,
+    Upgrade1 = 0,
+    Upgrade2 = 1,
+    Upgrade3 = 2,
+    Active = 3,
+    ActiveTwo = 4,
+    ActiveThree = 5,
+    ActiveFour = 6,
+    PreProduction = 7,
+    Production = 8,
+    Turret = 9,
+    Special = 10,
+    SpecialTwo = 11,
+    SpecialThree = 12,
+    SpecialFour = 13,
+    Super = 14,
+    SuperTwo = 15,
+    SuperThree = 16,
+    SuperFour = 17,
+    Idle = 18,
+    LowPower = 19,
+    SuperLowPower = 20
+}
+
+public enum TheaterType
+{
+    None = -1,
+    Temperate = 0,
+    Snow = 1,
+    Urban = 2,
+    Desert = 3,
+    NewUrban = 4,
+    Lunar = 5,
+}
+
+public enum FacingType : sbyte
+{
+    North = 0,
+    NorthEast = 1,
+    East = 2,
+    SouthEast = 3,
+    South = 4,
+    SouthWest = 5,
+    West = 6,
+    NorthWest = 7,
+    Count = 8,
+    None = -1,
+}
+
+public enum PCPType : byte // Per_Cell_Process 
+{
+    Rotation = 0, // When sitting in place and performing rotations.
+    During = 1, // While moving between two cells. Is this ever used? Tell me if you found any
+    End = 2, // When the 'center' of a cell is reached during movement.
+}
+
+public enum TargetType : uint
+{
+    None = 0,
+    Anything = 1,
+    Buildings = 2,
+    Harvesters = 3,
+    Infantry = 4,
+    Vehicles = 5,
+    Factories = 6,
+    BaseDefenses = 7,
+
+    // unknown = 8,
+    Power = 9,
+    Occupiable = 10,
+    TechBuildings = 11
+}
+
+public enum AiMode
+{
+    General = 0,
+    LowOnCash = 1, // if HouseClass::AvailableMoney < 25 ! stupidly low value
+    BuildBase = 3,
+    SellAll = 4,
+}
+
+public enum AIDifficulty : uint
+{
+    Hard = 0,
+    Normal = 1,
+    Easy = 2
+}
+
+public enum Category
+{
+    Invalid = -1,
+    Soldier = 0,
+    Civilian = 1,
+    VIP = 2,
+    Recon = 3,
+    AFV = 4,
+    IFV = 5,
+    LRFS = 6,
+    Support = 7,
+    Transport = 8,
+    AirPower = 9,
+    AirLift = 10
+}
+
+public enum CanBuildResult
+{
+    TemporarilyUnbuildable = -1, // black out cameo
+    Unbuildable = 0, // permanently; remove cameo
+    Buildable = 1, // can build
+}
+
+public enum HealthState : uint
+{
+    Red = 0,
+    Yellow = 1,
+    Green = 2
+}
+
+public enum PipScale : uint
+{
+    None = 0,
+    Ammo = 1,
+    Tiberium = 2,
+    Passengers = 3,
+    Power = 4,
+    MindControl = 5
+}
+
+public enum LandTargetingType : uint
+{
+    Land_OK = 0,
+    Land_Not_OK = 1,
+    Land_Secondary = 2
+}
+
+public enum NavalTargetingType : uint
+{
+    Underwater_Never = 0,
+    Underwater_Secondary = 1,
+    Underwater_Only = 2,
+    Organic_Secondary = 3,
+    SEAL_Special = 4,
+    Naval_All = 5,
+    Naval_None = 6,
+    Naval_Primary = 7
+}
+
+public enum AITriggerCondition
+{
+    Pool = -1,
+    AIOwns = 0,
+    EnemyOwns = 1,
+    EnemyYellowPowe = 2,
+    EnemyRedPower = 3,
+    EnemyCashExceeds = 4,
+    IronCharged = 5,
+    ChronoCharged = 6,
+    NeutralOwns = 7
+}
+
+public enum AITriggerHouseType
+{
+    None = 0,
+    Single = 1,
+    Any = 2
+}
+
+public enum SpotlightBehaviour : uint
+{
+    None = 0,
+    Sweep = 1,
+    Circle = 2,
+    Follow = 3
+}
+
+public enum MouseCursorType : uint
+{
+    Default = 0x0,
+    Move_N = 0x1,
+    Move_NE = 0x2,
+    Move_E = 0x3,
+    Move_SE = 0x4,
+    Move_S = 0x5,
+    Move_SW = 0x6,
+    Move_W = 0x7,
+    Move_NW = 0x8,
+    NoMove_N = 0x9,
+    NoMove_NE = 0xA,
+    NoMove_E = 0xB,
+    NoMove_SE = 0xC,
+    NoMove_S = 0xD,
+    NoMove_SW = 0xE,
+    NoMove_W = 0xF,
+    NoMove_NW = 0x10,
+    Select = 0x11,
+    Move = 0x12,
+    NoMove = 0x13,
+    Attack = 0x14,
+    AttackOutOfRange = 0x15,
+    Protect = 0x16,
+    DesolatorDeploy = 0x17,
+    Cursor_18 = 0x18,
+    Enter = 0x19,
+    NoEnter = 0x1A,
+    Deploy = 0x1B,
+    NoDeploy = 0x1C,
+    Cursor_1D = 0x1D,
+    Sell = 0x1E,
+    SellUnit = 0x1F,
+    NoSell = 0x20,
+    Repair = 0x21,
+    EngineerRepair = 0x22,
+    NoRepair = 0x23,
+    Waypoint = 0x24,
+    Disguise = 0x25,
+    IvanBomb = 0x26,
+    MindControl = 0x27,
+    RemoveSquid = 0x28,
+    Crush = 0x29,
+    SpyTech = 0x2A,
+    SpyPower = 0x2B,
+    Cursor_2C = 0x2C,
+    GIDeploy = 0x2D,
+    Cursor_2E = 0x2E,
+    ParaDrop = 0x2F,
+    Cursor_30 = 0x30, // RallyPoint
+    CloseWaypoint = 0x31, // ???
+    LightningStorm = 0x32,
+    Detonate = 0x33,
+    Demolish = 0x34,
+    Nuke = 0x35,
+    Cursor_36 = 0x36, // BlueMove
+    Power = 0x37,
+    Cursor_38 = 0x38, // NoBlueMove
+    IronCurtain = 0x39,
+    Chronosphere = 0x3A,
+    Disarm = 0x3B,
+    Disallowed = 0x3C,
+    Scroll = 0x3D,
+    Scroll_ESW = 0x3E,
+    Scroll_SW = 0x3F,
+    Scroll_NSW = 0x40,
+    Scroll_NW = 0x41,
+    Scroll_NEW = 0x42,
+    Scroll_NE = 0x43,
+    Scroll_NES = 0x44,
+    Scroll_ES = 0x45,
+    Protect2 = 0x46,
+    AttackOutOfRange2 = 0x47,
+    Cursor_48 = 0x48, // LeaveBuilding
+    InfantryAbsorb = 0x49,
+    NoMindControl = 0x4A,
+    Cursor_4B = 0x4B, // NoRallyPoint
+    Cursor_4C = 0x4C,
+    Cursor_4D = 0x4D,
+    Beacon = 0x4E,
+    ForceShield = 0x4F,
+    NoForceShield = 0x50,
+    GeneticMutator = 0x51,
+    AirStrike = 0x52,
+    PsychicDominator = 0x53,
+    PsychicReveal = 0x54,
+    SpyPlane = 0x55
+}
+
+public enum PipIndex : uint
+{
+    Empty = 0,
+    Green = 1,
+    Yellow = 2,
+    White = 3,
+    Red = 4,
+    Blue = 5,
+    PersonEmpty = 6,
+    PersonGreen = 7,
+    PersonYellow = 8,
+    PersonWhite = 9,
+    PersonRed = 10,
+    PersonBlue = 11,
+    PersonPurple = 12
+}
+
+public enum SequenceFacing
+{
+    N = 0,
+    NE = 1,
+    E = 2,
+    SE = 3,
+    S = 4,
+    SW = 5,
+    W = 6,
+    NW = 7
+}
+
+public enum Powerup
+{
+    Money = 0,
+    Unit = 1,
+    HealBase = 2,
+    Cloak = 3,
+    Explosion = 4,
+    Napalm = 5,
+    Squad = 6,
+    Darkness = 7,
+    Reveal = 8,
+    Armor = 9,
+    Speed = 10,
+    Firepower = 11,
+    ICBM = 12,
+    Invulnerability = 13,
+    Veteran = 14,
+    IonStorm = 15,
+    Gas = 16,
+    Tiberium = 17,
+    Pod = 18
+}
+
+public enum MouseHotSpotX
+{
+    Left = 0,
+    Center = 12345,
+    Right = 54321
+}
+
+public enum MouseHotSpotY
+{
+    Top = 0,
+    Middle = 12345,
+    Bottom = 54321
+}
+
+public enum ParasiteState : int
+{
+    Start = 0, // creates grab animation
+    Grab = 1, // wait for the grab anim
+    PushLeft = 2, // push the victim, variant A
+    PushRight = 3, // push the victim, variant B
+    Damage = 4 // wait until rocking stops; deliver damage
+}
+
+public enum BehavesLike : int
+{
+    Smoke = 0,
+    Gas = 1,
+    Fire = 2,
+    Spark = 3,
+    Railgun = 4
+};
+
+public enum RadBeamType : uint
+{
+    Temporal = 0,
+    RadBeam = 1,
+    Eruption = 2 // this sets the beam color to MagnaBeamColor! There probably was no reason for that whatsoever.
+}
+
+public enum  TriggerPersistence : uint
+{
+    Volatile = 0, // trigger for the first object whose events fired, then disable
+    SemiPersistant = 1, // trigger after all object's events fired, then disable
+    Persistent = 2 // trigger every time events fire for any object, never disable
+}
+
+[Flags]
+public enum RecordFlag : uint
+{
+    Write = 0x1, // I am recording the game now
+    Read = 0x2, // I am playing a recorded game now
+    Attract = 0x4 // Recording enabled by commmand line
+}
+
+
+[Flags]
+public enum SoundControl : uint
+{
+    None = 0x0,
+    Loop = 0x1,
+    Random = 0x2,
+    All = 0x4,
+    Predelay = 0x8,
+    Interrupt = 0x10,
+    Attack = 0x20,
+    Decay = 0x40,
+    Ambient = 0x80
+}
+
+[Flags]
+public enum SoundType: uint
+{
+    Normal = 0x0,
+    Violent = 0x1,
+    Movement = 0x2,
+    Quiet = 0x4,
+    Loud = 0x8,
+    Global = 0x10,
+    Screen = 0x20,
+    Local = 0x40,
+    Player = 0x80,
+    NoiseShy = 0x100,
+    GunShy = 0x200,
+    Unshroud = 0x400,
+    Shroud = 0x800,
+    Ambient = 0x1000
+}
+
+[Flags]
+public enum SoundPriority : int
+{
+    Lowest = 0,
+    Low = 1,
+    Normal = 2,
+    High = 3,
+    Critical = 4
 }

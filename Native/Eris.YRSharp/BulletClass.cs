@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
+﻿using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
 
@@ -15,12 +12,12 @@ public struct BulletData
 };
 
 [StructLayout(LayoutKind.Explicit, Size = 352)]
-public struct BulletClass : IYRObject<BulletTypeClass>/*, IExtMapIndex*/
+public struct BulletClass : IYRObject<BulletClass, BulletTypeClass>/*, IExtMapIndex*/
 {
     public const nint ArrayPointer = 0xA8ED40;
     public static ref DynamicVectorClass<Pointer<BulletClass>> Array => ref DynamicVectorClass<Pointer<BulletClass>>.GetDynamicVector(ArrayPointer);
 
-    Pointer<BulletTypeClass> IYRObject<BulletTypeClass>.Type => Type;
+    static Pointer<BulletTypeClass> IYRObject<BulletClass, BulletTypeClass>.Type(Pointer<BulletClass> pThis) => pThis.Ref.Type;
 
     // 123 virtual functions
     public void SetTarget(Pointer<AbstractClass> pTarget)
@@ -51,6 +48,33 @@ public struct BulletClass : IYRObject<BulletTypeClass>/*, IExtMapIndex*/
         var func = (delegate* unmanaged[Thiscall]<nint, void>)0x468430;
         func(this.GetThisPointer());
     }
+    
+    public unsafe void Explode(bool destroy = true)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, bool, void>)0x468D80;
+        func(this.GetThisPointer(), destroy);
+    }
+    public unsafe void Detonate(Pointer<CoordStruct> coords)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, void>)0x4690B0;
+        func(this.GetThisPointer(), coords);
+    }
+    public unsafe void Shrapnel()
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, void>)0x46A310;
+        func(this.GetThisPointer());
+    }
+    public unsafe void InitScalable()
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, void>)0x46B280;
+        func(this.GetThisPointer());
+    }
+    public unsafe void NukeMaker()
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, void>)0x46B310;
+        func(this.GetThisPointer());
+    }
+
 
     [FieldOffset(0)] public ObjectClass Base;
     [FieldOffset(0)] public AbstractClass BaseAbstract;

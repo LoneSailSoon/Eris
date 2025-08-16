@@ -1,7 +1,4 @@
-using System.Runtime.InteropServices;
 using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp;
 
@@ -116,7 +113,7 @@ public struct PassengersClass
         func(this.GetThisPointer(), pPassenger);
     }
 
-    public unsafe Pointer<FootClass> GetFirstPassenger()
+    public Pointer<FootClass> GetFirstPassenger()
     {
         return FirstPassenger;
     }
@@ -192,76 +189,34 @@ public struct OwnedTiberiumStruct
     public float Tiberium4;
 }
 
-[StructLayout(LayoutKind.Explicit, Size = 116)]
-public struct SpawnManagerClass
+
+
+[StructLayout(LayoutKind.Sequential)]
+public struct RecoilData
 {
-    public unsafe void Recalc()
+    public enum RecoilState : uint 
     {
-        var func = (delegate* unmanaged[Thiscall]<ref SpawnManagerClass, IntPtr, void>)0x6B7100;
-        func(ref this, target);
+        Inactive = 0,
+        Compressing = 1,
+        Holding = 2,
+        Recovering = 3,
+    }
+    
+    public TurretControl Turret;
+    public float TravelPerFrame;
+    public float TravelSoFar;
+    public RecoilState State;
+    public int TravelFramesLeft;
+
+    public unsafe void Update()
+    {
+        var func = (delegate*unmanaged[Thiscall]<nint, void>)0x70ED10;
+        func(this.GetThisPointer());
     }
 
-    public unsafe void SetTarget(Pointer<AbstractClass> target)
+    public unsafe void Fire()
     {
-        var func = (delegate* unmanaged[Thiscall]<ref SpawnManagerClass, IntPtr, void>)0x6B7B90;
-        func(ref this, target);
+        var func = (delegate*unmanaged[Thiscall]<nint, void>)0x70ECE0;
+        func(this.GetThisPointer());
     }
-
-    public unsafe int DrawState()
-    {
-        var func = (delegate* unmanaged[Thiscall]<ref SpawnManagerClass, int>)0x6B7D50;
-        return func(ref this);
-    }
-
-
-    [FieldOffset(36)] public IntPtr owner;
-
-    public Pointer<TechnoClass> Owner
-    {
-        get => owner;
-        set => owner = value;
-    }
-
-    [FieldOffset(40)] public IntPtr spawnType;
-
-    public Pointer<AircraftTypeClass> SpawnType
-    {
-        get => spawnType;
-        set => spawnType = value;
-    }
-
-    [FieldOffset(44)] public int SpawnCount;
-    [FieldOffset(48)] public int RegenRate;
-    [FieldOffset(52)] public int ReloadRate;
-    [FieldOffset(56)] public byte spawnedNodes;
-
-    public ref DynamicVectorClass<Pointer<SpawnNode>> SpawnedNodes => ref Pointer<byte>.AsPointer(ref spawnedNodes)
-        .Convert<DynamicVectorClass<Pointer<SpawnNode>>>().Ref;
-
-    [FieldOffset(80)] public TimerStruct UpdateTimer;
-    [FieldOffset(92)] public TimerStruct SpawnTimer;
-    [FieldOffset(104)] public IntPtr destination;
-
-    public Pointer<AbstractClass> Destination
-    {
-        get => destination;
-        set => destination = value;
-    }
-
-    [FieldOffset(108)] public IntPtr target;
-
-    public Pointer<AbstractClass> Target
-    {
-        get => target;
-        set => target = value;
-    }
-}
-
-[StructLayout(LayoutKind.Explicit, Size = 24)]
-public struct SpawnNode
-{
-    [FieldOffset(0)] public Pointer<TechnoClass> Unit;
-    [FieldOffset(4)] public int Status;
-    [FieldOffset(8)] public TimerStruct SpawnTimer;
-    [FieldOffset(20)] public Bool IsSpawnMissile;
 }

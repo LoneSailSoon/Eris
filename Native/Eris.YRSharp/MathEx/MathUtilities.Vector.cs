@@ -1,5 +1,4 @@
 using System.Numerics;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp.MathEx;
 

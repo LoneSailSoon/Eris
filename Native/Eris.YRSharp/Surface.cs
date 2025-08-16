@@ -1,8 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Eris.YRSharp.FileFormats;
 using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.Helpers;
 using Eris.YRSharp.String.Uni;
 using Eris.YRSharp.Utilities;
 using Eris.YRSharp.Vector;
@@ -83,13 +80,13 @@ public struct Surface
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe bool FillRect(RectangleStruct fillRect, int dwColor)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         return FillRectEx((int)this.GetThisPointer(), (int)rect.GetThisPointer(), (int)fillRect.GetThisPointer(), dwColor);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe bool FillRect(RectangleStruct fillRect, ColorStruct color)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         return FillRectEx((int)this.GetThisPointer(), (int)rect.GetThisPointer(), (int)fillRect.GetThisPointer(), Drawing.Color16Bit(color));
     }
     public unsafe bool FillRect(int dwColor)
@@ -97,17 +94,7 @@ public struct Surface
         var func = (delegate* unmanaged[Thiscall]<nint, int, bool>)this.GetVirtualFunctionPointer(6);
         return func(this.GetThisPointer(), dwColor);
     }
-
-    //public unsafe void FillRectTrans(RectangleStruct ClipRect, int color, int nOpacity)
-    //{
-    //    Surface.FillRectTrans(this.GetThisPointer(), ClipRect.GetThisPointer(), color, nOpacity);
-    //}
-
-    //[DllImport("Acanthamoeba.dll")]
-    //public static extern void FillRectTrans(IntPtr DSurface, IntPtr pClipRect, int color, int nOpacity);
-    //public static unsafe bool FillRectTrans(Pointer<Surface> surface, Pointer<RectangleStruct> clipRect, int color, int Trans)
-    //    => FillRectTrans(surface.Convert<DSurface>(), clipRect, color, Trans);
-
+    
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool FillRectTrans(RectangleStruct clipRect, ColorStruct color, int trans)
     {
@@ -165,14 +152,14 @@ public struct Surface
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe bool DrawLine(Point2D point1, Point2D point2, int dwColor)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         return DrawLineEx((int)this.GetThisPointer(), (int)rect.GetThisPointer(), (int)point1.GetThisPointer(), (int)point2.GetThisPointer(), dwColor);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe bool DrawLine(Point2D point1, Point2D point2, ColorStruct color)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         return DrawLineEx((int)this.GetThisPointer(), (int)rect.GetThisPointer(), (int)point1.GetThisPointer(), (int)point2.GetThisPointer(), Drawing.Color16Bit(color));
     }
 
@@ -259,35 +246,35 @@ public struct Surface
         return func(ref this);
     }
 
-    public unsafe void DrawSHP(Pointer<ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, int X, int Y)
+    public unsafe void DrawSHP(Pointer<FileFormats.ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, int X, int Y)
     {
         DrawSHP(pSHP, nFrame, pPalette, new Point2D(X, Y));
     }
-    public unsafe void DrawSHP(Pointer<ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, Point2D point)
+    public unsafe void DrawSHP(Pointer<FileFormats.ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, Point2D point)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         DrawSHP(pPalette, pSHP, nFrame, point, rect, BlitterFlags.None, 0, 0, 0, 0x3E8, 0, IntPtr.Zero, 0, 0, 0);
     }
-    public unsafe void DrawSHP(Pointer<ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, Point2D point, BlitterFlags flags)
+    public unsafe void DrawSHP(Pointer<FileFormats.ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, Point2D point, BlitterFlags flags)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         DrawSHP(pPalette, pSHP, nFrame, point, rect, flags, 0, 0, 0, 0x3E8, 0, IntPtr.Zero, 0, 0, 0);
     }
-    public unsafe void DrawSHP(Pointer<ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, BlitterFlags flags, int zAdjust, Point2D point)
+    public unsafe void DrawSHP(Pointer<FileFormats.ShpStruct> pSHP, int nFrame, Pointer<ConvertClass> pPalette, BlitterFlags flags, int zAdjust, Point2D point)
     {
-        RectangleStruct rect = this.GetRect();
+        RectangleStruct rect = GetRect();
         DrawSHP(pPalette, pSHP, nFrame, point, rect, flags, 0, zAdjust, 2, 1000, 0, IntPtr.Zero, 0, 0, 0);
     }
-    public unsafe void DrawSHP(Pointer<ConvertClass> Palette, Pointer<ShpStruct> SHP, int frameIdx,
+    public unsafe void DrawSHP(Pointer<ConvertClass> Palette, Pointer<FileFormats.ShpStruct> SHP, int frameIdx,
         Point2D pos, RectangleStruct boundingRect, BlitterFlags flags, uint arg7,
-        int zAdjust, uint arg9, uint bright, int TintColor, Pointer<ShpStruct> BUILDINGZ_SHA, uint argD, int ZS_X, int ZS_Y)
+        int zAdjust, uint arg9, uint bright, int TintColor, Pointer<FileFormats.ShpStruct> BUILDINGZ_SHA, uint argD, int ZS_X, int ZS_Y)
     {
         DrawSHP(Palette, SHP, frameIdx, Pointer<Point2D>.AsPointer(ref pos), Pointer<RectangleStruct>.AsPointer(ref boundingRect), flags, arg7, zAdjust, arg9, bright, TintColor, BUILDINGZ_SHA, argD, ZS_X, ZS_Y);
     }
 
-    public unsafe void DrawSHP(Pointer<ConvertClass> Palette, Pointer<ShpStruct> SHP, int frameIdx,
+    public unsafe void DrawSHP(Pointer<ConvertClass> Palette, Pointer<FileFormats.ShpStruct> SHP, int frameIdx,
         Pointer<Point2D> pos, Pointer<RectangleStruct> boundingRect, BlitterFlags flags, uint arg7,
-        int zAdjust, uint arg9, uint bright, int TintColor, Pointer<ShpStruct> BUILDINGZ_SHA, uint argD, int ZS_X,
+        int zAdjust, uint arg9, uint bright, int TintColor, Pointer<FileFormats.ShpStruct> BUILDINGZ_SHA, uint argD, int ZS_X,
         int ZS_Y)
     {
         var func =

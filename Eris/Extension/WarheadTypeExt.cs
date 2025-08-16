@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Eris.Extension.Core.Style;
 using Eris.Extension.Generic;
 using Eris.Serializer;
 using Eris.Utilities.Ini;
@@ -14,7 +13,7 @@ namespace Eris.Extension;
 public class WarheadTypeExt : CommonTypeExtension<WarheadTypeExt, WarheadTypeClass>,
     IExtensionActivator<WarheadTypeExt, WarheadTypeClass>
 {
-    public WarheadTypeExt(Pointer<WarheadTypeClass> owner) : base(owner)
+    private WarheadTypeExt(Pointer<WarheadTypeClass> owner) : base(owner)
     {
     }
 
@@ -26,7 +25,6 @@ public class WarheadTypeExt : CommonTypeExtension<WarheadTypeExt, WarheadTypeCla
     {
         base.Serialize(stream);
         stream
-            .ProcessObjectArrayInline(ref SelectedBy!)
             .Process(ref AllowZeroDamage)
             .Process(ref AffectsEnemies);
 
@@ -98,8 +96,6 @@ public class WarheadTypeExt : CommonTypeExtension<WarheadTypeExt, WarheadTypeCla
 
 
         var section = ini[OwnerRef.Base.ID];
-        
-        StyleTypeParser.Parse(section["Style.Types"u8], ref SelectedBy);
         Parsers.Parse(section["AllowZeroDamage"u8], ref AllowZeroDamage);
         Parsers.Parse(section["AffectsEnemies"u8], ref AffectsEnemies);
     }
@@ -115,10 +111,6 @@ public class WarheadTypeExt : CommonTypeExtension<WarheadTypeExt, WarheadTypeCla
         LoadFromIni(pItem, pIni);
         return 0;
     }
-
-    public StyleType[]? SelectedBy;
     public bool AllowZeroDamage;
     public bool AffectsEnemies = true;
-    
-    public bool StyleEnable => SelectedBy is { Length: > 0 };
 }

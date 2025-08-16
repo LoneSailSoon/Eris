@@ -1,6 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
 
 namespace Eris.YRSharp.String.Uni;
 
@@ -8,6 +6,11 @@ namespace Eris.YRSharp.String.Uni;
 [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
 public struct UniStringPointer(nint ptr)
 {
+    public UniStringPointer(ref char buffer, int _) : this(buffer.GetThisPointer())
+    {
+        
+    }
+    
     nint buffer = ptr;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

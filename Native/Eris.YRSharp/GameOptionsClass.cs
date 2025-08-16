@@ -1,25 +1,20 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.String.Ansi;
+﻿using Eris.YRSharp.String.Ansi;
 
 namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 184)]
 public struct GameOptionsClass
 {
-    private static IntPtr instance = new IntPtr(0xA8EB60);
+    private const nint instance = 0xA8EB60;
     public static ref GameOptionsClass Instance => ref instance.Convert<GameOptionsClass>().Ref;
+
+    private const nint windowedMode = 0x89F978;
+    public static ref Bool WindowedMode => ref windowedMode.Convert<Bool>().Ref;
 
     public unsafe int GetAnimSpeed(int rate)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref GameOptionsClass, int>)0x5FB2E0;
-        return func(ref this); 
-    }
-
-    public unsafe void LoadFromINI(int rate)
-    {
-        var func = (delegate* unmanaged[Thiscall]<ref GameOptionsClass, void>)0x5FA620;
-        func(ref this);
+        var func = (delegate* unmanaged[Thiscall]<nint, int>)0x5FB2E0;
+        return func(this.GetThisPointer()); 
     }
 
     [FieldOffset(0)] public int GameSpeed;
@@ -75,36 +70,4 @@ public struct GameOptionsClass
 
     [FieldOffset(176)] public int unknown_int_B0;
     [FieldOffset(180)] public int unknown_int_B4;
-}
-
-[StructLayout(LayoutKind.Explicit, Size = 31)]
-public struct InputManagerClass
-{
-    private static IntPtr instance = new IntPtr(0x87F770);
-    public static ref InputManagerClass Instance => ref instance.Convert<InputManagerClass>().Ref;
-
-    public unsafe bool IsKeyPressed(int key)
-    {
-        var func = (delegate* unmanaged[Thiscall]<ref InputManagerClass, int, bool>)0x54F5C0;
-        return func(ref this, key);
-    }
-    //{ JMP_THIS(0x54F5C0);}
-
-    public bool IsForceFireKeyPressed()
-    {
-        return IsKeyPressed(GameOptionsClass.Instance.KeyForceFire1)
-               || IsKeyPressed(GameOptionsClass.Instance.KeyForceFire2);
-    }
-
-    public bool IsForceMoveKeyPressed()
-    {
-        return IsKeyPressed(GameOptionsClass.Instance.KeyForceMove1)
-               || IsKeyPressed(GameOptionsClass.Instance.KeyForceMove2);
-    }
-
-    public bool IsForceSelectKeyPressed()
-    {
-        return IsKeyPressed(GameOptionsClass.Instance.KeyForceSelect1)
-               || IsKeyPressed(GameOptionsClass.Instance.KeyForceSelect2);
-    }
 }

@@ -29,7 +29,7 @@ public abstract class NetworkHandle<TArg> : INetworkHandle where TArg : unmanage
 
         Pointer<TArg> pArg = (nint)sender.GetThisPointer() + 7;
         pArg.Data = arg;
-
+        
         return EventClass.AddEvent(sender);
     }
 }

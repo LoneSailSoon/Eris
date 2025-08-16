@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-
-namespace Eris.YRSharp;
+﻿namespace Eris.YRSharp;
 
 // provides access to the game's operator new and operator delete.
 public static class YRMemory
@@ -22,7 +19,7 @@ public static class YRMemory
 	}
 
 	// the game's operator delete
-	public static unsafe void Deallocate(IntPtr mem)
+	public static unsafe void Deallocate(nint mem)
 	{
 		var func = (delegate* unmanaged[Cdecl]<nint, void>)0x7C8B3D;
 		func(mem);

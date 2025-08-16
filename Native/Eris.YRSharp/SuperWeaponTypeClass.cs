@@ -1,6 +1,4 @@
-using System.Runtime.InteropServices;
 using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.Helpers;
 using Eris.YRSharp.String.Ansi;
 
 namespace Eris.YRSharp;
@@ -8,9 +6,9 @@ namespace Eris.YRSharp;
 [StructLayout(LayoutKind.Explicit, Size = 256)]
 public struct SuperWeaponTypeClass
 {
-    public static readonly IntPtr ArrayPointer = new IntPtr(0xA8E330);
+    public const nint ArrayPointer = 0xA8E330;
 
-    public static GlobalDvcArray<SuperWeaponTypeClass> AbstractTypeArray { get; } = new GlobalDvcArray<SuperWeaponTypeClass>(ArrayPointer);
+    public static readonly GlobalDvcArray<SuperWeaponTypeClass> AbstractTypeArray = new(ArrayPointer);
 
     [FieldOffset(0)] public AbstractTypeClass Base;
 
@@ -23,7 +21,7 @@ public struct SuperWeaponTypeClass
     [FieldOffset(176)] public int RechargeTime; //in frames
     [FieldOffset(180)] public SuperWeaponType Type;
     //[FieldOffset(184)] public Pointer<SHPStruct> SidebarImage;
-    [FieldOffset(188)] public CcAction Action;
+    [FieldOffset(188)] public CCAction Action;
     [FieldOffset(192)] public int SpecialSound;
     [FieldOffset(196)] public int StartSound;
     [FieldOffset(200)] public Pointer<BuildingTypeClass> AuxBuilding;

@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
+﻿using Eris.YRSharp.GeneralDefinitions;
 
 namespace Eris.YRSharp;
 
@@ -11,31 +8,74 @@ public struct RadioClass
 
     public unsafe RadioCommand SendToFirstLink(RadioCommand command)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, RadioCommand>)this.GetVirtualFunctionPointer(157);
+        var func =
+            (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, RadioCommand>)
+            this.GetVirtualFunctionPointer(157);
         return func(ref this, command);
     }
+
     public unsafe RadioCommand SendCommand(RadioCommand command, Pointer<TechnoClass> pRecipient)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, IntPtr, RadioCommand>)this.GetVirtualFunctionPointer(158);
+        var func =
+            (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, IntPtr, RadioCommand>)this
+                .GetVirtualFunctionPointer(158);
         return func(ref this, command, pRecipient);
     }
-    public unsafe RadioCommand SendCommandWithData(RadioCommand command, ref Pointer<AbstractClass> pInOut, Pointer<TechnoClass> pRecipient)
+
+    public unsafe RadioCommand SendCommandWithData(RadioCommand command, ref Pointer<AbstractClass> pInOut,
+        Pointer<TechnoClass> pRecipient)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, IntPtr, IntPtr, RadioCommand>)this.GetVirtualFunctionPointer(159);
+        var func =
+            (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, IntPtr, IntPtr, RadioCommand>)this
+                .GetVirtualFunctionPointer(159);
         return func(ref this, command, pInOut.GetThisPointer(), pRecipient);
     }
+
     public unsafe void SendToEachLink(RadioCommand command)
     {
-        var func = (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, void>)this.GetVirtualFunctionPointer(160);
+        var func =
+            (delegate* unmanaged[Thiscall]<ref RadioClass, RadioCommand, void>)this.GetVirtualFunctionPointer(160);
         func(ref this, command);
     }
+
     public unsafe bool HasAnyLink()
     {
         var func = (delegate* unmanaged[Thiscall]<ref RadioClass, Bool>)0x65AE30;
         return func(ref this);
     }
 
-        
+    public unsafe bool ContainsLink(Pointer<TechnoClass> pLink)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, bool>)0x65AD50;
+        return func(this.GetThisPointer(), pLink);
+    }
+
+    public unsafe int FindLinkIndex(Pointer<TechnoClass> pLink)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, int>)0x65AD90;
+        return func(this.GetThisPointer(), pLink);
+    }
+
+    public unsafe bool HasFreeLink()
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, bool>)0x65ADC0;
+        return func(this.GetThisPointer());
+    }
+
+    public unsafe bool HasFreeLink(Pointer<TechnoClass> pIgnore)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, nint, bool>)0x65ADF0;
+        return func(this.GetThisPointer(), pIgnore);
+    }
+    
+    public unsafe void SetLinkCount(int count)
+    {
+        var func = (delegate* unmanaged[Thiscall]<nint, int, void>)0x65AE60;
+         func(this.GetThisPointer(), count);
+    }
+
+
+
     [FieldOffset(0)] public MissionClass Base;
     [FieldOffset(0)] public ObjectClass BaseObject;
     [FieldOffset(0)] public AbstractClass BaseAbstract;
@@ -43,5 +83,7 @@ public struct RadioClass
     [FieldOffset(216)] public RadioCommand LastCommand1;
     [FieldOffset(220)] public RadioCommand LastCommand2;
     [FieldOffset(224)] public byte radioLinks;
-    public ref Vector<Pointer<TechnoClass>> RadioLinks => ref Pointer<byte>.AsPointer(ref radioLinks).Convert<Vector<Pointer<TechnoClass>>>().Ref;
+
+    public ref Vector<Pointer<TechnoClass>> RadioLinks =>
+        ref Pointer<byte>.AsPointer(ref radioLinks).Convert<Vector<Pointer<TechnoClass>>>().Ref;
 }

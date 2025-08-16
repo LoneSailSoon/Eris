@@ -1,16 +1,13 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
+﻿using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 352)]
 public struct WeaponTypeClass
 {
-	public static readonly IntPtr ArrayPointer = new IntPtr(0x887568);
+	private const nint ArrayPointer = 0x887568;
 
-	public static GlobalDvcArray<WeaponTypeClass> AbstractTypeArray { get; } = new GlobalDvcArray<WeaponTypeClass>(ArrayPointer);
+	public static GlobalDvcArray<WeaponTypeClass> AbstractTypeArray = new(ArrayPointer);
 
 	[FieldOffset(0)] public AbstractTypeClass Base;
 	[FieldOffset(152)] public int AmbientDamage;

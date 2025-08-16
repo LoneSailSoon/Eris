@@ -1,109 +1,116 @@
 ﻿using Eris.YRSharp.FileFormats;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
+using Eris.YRSharp.String.Ansi;
+using Eris.YRSharp.Utilities;
 
 namespace Eris.YRSharp;
 
 public static class FileSystem
 {
-    private static IntPtr ppPIPBRD_SHP = new IntPtr(0xAC1478);
-    private static IntPtr ppPIPS_SHP = new IntPtr(0xAC147C);
-    private static IntPtr ppPIPS2_SHP = new IntPtr(0xAC1480);
-    private static IntPtr ppTALKBUBL_SHP = new IntPtr(0xAC1484);
-    private static IntPtr ppWRENCH_SHP = new IntPtr(0x89DDC8);
-    private static IntPtr ppPOWEROFF_SHP = new IntPtr(0x89DDC4);
-    private static IntPtr ppGRFXTXT_SHP = new IntPtr(0xA8F794);
-    private static IntPtr ppOREGATH_SHP = new IntPtr(0xB1CF98);
-    private static IntPtr ppDARKEN_SHP = new IntPtr(0xB07BC0);
-    private static IntPtr ppGCLOCK2_SHP = new IntPtr(0xB0B484);
+    private const nint ppPipbrdShp = 0xAC1478;
+    private const nint ppPipsShp = 0xAC147C;
+    private const nint ppPips2Shp = 0xAC1480;
+    private const nint ppTalkbublShp = 0xAC1484;
+    private const nint ppWrenchShp = 0x89DDC8;
+    private const nint ppPoweroffShp = 0x89DDC4;
+    private const nint ppGrfxtxtShp = 0xA8F794;
+    private const nint ppOregathShp = 0xB1CF98;
+    private const nint ppDarkenShp = 0xB07BC0;
+    private const nint ppGclock2Shp = 0xB0B484;
 
-    public static ref Pointer<ShpStruct> PIPBRD_SHP => ref ppPIPBRD_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> PIPS_SHP => ref ppPIPS_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> PIPS2_SHP => ref ppPIPS2_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> TALKBUBL_SHP => ref ppTALKBUBL_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> WRENCH_SHP => ref ppWRENCH_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> POWEROFF_SHP => ref ppPOWEROFF_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> GRFXTXT_SHP => ref ppGRFXTXT_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> OREGATH_SHP => ref ppOREGATH_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> DARKEN_SHP => ref ppDARKEN_SHP.Convert<Pointer<ShpStruct>>().Ref;
-    public static ref Pointer<ShpStruct> GCLOCK2_SHP => ref ppGCLOCK2_SHP.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> PipbrdShp => ref ppPipbrdShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> PipsShp => ref ppPipsShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> Pips2Shp => ref ppPips2Shp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> TalkbublShp => ref ppTalkbublShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> WrenchShp => ref ppWrenchShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> PoweroffShp => ref ppPoweroffShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> GrfxtxtShp => ref ppGrfxtxtShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> OregathShp => ref ppOregathShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> DarkenShp => ref ppDarkenShp.Convert<Pointer<ShpStruct>>().Ref;
+    public static ref Pointer<ShpStruct> Gclock2Shp => ref ppGclock2Shp.Convert<Pointer<ShpStruct>>().Ref;
 
-    private static IntPtr pTEMPERAT_PAL = new IntPtr(0x885780);
-    private static IntPtr pGRFXTXT_PAL = new IntPtr(0xA8F790);
+    private const nint pTemperatPal = 0x885780;
+    private const nint pGrfxtxtPal = 0xA8F790;
 
-    public static Pointer<BytePalette> TEMPERAT_PAL => pTEMPERAT_PAL;
-    public static Pointer<BytePalette> GRFXTXT_PAL => pGRFXTXT_PAL;
+    public static Pointer<BytePalette> TemperatPal => pTemperatPal;
+    public static Pointer<BytePalette> GrfxtxtPal => pGrfxtxtPal.Convert<nint>().Data;
 
-    private static IntPtr ppCAMEO_PAL = new IntPtr(0x87F6B0);
-    private static IntPtr ppUNITx_PAL = new IntPtr(0x87F6B4);
-    private static IntPtr ppPALETTE_PAL = new IntPtr(0x87F6C4);
-    private static IntPtr ppx_PAL = new IntPtr(0x87F6B8);
-    private static IntPtr ppGRFTXT_TIBERIUM_PAL = new IntPtr(0x87F6BC);
-    private static IntPtr ppANIM_PAL = new IntPtr(0x87F6C0);
-    private static IntPtr ppTHEATER_PAL = new IntPtr(0x87F6C4);
-    private static IntPtr ppMOUSE_PAL = new IntPtr(0x87F6C8);
-    private static IntPtr ppGRFXTXT_Convert = new IntPtr(0xA8F798);
-    private static IntPtr ppSIDEBAR_PAL = new IntPtr(0x87F6CC);
+    private const nint ppCameoPal = 0x87F6B0;
+    private const nint ppUniTxPal = 0x87F6B4;
+    private const nint ppPalettePal = 0x87F6C4;
+    private const nint ppxPal = 0x87F6B8;
+    private const nint ppGrftxtTiberiumPal = 0x87F6BC;
+    private const nint ppAnimPal = 0x87F6C0;
+    private const nint ppTheaterPal = 0x87F6C4;
+    private const nint ppMousePal = 0x87F6C8;
+    private const nint ppGrfxtxtConvert = 0xA8F798;
+    private const nint ppSidebarPal = 0x87F6CC;
 
-    public static ref Pointer<ConvertClass> CAMEO_PAL => ref ppCAMEO_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> UNITx_PAL => ref ppUNITx_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> PALETTE_PAL => ref ppPALETTE_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> x_PAL => ref ppx_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> GRFTXT_TIBERIUM_PAL => ref ppGRFTXT_TIBERIUM_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> ANIM_PAL => ref ppANIM_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> THEATER_PAL => ref ppTHEATER_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> MOUSE_PAL => ref ppMOUSE_PAL.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> GRFXTXT_Convert => ref ppGRFXTXT_Convert.Convert<Pointer<ConvertClass>>().Ref;
-    public static ref Pointer<ConvertClass> SIDEBAR_PAL => ref ppSIDEBAR_PAL.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> CameoPal => ref ppCameoPal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> UniTxPal => ref ppUniTxPal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> PalettePal => ref ppPalettePal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> XPal => ref ppxPal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> GrftxtTiberiumPal => ref ppGrftxtTiberiumPal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> AnimPal => ref ppAnimPal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> TheaterPal => ref ppTheaterPal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> MousePal => ref ppMousePal.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> GrfxtxtConvert => ref ppGrfxtxtConvert.Convert<Pointer<ConvertClass>>().Ref;
+    public static ref Pointer<ConvertClass> SidebarPal => ref ppSidebarPal.Convert<Pointer<ConvertClass>>().Ref;
 
 
-    // public static unsafe IntPtr LoadFile(string fileName, bool bLoadAsSHPReferenc = false)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, IntPtr, Bool, IntPtr>)ASM.FastCallTransferStation;
-    //     return func(0x5B40B0, new AnsiString(fileName), bLoadAsSHPReferenc);
-    // }
-    // public static unsafe IntPtr LoadWholeFileEx(string fileName, out bool outAllocated)
-    // {
-    //     var func = (delegate* unmanaged[Thiscall]<int, IntPtr, out Bool, IntPtr>)ASM.FastCallTransferStation;
-    //     var ret = func(0x4A38D0, new AnsiString(fileName), out var tmp);
-    //
-    //     outAllocated = tmp;
-    //     return ret;
-    // }
-    // public static unsafe Pointer<T> LoadWholeFileEx<T>(string fileName, out bool outAllocated)
-    // {
-    //     return LoadWholeFileEx(fileName, out outAllocated);
-    // }
-    //
-    // public static Pointer<SHPStruct> LoadSHPFile(string fileName)
-    // {
-    //     return LoadFile(fileName, true);
-    // }
-    //
-    // public static unsafe Pointer<T> AllocateFile<T>(string fileName)
-    // {
-    //     var file = YRMemory.Create<CCFileClass>(fileName);
-    //     var ret = file.Ref.ReadWholeFile();
-    //     YRMemory.Delete(file);
-    //     return ret;
-    // }
-    //
-    // public static unsafe Pointer<BytePalette> AllocatePalette(string fileName)
-    // {
-    //     var pal = AllocateFile<BytePalette>(fileName);
-    //     if(pal.IsNull == false)
-    //     {
-    //         var buffer = pal.Ref.Entries;// (ColorStruct*)pal;
-    //         for (int idx = 0; idx < BytePalette.EntriesCount; idx++)
-    //         {
-    //
-    //             buffer[idx].R <<= 2;
-    //             buffer[idx].G <<= 2;
-    //             buffer[idx].B <<= 2;
-    //         }
-    //     }
-    //
-    //     return pal;
-    // }
+    public static unsafe IntPtr LoadFile(string fileName, bool bLoadAsSHPReferenc = false)
+    {
+        using var span = new AnsiStringSpan(fileName);
+        var func = (delegate* unmanaged[Thiscall]<int, IntPtr, Bool, IntPtr>)NativeCode.FastCallTransferStation;
+        return func(0x5B40B0, span, bLoadAsSHPReferenc);
+    }
+    public static unsafe IntPtr LoadWholeFileEx(string fileName, out bool outAllocated)
+    {
+        using var span = new AnsiStringSpan(fileName);
+        var temp = false;
+        var func = (delegate* unmanaged[Thiscall]<int, IntPtr, nint, IntPtr>)NativeCode.FastCallTransferStation;
+        var ret = func(0x4A38D0, span,temp.GetThisPointer());
+    
+        outAllocated = temp;
+        return ret;
+    }
+    public static unsafe Pointer<T> LoadWholeFileEx<T>(string fileName, out bool outAllocated)
+    {
+        return LoadWholeFileEx(fileName, out outAllocated);
+    }
+    
+    public static Pointer<ShpStruct> LoadSHPFile(string fileName)
+    {
+        return LoadFile(fileName, true);
+    }
+    
+    public static unsafe Pointer<T> AllocateFile<T>(string fileName)
+    {
+        var file = YRCreater.Create<CCFileClass>().Constructor(fileName);//YRMemory.Create<CCFileClass>(fileName);
+        var ret = file.Ref.BaseFile.ReadWholeFile();
+        YRDeleter.Delete(file);
+        return ret;
+    }
+    
+    public static unsafe Pointer<BytePalette> AllocatePalette(string fileName)
+    {
+        var pal = AllocateFile<BytePalette>(fileName);
+        if(pal.IsNull == false)
+        {
+            var buffer = pal.Ref.Entries;// (ColorStruct*)pal;
+            for (int idx = 0; idx < BytePalette.EntriesCount; idx++)
+            {
+    
+                buffer[idx].R <<= 2;
+                buffer[idx].G <<= 2;
+                buffer[idx].B <<= 2;
+            }
+        }
+    
+        return pal;
+    }
+}
+
+[StructLayout(LayoutKind.Explicit)]
+public struct VoxelStruct
+{
 }

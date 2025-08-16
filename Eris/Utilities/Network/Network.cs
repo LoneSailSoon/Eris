@@ -1,4 +1,3 @@
-using Eris.Ui.NaegleriaUi;
 using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
 
@@ -9,8 +8,8 @@ public static class Network
     static Network()
     {
         NetworkHandles = [];
-        
-        Register(new NaegleriaUiMissionNetworkHandle());
+        return;
+
 
         static void Register(INetworkHandle handle)
         {
@@ -18,10 +17,10 @@ public static class Network
         }
     }
 
-    private static readonly Dictionary<byte, INetworkHandle> NetworkHandles;
+    public static readonly Dictionary<byte, INetworkHandle> NetworkHandles;
 
 
-    public static bool EventLength(byte events, out uint length)
+    public static bool GetEventLength(byte events, out uint length)
     {
         if (NetworkHandles.TryGetValue(events, out var handler))
         {
@@ -39,7 +38,6 @@ public static class Network
         {
             Pointer<EventClass> pEvent = (nint)r->ECX;
             var eventType = (byte)pEvent.Ref.Type;
-
             if (NetworkHandles.TryGetValue(eventType, out var handler))
             {
                 handler.Respond(pEvent);
@@ -58,16 +56,13 @@ public static class Network
     {
         var nSize = (byte)r->EDI;
 
-        if (EventLength(nSize, out var length))
-        {
-            r->ECX = length;
-            r->EBP = length;
-            r->Stack(0x20, length);
+        if (!GetEventLength(nSize, out var length)) return 0;
+        r->ECX = length;
+        r->EBP = length;
+        r->Stack(0x20, length);
 
-            return 0x64BE97;
-        }
+        return 0x64BE97;
 
-        return 0;
     }
 
 
@@ -75,14 +70,11 @@ public static class Network
     {
         var nSize = (byte)r->ESI;
 
-        if (EventLength(nSize, out var length))
-        {
-            r->ECX = length;
-            r->EBP = length;
-            return 0x64C321;
-        }
+        if (!GetEventLength(nSize, out var length)) return 0;
+        r->ECX = length;
+        r->EBP = length;
+        return 0x64C321;
 
-        return 0;
     }
 
 
@@ -90,13 +82,10 @@ public static class Network
     {
         var nSize = (byte)r->EDI;
 
-        if (EventLength(nSize, out var length))
-        {
-            r->EDX = length;
-            r->EBP = length;
-            return 0x64B71D;
-        }
+        if (!GetEventLength(nSize, out var length)) return 0;
+        r->EDX = length;
+        r->EBP = length;
+        return 0x64B71D;
 
-        return 0;
     }
 }

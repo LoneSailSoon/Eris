@@ -1,7 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.GeneralStructures;
-using Eris.YRSharp.Helpers;
+﻿using Eris.YRSharp.GeneralDefinitions;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp;
@@ -11,7 +8,7 @@ public struct AnimTypeClass
 {
     public const nint ArrayPointer = 0x8B4150;
 
-    public static GlobalDvcArray<AnimTypeClass> AbstractTypeArray { get; } = new(ArrayPointer);
+    public static readonly GlobalDvcArray<AnimTypeClass> AbstractTypeArray = new(ArrayPointer);
 
     [FieldOffset(0)] public ObjectTypeClass Base;
     [FieldOffset(0)] public AbstractTypeClass BaseAbstractType;

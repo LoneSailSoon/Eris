@@ -1,6 +1,5 @@
 using System.Collections;
 using Eris.Misc.String.HybridString;
-using Eris.YRSharp.GeneralStructures;
 using Eris.YRSharp.String.Ansi;
 
 namespace Eris.YRSharp.Helpers;
@@ -21,22 +20,63 @@ public class GlobalDvcArray<T>(nint pVector) : IEnumerable<Pointer<T>>
     public int FindIndex(string id)
     {
         if (string.IsNullOrWhiteSpace(id)) return -1;
+        if (id.Length > 23) return -1;
+        using var ansi = new AnsiStringSpan(id);
+        var span = ansi.AsSpan();
+        
         var i = 0;
         
         foreach (var ptr in Array)
         {
             var pItem = ptr.Convert<AbstractTypeClass>();
-            if (AnsiComparer.Ordinal.Equals(pItem.Ref.ID, id))
+            // if (AnsiComparer.Ordinal.Equals(pItem.Ref.ID, id))
+            if(span.SequenceEqual(pItem.Ref.ID.AsSpan()))
             {
                 return i;
             }
 
             i++;
         }
-
         return -1;
     }
 
+    public Pointer<T> FindIgnoreCase(string id)
+    {
+        var idx = FindIndexIgnoreCase(id);
+        if (idx >= 0)
+        {
+            return Array.Get(idx);
+        }
+
+        return 0;
+    }
+    
+    public int FindIndexIgnoreCase(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id)) return -1;
+        if (id.Length > 23) return -1;
+        
+        using var ansi = new AnsiStringSpan(id);
+        var span = ansi.AsSpan();
+        
+        var i = 0;
+        
+        foreach (var ptr in Array)
+        {
+            var pItem = ptr.Convert<AbstractTypeClass>();
+            // if (AnsiComparer.Ordinal.Equals(pItem.Ref.ID, id))
+            
+            
+            if(AnsiComparer.EqualIgnoreCaseSimd(span, pItem.Ref.ID.AsSpan()))
+            {
+                return i;
+            }
+
+            i++;
+        }
+        return -1;
+    }
+    
     public Pointer<T> Find(string id, StringComparer comparer)
     {
         var idx = FindIndex(id, comparer);

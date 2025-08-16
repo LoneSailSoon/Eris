@@ -1,5 +1,4 @@
 using Eris.YRSharp.GeneralDefinitions;
-using Eris.YRSharp.Helpers;
 using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp.Utilities;
@@ -98,9 +97,7 @@ public class TechnoPlacer
 
             // place and set up
             var xyz = pCell.Ref.GetCoordsWithBridge();
-
             var isPut = pTechno.Ref.Base.Put(xyz, (Direction)(MapClass.GetCellIndex(pCell.Ref.MapCoords) & 7u));
-
             if (isPut)
             {
                 if (!pBuilding.IsNull)
@@ -108,7 +105,7 @@ public class TechnoPlacer
                     if (buildUp)
                     {
                         pBuilding.Ref.Base.Base.DiscoveredBy(pOwner);
-                        pBuilding.Ref.unknown_bool_6DD = true;
+                        pBuilding.Ref.IsReadyToCommence = true;
                     }
                 }
                 else if (pType.Ref.BalloonHover || pType.Ref.JumpJet)

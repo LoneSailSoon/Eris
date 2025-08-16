@@ -28,7 +28,7 @@ public class IniReader
         if (length < 0)
             str = str[..str.IndexOf('\0')];
         
-        str = str.Trim();
+        str = str.Replace(" ", "");
         return str;
     }
 

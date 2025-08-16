@@ -1,4 +1,3 @@
-using Eris.Extension.Core.Style;
 using Eris.Extension.Core.World.NewExtension;
 using Eris.Utilities.Ini;
 using NaegleriaSerializer.Streaming;
@@ -9,26 +8,18 @@ public static class World
 {
     public static void Clear()
     {
-        Clear<StyleType>();
     }
 
     public static void LoadFromIni(IniReader reader)
     {
-        //
-        LoadRegister<StyleType>(reader);
-        
-        //
-        LoadFromIni<StyleType>(reader);
     }
 
     public static void Serialize(NaegleriaSerializeStream stream)
     {
-        Serialize<StyleType>(stream);
     }
 
     public static void Deserialize(NaegleriaDeserializeStream stream)
     {
-        Deserialize<StyleType>(stream);
     }
 
 

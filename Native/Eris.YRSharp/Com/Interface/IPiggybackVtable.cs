@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace Eris.YRSharp.Com.Interface;
 
 [StructLayout(LayoutKind.Sequential)]
