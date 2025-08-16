@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Misc/">
+    <Project Path="Misc/Eris.BeonSerializer/Eris.BeonSerializer.csproj" />
+    <Project Path="Misc/Eris.Misc/Eris.Misc.csproj" />
+  </Folder>
+  <Folder Name="/Native/">
+    <File Path="Eris.dll.inj" />
+    <Project Path="Native/Eris.YRSharp/Eris.YRSharp.csproj" />
+  </Folder>
+  <Project Path="Eris/Eris.csproj" />
+</Solution>
