@@ -23,8 +23,6 @@ public class FileLogHandler(ILogFormatter<LogMessage>? formatter = null) : ILogH
 
     public void LogLine(string message)
     {
-        //using var format = new AnsiStringSpan("%s\n");
-
         nint format;
         unsafe
         {

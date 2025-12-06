@@ -1,98 +1,31 @@
-﻿using Eris.Extension;
-using System.Numerics;
-using System.Runtime.InteropServices;
+﻿using System.Numerics;
 using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
+using Eris.YRSharp.MathEx;
 using Eris.YRSharp.Vector;
 
 namespace Eris.Utilities.Helpers
 {
     public static class LaserHelpers
     {
-        public static Pointer<LaserDrawClass> CreatLaser(this TechnoExt ext, Pointer<AbstractClass> pTarget, Pointer<WeaponTypeClass> pWeapon, CoordStruct sourceCoord)
-            => CreatLaser(ext.OwnerObject, pTarget, pWeapon, sourceCoord);
-        public static Pointer<LaserDrawClass> CreatLaser(this Pointer<TechnoClass> pThis, Pointer<AbstractClass> pTarget, Pointer<WeaponTypeClass> pWeapon, CoordStruct sourceCoord)
-        {
-            return pThis.Ref.CreateLaser(pTarget, 0, pWeapon, sourceCoord);
-        }
-
-        public static unsafe Pointer<LaserDrawClass> CreateLaser(CoordStruct target, int weaponIndex, Pointer<WeaponTypeClass> pWeapon, CoordStruct sourceCoord)
-        {
-            var func = (delegate* unmanaged[Thiscall]<IntPtr, IntPtr, int, IntPtr, ref CoordStruct, IntPtr>)0x6FD210;
-            return func(IntPtr.Zero, CoordHandle.Handle.GetFakeTarget(target), weaponIndex, pWeapon, ref sourceCoord);
-        }
-
-        public class CoordHandle
-        {
-            private static CoordHandle? _sHandle;
-            public static CoordHandle Handle
-            {
-                get
-                {
-                    _sHandle ??= new CoordHandle();
-                    return _sHandle;
-                }
-            }
-
-
-            public unsafe CoordHandle()
-            {
-                _mVfptr = Marshal.AllocHGlobal(0x58 + 4);
-                _mAbstract = Marshal.AllocHGlobal(24);
-
-                Pointer<IntPtr> pAbstract = _mAbstract;
-                pAbstract.Ref = _mVfptr;
-
-                _getCoord = GetCoordImpl;
-                *(IntPtr*)((uint)_mVfptr + 0x58) = Marshal.GetFunctionPointerForDelegate(_getCoord);
-            }
-
-            [UnmanagedFunctionPointer(CallingConvention.ThisCall)]
-            private delegate IntPtr GetCoordDelegate(IntPtr pThis, ref CoordStruct input);
-
-            private GetCoordDelegate _getCoord;
-
-            private IntPtr GetCoordImpl(IntPtr pThis, ref CoordStruct input)
-            {
-                _mCopylocation = _mLocation;
-                input = _mCopylocation;
-                return _mCopylocation.GetThisPointer();
-            }
-
-            ~CoordHandle()
-            {
-                Marshal.FreeHGlobal(_mAbstract);
-                Marshal.FreeHGlobal(_mVfptr);
-            }
-
-            private IntPtr _mAbstract;
-            private IntPtr _mVfptr;
-            private CoordStruct _mLocation;
-            private CoordStruct _mCopylocation;
-
-            public IntPtr GetFakeTarget(CoordStruct location)
-            {
-                _mLocation = location;
-                return _mAbstract;
-            }
-        }
-
-
-        public static Pointer<LaserDrawClass> DrawLine(this CoordStruct sourcePos, CoordStruct targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
+        private static Pointer<LaserDrawClass> DrawLine(this CoordStruct sourcePos, CoordStruct targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
         {
             if (default != houseColor)
             {
                 innerColor = houseColor;
                 outerColor = default;
             }
-            return YRCreater.Create<LaserDrawClass>().Constructor(sourcePos, targetPos, innerColor, outerColor, default(ColorStruct), duration).SetThickness(thickness);
+            return YRCreater
+                .Create<LaserDrawClass>()
+                .Constructor(sourcePos, targetPos, innerColor, outerColor, default, duration)
+                .SetThickness(thickness);
         }
 
         public static void DrawLine(this Vector3 sourcePos, Vector3 targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
-            => DrawLine(sourcePos, targetPos, innerColor, outerColor, thickness, duration, houseColor);
+            => DrawLine(sourcePos.ToCoordStruct(), targetPos.ToCoordStruct(), innerColor, outerColor, thickness, duration, houseColor);
 
         public static void DrawLine(this BulletVelocity sourcePos, BulletVelocity targetPos, ColorStruct innerColor, ColorStruct outerColor = default, int thickness = 2, int duration = 15, ColorStruct houseColor = default)
-            => DrawLine(sourcePos, targetPos, innerColor, outerColor, thickness, duration, houseColor);
+            => DrawLine(sourcePos.ToCoordStruct(), targetPos.ToCoordStruct(), innerColor, outerColor, thickness, duration, houseColor);
 
         public static Pointer<LaserDrawClass> SetInnerColor(this Pointer<LaserDrawClass> pLaser, byte? r = null, byte? g = null, byte? b = null)
         {

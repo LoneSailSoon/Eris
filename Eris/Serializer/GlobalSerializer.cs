@@ -1,13 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Eris.Extension;
-using Eris.Extension.Core.World;
+using Eris.BeonSerializer;
+using Eris.BeonSerializer.Streaming;
+using Eris.Component.Root;
 using Eris.Utilities.Logger;
-using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
 using Eris.YRSharp.String.Ansi;
-using NaegleriaSerializer;
-using NaegleriaSerializer.Streaming;
 
 namespace Eris.Serializer;
 
@@ -20,6 +18,9 @@ public static class GlobalSerializer
         try
         {
             Saver.Write();
+
+            var version = Program.ErisVersion;
+            Saver.ProcessStringInline(ref version);
             IsSaving = true;
         }
         catch (Exception e)
@@ -34,7 +35,7 @@ public static class GlobalSerializer
         try
         {
 
-            World.Serialize(Saver);
+            Root.Serialize(Saver);
 
             File.WriteAllBytes(GetSavePath(savePath), Saver.Buffer.AsSpan());
             Saver.Reset();
@@ -55,21 +56,23 @@ public static class GlobalSerializer
         {
             Loader.Read(File.ReadAllBytes(GetSavePath(savePath)));
             IsLoading = true;
+
+            string? version = null;
+            Loader.ProcessStringInline(ref version);
+
+            if(version?.Equals(Program.ErisVersion) != true)Logger.Log("阋神星版本错误，无法反序列化", LogLevel.Error);
         }
         catch (Exception ex)
         {
-
             Logger.LogException(ex);
         }
-        
     }
 
     private static void EndLoad(string savePath)
     {
         try
         {
-            
-            World.Deserialize(Loader);
+            Root.Deserialize(Loader);
             
             Loader.Reset();
             IsLoading = false;
@@ -79,7 +82,6 @@ public static class GlobalSerializer
         {
             Logger.LogException(ex);
         }
-
     }
 
     private static string GetSavePath(string name)
@@ -99,11 +101,11 @@ public static class GlobalSerializer
             Directory.CreateDirectory(saveDir);
         }
 
-        var fileName = Path.ChangeExtension(name, "eris.data");
+        var fileName = Path.ChangeExtension(name, "beon");
         return Path.Combine(saveDir, fileName);
     }
 
-    public static void WriteObject(INaegleriaSerializable obj)
+    public static void WriteObject(IBeonSerializable obj)
     {
         try
         {
@@ -116,7 +118,7 @@ public static class GlobalSerializer
 
     }
 
-    public static INaegleriaSerializable? ReadObject()
+    public static IBeonSerializable? ReadObject()
     {
         try
         {
@@ -129,8 +131,8 @@ public static class GlobalSerializer
         return null;
     }
 
-    private static readonly NaegleriaSerializeStream Saver = new NaegleriaSerializeStream();
-    private static readonly NaegleriaDeserializeStream Loader = new NaegleriaDeserializeStream();
+    private static readonly BeonSerializeStream Saver = new();
+    private static readonly BeonDeserializeStream Loader = new();
 
 
     //[Hook(HookType.AresHook, Address = 0x67CEF0, Size = 6)]

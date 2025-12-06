@@ -7,9 +7,11 @@ using Eris.YRSharp.Vector;
 namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 3576)]
-public struct TechnoTypeClass
+public struct TechnoTypeClass : IYRType<TechnoTypeClass>
 {
     private const nint ArrayPointer = 0xA8EB00;
+
+    static GlobalDvcArray<TechnoTypeClass> IYRType<TechnoTypeClass>.AbstractTypeArray => AbstractTypeArray;
 
     public static readonly GlobalDvcArray<TechnoTypeClass> AbstractTypeArray = new(ArrayPointer);
 

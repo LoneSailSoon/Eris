@@ -1,4 +1,4 @@
-﻿using Eris.YRSharp.Vector;
+﻿using Eris.YRSharp.FileFormats;
 
 namespace Eris.YRSharp;
 
@@ -14,12 +14,12 @@ public static class YRCreater
         return new(YRMemory.Allocate<T>());
     }
 
-    // public static Pointer<SHPReference> Constructor(this UnCotrPointer<SHPReference> pThis, string fileName)
-    // {
-    //     SHPReference.Constructor(pThis.Pointer, fileName);
-    //     return pThis.Pointer;
-    // }
-    
+     public static Pointer<ShpReference> Constructor(this UnCotrPointer<ShpReference> pThis, string fileName)
+    {
+        ShpReference.Constructor(pThis.Pointer, fileName);
+        return pThis.Pointer;
+    }
+
     public static Pointer<AirstrikeClass> Constructor(this UnCotrPointer<AirstrikeClass> pThis, Pointer<TechnoClass> pOwner)
     {
         AirstrikeClass.Constructor(pThis.Pointer, pOwner);

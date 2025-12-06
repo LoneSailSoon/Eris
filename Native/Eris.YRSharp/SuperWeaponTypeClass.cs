@@ -4,9 +4,11 @@ using Eris.YRSharp.String.Ansi;
 namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 256)]
-public struct SuperWeaponTypeClass
+public struct SuperWeaponTypeClass : IYRType<SuperWeaponTypeClass>
 {
     public const nint ArrayPointer = 0xA8E330;
+
+    static GlobalDvcArray<SuperWeaponTypeClass> IYRType<SuperWeaponTypeClass>.AbstractTypeArray => AbstractTypeArray;
 
     public static readonly GlobalDvcArray<SuperWeaponTypeClass> AbstractTypeArray = new(ArrayPointer);
 

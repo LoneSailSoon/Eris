@@ -21,7 +21,7 @@ public struct AnsiStringPointer(nint ptr) : IEquatable<AnsiStringPointer>
     public static implicit operator nint(AnsiStringPointer pointer) => pointer.buffer;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator string(AnsiStringPointer pointer) => (AnsiString)pointer;
+    public static implicit operator string(AnsiStringPointer pointer) => Marshal.PtrToStringAnsi(pointer.buffer);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator AnsiStringPointer(nint ptr) => new(ptr);
@@ -50,7 +50,7 @@ public struct AnsiStringPointer(nint ptr) : IEquatable<AnsiStringPointer>
     } 
 
 
-    public bool Equals(AnsiStringPointer other)
+    public readonly bool Equals(AnsiStringPointer other)
     {
         return buffer == other.buffer;
     }

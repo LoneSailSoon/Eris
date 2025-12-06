@@ -13,13 +13,11 @@
 6875F3 = Scenario_Start1_Behaviors, 6
 55AFB3 = LogicClass_Update_Behaviors, 6
 55B719 = LogicClass_Update_Late_Behaviors, 5
+6851F0 = Scenario_ClearClasses_Start_Behaviors, 5
 685659 = Scenario_ClearClasses_Behaviors, 10
 679CAF = RulesData_LoadAfterTypeData_Behaviors, 5
 533066 = CommandClassCallback_Register_Behaviors, 6
 6BD68D = WinMain_Registrations_Behaviors, 6
-623880 = TextLabelClass_Render_Behaviors, 5
-;623AA8 = TextLabelClass_Render_Text_Back_Behaviors, 7
-6851F0 = Scenario_ClearClasses_Start_Behaviors, 5
 
 ;/Behaviors/NetworkBehaviors.cs
 4C6CB0 = Network_RespondToEvent_Behaviors, 6
@@ -37,7 +35,7 @@
 6933C0 = Ui_MouseRightRelease_Behaviors, 5
 693119 = Ui_WindowProc_Behaviors, 6
 
-;/Extension/TechnoTypeExt.cs
+;/Entity/TechnoTypeEntity.cs
 711835 = TechnoTypeClass_CTOR, 5
 711AE0 = TechnoTypeClass_DTOR, 5
 716DC0 = TechnoTypeClass_SaveLoad_Prefix, 5
@@ -47,7 +45,7 @@
 716132 = TechnoTypeClass_LoadFromINI, 5
 716123 = TechnoTypeClass_LoadFromINI, 5
 
-;/Extension/TechnoExt.cs
+;/Entity/TechnoEntity.cs
 6F3260 = TechnoClass_CTOR, 5
 6F4500 = TechnoClass_DTOR, 5
 70C250 = TechnoClass_SaveLoad_Prefix, 8
@@ -65,7 +63,7 @@
 7077C0 = TechnoClass_PointerExpired_Behaviors, 7
 
 
-;/Extension/CellExt.cs
+;/Entity/CellEntity.cs
 47BDA1 = CellClass_CTOR, 5
 47BB60 = CellClass_DTOR, 6
 483C10 = CellClass_SaveLoad_Prefix, 5
@@ -73,7 +71,7 @@
 483C00 = CellClass_Load_Suffix, 5
 483C79 = CellClass_Save_Suffix, 6
 
-;/Extension/BulletTypeExt.cs
+;/Entity/BulletTypeEntity.cs
 46BDD9 = BulletTypeClass_CTOR, 5
 46C8B6 = BulletTypeClass_SDDTOR, 6
 46C730 = BulletTypeClass_SaveLoad_Prefix, 8
@@ -83,7 +81,7 @@
 46C429 = BulletTypeClass_LoadFromINI, A
 46C41C = BulletTypeClass_LoadFromINI, A
 
-;/Extension/BulletExt.cs
+;/Entity/BulletEntity.cs
 4664BA = BulletClass_CTOR, 5
 4665E9 = BulletClass_DTOR, A
 46AFB0 = BulletClass_SaveLoad_Prefix, 8
@@ -92,7 +90,11 @@
 46AF9E = BulletClass_Load_Suffix, 7
 46AFC4 = BulletClass_Save_Suffix, 3
 
-;/Extension/HouseTypeExt.cs
+;/Behaviors/BulletBehaviors.cs
+4666F7 = BulletClass_Update_Behaviors, 6
+4690B0 = BulletClass_Detonate_Behaviors, 6
+
+;/Entity/HouseTypeEntity.cs
 511635 = HouseTypeClass_CTOR, 5
 511643 = HouseTypeClass_CTOR, 5
 512760 = HouseTypeClass_DTOR, 6
@@ -103,7 +105,7 @@
 51215A = HouseTypeClass_LoadFromINI, 5
 51214F = HouseTypeClass_LoadFromINI, 5
 
-;/Extension/HouseExt.cs
+;/Entity/HouseEntity.cs
 4F6532 = HouseClass_CTOR, 5
 4F7140 = HouseClass_DTOR, 6
 504080 = HouseClass_SaveLoad_Prefix, 5
@@ -111,7 +113,7 @@
 504069 = HouseClass_Load_Suffix, 7
 5046DE = HouseClass_Save_Suffix, 7
 
-;/Extension/SWTypeExt.cs
+;/Entity/SWTypeEntity.cs
 6CE6F6 = SuperWeaponTypeClass_CTOR, 5
 6CEFE0 = SuperWeaponTypeClass_DTOR, 8
 6CE8D0 = SuperWeaponTypeClass_SaveLoad_Prefix, 8
@@ -121,7 +123,7 @@
 6CEE50 = SuperWeaponTypeClass_LoadFromINI, A
 6CEE43 = SuperWeaponTypeClass_LoadFromINI, A
 
-;/Extension/SuperWeaponExt.cs
+;/Entity/SuperWeaponEntity.cs
 6CB10E = SuperClass_CTOR, 7
 6CB120 = SuperClass_DTOR, 7
 6CDEF0 = SuperClass_SaveLoad_Prefix, 5
@@ -129,7 +131,10 @@
 6CDFC7 = SuperClass_Load_Suffix, 5
 6CDFEA = SuperClass_Save_Suffix, 5
 
-;/Extension/WarheadTypeExt.cs
+;/Behaviors/SuperWeaponBehaviors.cs
+6CC390 = SuperClass_Launch_Behaviors, 6
+
+;/Entity/WarheadTypeEntity.cs
 75D1A9 = WarheadTypeClass_CTOR, 7
 75E5C8 = WarheadTypeClass_SDDTOR, 6
 75E2C0 = WarheadTypeClass_SaveLoad_Prefix, 5
@@ -139,7 +144,7 @@
 75DEAF = WarheadTypeClass_LoadFromINI, 5
 75DEA0 = WarheadTypeClass_LoadFromINI, 5
 
-;/Extension/WeaponTypeExt.cs
+;/Entity/WeaponTypeEntity.cs
 771EE9 = WeaponTypeClass_CTOR, 5
 77311D = WeaponTypeClass_SDDTOR, 6
 772EB0 = WeaponTypeClass_SaveLoad_Prefix, 5

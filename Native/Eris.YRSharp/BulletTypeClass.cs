@@ -1,11 +1,13 @@
 ﻿namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 760)]
-public struct BulletTypeClass
+public struct BulletTypeClass : IYRType<BulletTypeClass>
 {
 	public const nint ArrayPointer = 0xA83C80;
 
-	public static readonly GlobalDvcArray<BulletTypeClass> AbstractTypeArray = new(ArrayPointer);
+    static GlobalDvcArray<BulletTypeClass> IYRType<BulletTypeClass>.AbstractTypeArray => AbstractTypeArray;
+
+    public static readonly GlobalDvcArray<BulletTypeClass> AbstractTypeArray = new(ArrayPointer);
 
 	public unsafe Pointer<BulletClass> CreateBullet(Pointer<AbstractClass> target, Pointer<TechnoClass> owner, int damage, Pointer<WarheadTypeClass> wh, int speed, bool bright)
 	{

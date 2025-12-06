@@ -7,16 +7,16 @@ namespace Eris.YRSharp;
 public struct BitFont
 {
     public const nint instance = 0x89C4D0;
-    public static ref BitFont Instance => ref instance.Convert<BitFont>().Ref;
+    public static ref BitFont Instance => ref instance.Convert<Pointer<BitFont>>().Ref.Ref;
     
     public unsafe bool GetTextDimension(ReadOnlySpan<char> pText, Pointer<int> pWidth, Pointer<int> pHeight, int nMaxWidth)
     {
         var func = (delegate* unmanaged[Thiscall]<nint, nint, nint, nint, int, bool>)0x433CF0;
         return func(this.GetThisPointer(), MemoryMarshal.GetReference(pText).GetThisPointer(), pWidth, pHeight, nMaxWidth);
     }
-    public unsafe int Blit(byte wch, int X, int Y, int nColor)
+    public unsafe int Blit(char wch, int X, int Y, int nColor)
     {
-        var func = (delegate* unmanaged[Thiscall]<nint, byte, int, int, int, int>)0x434120;
+        var func = (delegate* unmanaged[Thiscall]<nint, int, int, int, int, int>)0x434120;
         return func(this.GetThisPointer(), wch, X, Y, nColor);
     }
     public unsafe bool Lock(Pointer<Surface> pSurface)

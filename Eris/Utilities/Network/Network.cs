@@ -8,13 +8,13 @@ public static class Network
     static Network()
     {
         NetworkHandles = [];
-        return;
+        // return;
 
 
-        static void Register(INetworkHandle handle)
-        {
-            NetworkHandles.Add(handle.Index, handle);
-        }
+        // static void Register(INetworkHandle handle)
+        // {
+        //     NetworkHandles.Add(handle.Index, handle);
+        // }
     }
 
     public static readonly Dictionary<byte, INetworkHandle> NetworkHandles;

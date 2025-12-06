@@ -8,9 +8,17 @@ namespace Eris.YRSharp;
 public struct TechnoClass : IYRObject<TechnoClass, TechnoTypeClass>
 {
     static Pointer<TechnoTypeClass> IYRObject<TechnoClass, TechnoTypeClass>.Type(Pointer<TechnoClass> pThis) => pThis.Ref.Base.GetTechnoType();
+
     
-    public Pointer<TechnoTypeClass> Type => Base.GetTechnoType();
-    
+    public Pointer<TechnoTypeClass> Type
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get
+        {
+            return Base.GetTechnoType();
+        }
+    }
+
     public const nint ArrayPointer = 0xA8EC78;
 
     public static ref DynamicVectorClass<Pointer<TechnoClass>> Array =>

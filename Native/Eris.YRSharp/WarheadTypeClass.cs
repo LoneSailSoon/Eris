@@ -1,9 +1,11 @@
 ﻿namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 464)]
-public struct WarheadTypeClass
+public struct WarheadTypeClass : IYRType<WarheadTypeClass>
 {
     private const nint ArrayPointer = 0x8874C0;
+
+    static GlobalDvcArray<WarheadTypeClass> IYRType<WarheadTypeClass>.AbstractTypeArray => AbstractTypeArray;
 
     public static readonly GlobalDvcArray<WarheadTypeClass> AbstractTypeArray = new(ArrayPointer);
 

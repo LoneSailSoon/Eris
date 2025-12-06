@@ -1,5 +1,6 @@
 using Eris.YRSharp.GeneralDefinitions;
 using Eris.YRSharp.Vector;
+using System.Runtime.CompilerServices;
 
 namespace Eris.YRSharp;
 
@@ -23,6 +24,7 @@ public struct AbstractClass
         func(this.GetThisPointer(), pAbstract, removed);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe AbstractType WhatAmI()
     {
         var func = (delegate* unmanaged[Thiscall]<nint, AbstractType>)this.GetVirtualFunctionPointer(11);

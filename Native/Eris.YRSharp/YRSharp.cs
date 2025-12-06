@@ -8,10 +8,12 @@ namespace Eris.YRSharp;
 
 public static class YRSharp;
 
-public interface IYRObject<T,TType>
+public interface IYRObject<T, TType>
 {
     static abstract Pointer<TType> Type(Pointer<T> pThis);
 }
 
-//      ABCDEFGHIGKLMNOPQRSTUV
-//TODO: WXYZ
+public interface IYRType<T>
+{
+    static abstract GlobalDvcArray<T> AbstractTypeArray { get; }
+}

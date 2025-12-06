@@ -1,58 +1,89 @@
+using Eris.BeonSerializer;
+using Eris.BeonSerializer.Streaming;
+using Eris.Utilities.Data;
+using Eris.YRSharp;
 using System.Runtime.InteropServices;
-using Eris.YRSharp.Helpers;
-using NaegleriaSerializer;
-using NaegleriaSerializer.Streaming;
 
 namespace Eris.Serializer;
 
 public static class Formatters
 {
-    public static void ListSerialize<T>(List<T>? list, NaegleriaSerializeStream stream)
-        where T : INaegleriaSerializable
+    extension(BeonSerializeStream stream)
     {
-        if (list is null)
+        public void ListSerialize<T>(List<T>? list)
+            where T : IBeonSerializable
+        {
+            if (list is null)
+            {
+                var count = -1;
+                stream.Process(ref count);
+            }
+            else
+            {
+                var count = list.Count;
+                stream.Process(ref count);
+
+                for (var i = 0; i < count; i++)
+                {
+                    stream.Serialize(list[i]);
+                }
+            }
+        }
+
+        public BeonSerializeStream DelegateSerialize<T>(SerializableDelegate.Node<T> node)
+        {
+            var id = node.Id;
+            stream.Process(ref id);
+
+            if (node.Funcs is var (s, _))
+                s(stream);
+            return stream;
+        }
+    }
+
+    extension(BeonDeserializeStream stream)
+    {
+        public void ListDeserialize<T>(ref List<T>? list)
+        where T : IBeonSerializable
         {
             var count = -1;
             stream.Process(ref count);
-        }
-        else
-        {
-            var count = list.Count;
-            stream.Process(ref count);
-
-            for (var i = 0; i < count; i++)
+            if (count == -1)
             {
-                stream.Serialize(list[i]);
+                list = null;
+            }
+            else
+            {
+                list = new List<T>(count);
+                CollectionsMarshal.SetCount(list, count);
+                for (var i = 0; i < count; i++)
+                {
+                    list[i] = (T)stream.Deserialize()!;
+                }
             }
         }
-    }
-    
-    public static void ListDeserialize<T>(ref List<T>? list, NaegleriaDeserializeStream stream)
-        where T : INaegleriaSerializable
-    {
-        var count = -1;
-        stream.Process(ref count);
-        if (count == -1)
+        public BeonDeserializeStream DelegateDeserialize<T>(ref SerializableDelegate.Node<T> node)
         {
-            list = null;
-        }
-        else
-        {
-            list = new List<T>(count);
-            CollectionsMarshal.SetCount(list, count);
-            for (var i = 0; i < count; i++)
-            {
-                list[i] = (T)stream.Deserialize()!;
-            }
+            var id = -1;
+            stream.Process(ref id);
+            if (id != node.Id)
+                node = new SerializableDelegate.Node<T>(id);
+
+            if (node.Funcs is var (s, _))
+                s(stream);
+
+            return stream;
         }
     }
 
-    public static void PointerSerialize<T>(this ref Pointer<T> ptr, NaegleriaSerializeStream stream)
+    extension(IBeonStream stream)
     {
-        stream.Buffer.WriteInt32((int)ptr);
-    }
-
-    public static void PointerDeserialize<T>(this ref Pointer<T> ptr, NaegleriaDeserializeStream stream)
-    {
+        public IBeonStream Process<T>(ref YRTypePointer<T> type) where T : struct, IYRType<T>
+        {
+            string? id = type.Id;
+            stream.ProcessStringInline(ref id);
+            type.Id = id;
+            return stream;
+        }
     }
 }

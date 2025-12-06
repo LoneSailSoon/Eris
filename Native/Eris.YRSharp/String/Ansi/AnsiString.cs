@@ -28,7 +28,7 @@ public sealed class AnsiString : IDisposable
     public static implicit operator uint(AnsiString ansiStr) => (uint)ansiStr.HGlobal;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator string(AnsiString ansiStr) => Marshal.PtrToStringAnsi((IntPtr)ansiStr);
+    public static implicit operator string(AnsiString ansiStr) => Marshal.PtrToStringAnsi((nint)ansiStr);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static implicit operator AnsiString(string str) => new(str);

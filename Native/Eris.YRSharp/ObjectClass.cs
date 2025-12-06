@@ -2,6 +2,7 @@ using Eris.YRSharp.GeneralDefinitions;
 using Eris.YRSharp.String.Ansi;
 using Eris.YRSharp.Utilities;
 using Eris.YRSharp.Vector;
+using System.Runtime.CompilerServices;
 
 namespace Eris.YRSharp;
 
@@ -224,6 +225,7 @@ public struct ObjectClass
         func(this.GetThisPointer(), coords);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe void UnInit()
     {
         var func = (delegate* unmanaged[Thiscall]<nint, void>)this.GetVirtualFunctionPointer(62);
@@ -236,6 +238,7 @@ public struct ObjectClass
         func(this.GetThisPointer());
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe KickOutResult KickOutUnit(Pointer<TechnoClass> pTechno, CellStruct Cell)
     {
         var func =

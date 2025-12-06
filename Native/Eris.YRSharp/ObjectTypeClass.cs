@@ -76,6 +76,7 @@ public struct ObjectTypeClass
         return func(this.GetThisPointer());
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public unsafe Pointer<ObjectClass> CreateObject(Pointer<HouseClass> pOwner)
     {
         var func = (delegate* unmanaged[Thiscall]<nint, nint, nint>)this.GetVirtualFunctionPointer(35);

@@ -3,7 +3,7 @@ namespace Eris.YRSharp;
 public struct BitText
 {
     public const nint instance = 0x89C4B8;
-    public static ref BitText Instance => ref instance.Convert<BitText>().Ref;
+    public static ref BitText Instance => ref instance.Convert<Pointer<BitText>>().Ref.Ref;
     
     public unsafe void Print(Pointer<BitFont> pFont, Pointer<Surface> pSurface, ReadOnlySpan<char> pWideString, int X, int Y, int W, int H)
     {

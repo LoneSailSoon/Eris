@@ -40,7 +40,6 @@ public static partial class Parsers
 
         buffer = parsed;
         return true;
-
     }
 
     public static bool Parse<T>(this ISection section, string key, ref T buffer) where T : struct, INumber<T> =>

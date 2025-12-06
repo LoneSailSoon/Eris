@@ -3,11 +3,13 @@
 namespace Eris.YRSharp;
 
 [StructLayout(LayoutKind.Explicit, Size = 352)]
-public struct WeaponTypeClass
+public struct WeaponTypeClass : IYRType<WeaponTypeClass>
 {
 	private const nint ArrayPointer = 0x887568;
 
-	public static GlobalDvcArray<WeaponTypeClass> AbstractTypeArray = new(ArrayPointer);
+    static GlobalDvcArray<WeaponTypeClass> IYRType<WeaponTypeClass>.AbstractTypeArray => AbstractTypeArray;
+
+    public static GlobalDvcArray<WeaponTypeClass> AbstractTypeArray = new(ArrayPointer);
 
 	[FieldOffset(0)] public AbstractTypeClass Base;
 	[FieldOffset(152)] public int AmbientDamage;

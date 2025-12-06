@@ -11,7 +11,7 @@ public static class NetworkBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Network_RespondToEvent_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Network_RespondToEvent_Behaviors(Registers* r)
     {
-        return Network.Network_RespondToEvent_Behaviors(r);//EventClassExt.EventClass_RespondToEvent(R);
+        return Network.Network_RespondToEvent_Behaviors(r);
     }
 
 
@@ -19,7 +19,7 @@ public static class NetworkBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Network_GetEventSize1_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Network_GetEventSize1_Behaviors(Registers* r)
     {
-        return Network.Network_GetEventSize1_Behaviors(r);//EventClassExt.sub_64BDD0_GetEventSize1(R);
+        return Network.Network_GetEventSize1_Behaviors(r);
     }
 
 
@@ -27,7 +27,7 @@ public static class NetworkBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Network_GetEventSize2_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Network_GetEventSize2_Behaviors(Registers* r)
     {
-        return Network.Network_GetEventSize2_Behaviors(r);//EventClassExt.sub_64BDD0_GetEventSize2(R);
+        return Network.Network_GetEventSize2_Behaviors(r);
     }
 
 
@@ -35,7 +35,7 @@ public static class NetworkBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Network_GetEventSize3_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Network_GetEventSize3_Behaviors(Registers* r)
     {
-        return Network.Network_GetEventSize3_Behaviors(r);//EventClassExt.sub_64B660_GetEventSize(R);
+        return Network.Network_GetEventSize3_Behaviors(r);
     }
 
 }

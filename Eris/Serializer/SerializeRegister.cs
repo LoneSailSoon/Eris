@@ -1,37 +1,37 @@
-using Eris.Extension.Core.Generic;
-using NaegleriaSerializer;
+using Eris.Component.Generic;
+using Eris.Entity;
 
 namespace Eris.Serializer;
 
 public static class SerializeRegister
 {
-    public const int TechnoTypeExtSerializeType = 1;
-    public const int TechnoExtSerializeType = 2;
-    public const int CellExtSerializeType = 3;
-    public const int BulletTypeExtSerializeType = 4;
-    public const int BulletExtSerializeType = 5;
-    public const int HouseTypeExtSerializeType = 6;
-    public const int HouseExtSerializeType = 7;
-    public const int SuperWeaponTypeExtSerializeType = 8;
-    public const int SuperWeaponExtSerializeType = 9;
-    public const int WarheadTypeExtSerializeType = 10;
-    public const int WeaponTypeExtSerializeType = 11;
+    public const int TechnoTypeEntitySerializeType = 1;
+    public const int TechnoEntitySerializeType = 2;
+    public const int CellEntitySerializeType = 3;
+    public const int BulletTypeEntitySerializeType = 4;
+    public const int BulletEntitySerializeType = 5;
+    public const int HouseTypeEntitySerializeType = 6;
+    public const int HouseEntitySerializeType = 7;
+    public const int SuperWeaponTypeEntitySerializeType = 8;
+    public const int SuperWeaponEntitySerializeType = 9;
+    public const int WarheadTypeEntitySerializeType = 10;
+    public const int WeaponTypeEntitySerializeType = 11;
     public const int GameObjectType = 12;
 
 
     public static void Register()
     {
-        DeserializeObjectActivator.Register(TechnoTypeExtSerializeType, static () => new Extension.TechnoTypeExt());
-        DeserializeObjectActivator.Register(TechnoExtSerializeType, static () => new Extension.TechnoExt());
-        DeserializeObjectActivator.Register(CellExtSerializeType, static () => new Extension.CellExt());
-        DeserializeObjectActivator.Register(BulletTypeExtSerializeType, static () => new Extension.BulletTypeExt());
-        DeserializeObjectActivator.Register(BulletExtSerializeType, static () => new Extension.BulletExt());
-        DeserializeObjectActivator.Register(HouseTypeExtSerializeType, static () => new Extension.HouseTypeExt());
-        DeserializeObjectActivator.Register(HouseExtSerializeType, static () => new Extension.HouseExt());
-        DeserializeObjectActivator.Register(SuperWeaponTypeExtSerializeType, static () => new Extension.SWTypeExt());
-        DeserializeObjectActivator.Register(SuperWeaponExtSerializeType, static () => new Extension.SuperWeaponExt());
-        DeserializeObjectActivator.Register(WarheadTypeExtSerializeType, static () => new Extension.WarheadTypeExt());
-        DeserializeObjectActivator.Register(WeaponTypeExtSerializeType, static () => new Extension.WeaponTypeExt());
-        DeserializeObjectActivator.Register(GameObjectType, static () => new GameObject());
+        BeonSerializer.DeserializeObjectActivator.Register(TechnoTypeEntitySerializeType, static () => new TechnoTypeEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(TechnoEntitySerializeType, static () => new TechnoEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(CellEntitySerializeType, static () => new CellEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(BulletTypeEntitySerializeType, static () => new BulletTypeEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(BulletEntitySerializeType, static () => new BulletEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(HouseTypeEntitySerializeType, static () => new HouseTypeEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(HouseEntitySerializeType, static () => new HouseEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(SuperWeaponTypeEntitySerializeType, static () => new SWTypeEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(SuperWeaponEntitySerializeType, static () => new SuperWeaponEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(WarheadTypeEntitySerializeType, static () => new WarheadTypeEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(WeaponTypeEntitySerializeType, static () => new WeaponTypeEntity());
+        BeonSerializer.DeserializeObjectActivator.Register(GameObjectType, static () => new GameObject());
     }
 }

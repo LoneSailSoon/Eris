@@ -1,5 +1,4 @@
 using System.Numerics;
-using Eris.YRSharp.Vector;
 
 namespace Eris.YRSharp.MathEx;
 
@@ -22,9 +21,10 @@ partial class MathUtilities
         new((float)velocity.X, (float)velocity.Y, (float)velocity.Z);
 
     public static BulletVelocity ToBulletVelocity(this CoordStruct location) =>
-        new((float)location.X, (float)location.Y, (float)location.Z);
+        new(location.X, location.Y, location.Z);
 
-    public static BulletVelocity ToBulletVelocity(this Vector3 vector) => new(vector.X, vector.Y, vector.Z);
+    public static BulletVelocity ToBulletVelocity(this Vector3 vector) => 
+        new(vector.X, vector.Y, vector.Z);
 
     public static RectangleStruct ToRectangleStruct(this LtrbStruct ltrb) =>
         new(ltrb.Left, ltrb.Top, ltrb.Right - ltrb.Left, ltrb.Bottom - ltrb.Top);

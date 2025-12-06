@@ -1,11 +1,10 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Eris.Extension.Core.World;
+using Eris.Component.Root;
 using Eris.Utilities.Ini;
 using Eris.Utilities.Logger;
 using Eris.YRSharp;
 using Eris.YRSharp.Helpers;
-using Eris.YRSharp.Vector;
 
 namespace Eris.Behaviors;
 
@@ -37,7 +36,15 @@ public static class GeneralBehaviors
     [UnmanagedCallersOnly(EntryPoint = "Scenario_ClearClasses_Start_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
     public static unsafe uint Scenario_ClearClasses_Start_Behaviors(Registers* r)
     {
-        World.Clear();
+        try
+        {
+            Root.Clear();
+        }
+        catch (Exception e)
+        {
+            Logger.LogException(e);
+        }
+
         return 0;
     }
 
@@ -54,10 +61,9 @@ public static class GeneralBehaviors
     public static unsafe uint RulesData_LoadAfterTypeData_Behaviors(Registers* r)
     {
         var pIni = r->Stack<Pointer<CCIniClass>>(0x4);
-        var ini = IniReader.Default;
-        ini.SetCurrentIni(pIni);
+        var ini = IniReader.Read(pIni);
 
-        World.LoadFromIni(ini);
+        Root.LoadFromIni(ini);
 
         return 0;
     }
@@ -82,34 +88,6 @@ public static class GeneralBehaviors
             Logger.LogException(e);
         }
 
-        return 0;
-    }
-    
-    //623880 5
-    [UnmanagedCallersOnly(EntryPoint = "TextLabelClass_Render_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe uint TextLabelClass_Render_Behaviors(Registers* r)
-    {
-        Pointer<Point2D> pos = (nint)r->EDX;
-        pos.Ref += Surface.ViewBound.BottomLeft - (- Math.Max((Surface.ViewBound.Width - 800)/2, 0), 300);
-        
-        return 0;
-    }
-    
-    //623AA8 7
-    [UnmanagedCallersOnly(EntryPoint = "TextLabelClass_Render_Text_Back_Behaviors", CallConvs = [typeof(CallConvCdecl)])]
-    public static unsafe uint TextLabelClass_Render_Text_Back_Behaviors(Registers* r)
-    {
-        Pointer<RectangleStruct> pRectangleStruct = r->LeaStack<nint>(0x8 + 0x30);
-        Pointer<DSurface> pSurface = r->Stack<nint>(0x8 + 0x2C);
-        
-        if (!pRectangleStruct || !pSurface) return 0;
-        
-        pRectangleStruct.Ref.X -= 1;
-        pRectangleStruct.Ref.Width -= 2;
-        pSurface.Ref.Base.FillRectTrans(pRectangleStruct.Data, 0, 60);
-        pRectangleStruct.Ref.Height = 0;
-        pRectangleStruct.Ref.Width = 0;
-        
         return 0;
     }
 }
